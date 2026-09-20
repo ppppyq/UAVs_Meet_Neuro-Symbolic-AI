@@ -1,0 +1,20 @@
+{
+  "project_name": "UAVs Meet Neuro-Symbolic AI",
+  "suggested_repository_name": "UAVs_Meet_Neuro-Symbolic-AI",
+  "working_title": "UAVs Meet Neuro-Symbolic AI: Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy",
+  "status": "manuscript-in-preparation",
+  "version": "0.1.0",
+  "research_question": "How can neural learning and explicit symbolic representations, reasoning, and constraints be integrated to support trustworthy UAV autonomy?",
+  "authors": [
+    "Yuqi Ping"
+  ],
+  "affiliations": [
+    "Harbin Institute of Technology, Shenzhen"
+  ],
+  "contact_email": null,
+  "github_owner": "ppppyq",
+  "github_repository": "UAVs_Meet_Neuro-Symbolic-AI",
+  "github_url": "https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI",
+  "target_venue": null,
+  "license": "MIT"
+}

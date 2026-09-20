@@ -1,0 +1,46 @@
+flowchart LR
+    P[Paper record] --> FP[Functional position]
+    P --> ID[Integration direction]
+    P --> SM[Symbolic mechanism]
+    P --> UT[UAV task]
+    P --> SD[System and deployment form]
+
+    FP --> FP1[grounding]
+    FP --> FP2[representation]
+    FP --> FP3[reasoning]
+    FP --> FP4[planning]
+    FP --> FP5[execution]
+    FP --> FP6[assurance]
+
+    ID --> ID1[neural_to_symbolic]
+    ID --> ID2[symbolic_to_neural]
+    ID --> ID3[bidirectional]
+    ID --> ID4[other]
+    ID --> ID5[unknown]
+
+    SM --> SM1[logic_rules]
+    SM --> SM2[probabilistic_logic]
+    SM --> SM3[temporal_logic]
+    SM --> SM4[symbolic_planning]
+    SM --> SM5[knowledge_graph]
+    SM --> SM6[scene_graph]
+    SM --> SM7[program_representation]
+    SM --> SM8[constraint_reasoning]
+
+    UT --> UT1[navigation]
+    UT --> UT2[mission_planning]
+    UT --> UT3[search_and_exploration]
+    UT --> UT4[landing]
+    UT --> UT5[inspection]
+    UT --> UT6[aerial_manipulation]
+    UT --> UT7[multi_uav_coordination]
+    UT --> UT8[communication_and_networking]
+
+    SD --> SD1[single_uav]
+    SD --> SD2[multi_uav]
+    SD --> SD3[human_uav]
+    SD --> SD4[edge_cloud]
+    SD --> SD5[heterogeneous_robots]
+
+    classDef axis fill:#eef,stroke:#446;
+    class FP,ID,SM,UT,SD axis;

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UAVs Meet Neuro-Symbolic AI</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Literature-review workspace · manuscript in preparation</p>
+      <h1>UAVs Meet Neuro-Symbolic AI</h1>
+      <p class="subtitle">Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy</p>
+      <p class="status-note">This is a proposed research framework and evidence
+        knowledge base. It is not a completed systematic review and not an
+        experimental system. Author and venue information remain TODO.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="overview" aria-labelledby="overview-heading">
+      <h2 id="overview-heading">Project overview</h2>
+      {{OVERVIEW_HTML}}
+    </section>
+
+    <section class="framework" aria-labelledby="framework-heading">
+      <h2 id="framework-heading">Proposed framework</h2>
+      <p>The diagrams below are editable Mermaid sketches, not experimental
+        results.</p>
+      <pre class="mermaid-source"><code>flowchart TD
+    Perception --&gt; Neural grounding
+    Neural grounding --&gt; Symbolic representation
+    Symbolic representation --&gt; Reasoning and planning
+    Reasoning and planning --&gt; Execution
+    Execution --&gt; Monitoring and assurance
+    Monitoring and assurance --&gt;|feedback| Reasoning and planning
+    Monitoring and assurance --&gt;|cueing| Perception</code></pre>
+    </section>
+
+    <section class="filters" aria-labelledby="filters-heading">
+      <h2 id="filters-heading">Paper list</h2>
+      <div class="controls">
+        <label for="search">Search title and keywords</label>
+        <input id="search" type="search" placeholder="e.g. landing, logic, UAV">
+
+        <label for="task-filter">Task</label>
+        <select id="task-filter">
+          <option value="">All tasks</option>
+        </select>
+
+        <label for="direction-filter">Integration direction</label>
+        <select id="direction-filter">
+          <option value="">All directions</option>
+        </select>
+
+        <label for="status-filter">Status</label>
+        <select id="status-filter">
+          <option value="">All statuses</option>
+        </select>
+
+        <button id="reset-filters" type="button">Reset filters</button>
+      </div>
+      <p id="result-count" aria-live="polite"></p>
+    </section>
+
+    <section class="papers" aria-label="Paper table">
+      {{PAPER_TABLE_HTML}}
+    </section>
+
+    <section class="methodology" aria-labelledby="methodology-heading">
+      <h2 id="methodology-heading">Methodology and contributions</h2>
+      <p>See the repository documents for the review methodology, proposed
+        taxonomy, evidence rules, and paper outline. In this generated page,
+        paper status and evidence fields are shown directly from
+        <code>data/papers.json</code>.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Repository:
+        <a href="https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI" rel="noopener noreferrer">GitHub</a>.
+        License: MIT.
+        Generated statically from <code>data/papers.json</code>.</p>
+    </div>
+  </footer>
+
+  <script>
+    window.__PAPER_DATA__ = {{PAPER_DATA_JSON}};
+  </script>
+  <script src="static/app.js"></script>
+</body>
+</html>

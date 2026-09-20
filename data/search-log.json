@@ -1,0 +1,11 @@
+[
+  {
+    "id": "search-2026-09-20-seed-arxiv",
+    "date": "2026-09-20",
+    "entry": "Seed list provided by the project initialization request.",
+    "query_or_resource": "arXiv ID lookups: 2501.02341, 2506.08045, 2609.19961, 2607.02277, 2510.22204, 2012.05876, 1805.10872",
+    "source": "https://export.arxiv.org/api/query?id_list=...",
+    "screening_notes": "Metadata and abstracts were inspected. No systematic database or citation search was performed in this initialization.",
+    "limitations": "Abstract-level review only; no full-text review; no additional seed expansion."
+  }
+]

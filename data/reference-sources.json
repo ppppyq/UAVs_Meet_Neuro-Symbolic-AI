@@ -1,0 +1,42 @@
+[
+  {
+    "id": "src-uavs-meet-llms",
+    "name": "Hub-Tian/UAVs_Meet_LLMs",
+    "url": "https://github.com/Hub-Tian/UAVs_Meet_LLMs",
+    "source_type": "github_repository",
+    "purpose": "Reference for how a UAV survey repository organizes paper tables, datasets, platforms, and arXiv/GitHub resources.",
+    "verified_at": "2026-09-20",
+    "status": "verified",
+    "notes": "Page opened successfully. Associated paper title and Information Fusion publication information verified on arXiv."
+  },
+  {
+    "id": "src-uavs-meet-embodied",
+    "name": "Hub-Tian/UAVs_Meet_Embodied-Intelligence",
+    "url": "https://github.com/Hub-Tian/UAVs_Meet_Embodied-Intelligence",
+    "source_type": "github_repository",
+    "purpose": "Reference for taxonomy-to-paper mapping and an academic project page structure.",
+    "verified_at": "2026-09-20",
+    "status": "page_verified_repo_timeout",
+    "notes": "GitHub fetch timed out during this session; the project website URL was separately opened and confirmed to exist."
+  },
+  {
+    "id": "src-uavs-meet-embodied-site",
+    "name": "UAVs Meet Embodied Intelligence project page",
+    "url": "https://hub-tian.github.io/UAVs_Meet_Embodied-Intelligence/",
+    "source_type": "project_page",
+    "purpose": "Reference for static academic project-page structure and paper-card organization.",
+    "verified_at": "2026-09-20",
+    "status": "verified",
+    "notes": "Page opened successfully. Some page content is marked as pending in later phases."
+  },
+  {
+    "id": "src-codex-agents-md",
+    "name": "Codex AGENTS.md guide",
+    "url": "https://developers.openai.com/codex/guides/agents-md",
+    "source_type": "documentation",
+    "purpose": "Engineering instruction for a concise project-level AGENTS.md.",
+    "verified_at": null,
+    "status": "listed_not_opened",
+    "notes": "Listed as a reference; not re-read during initialization."
+  }
+]

@@ -1,0 +1,27 @@
+flowchart TD
+    S[Perception and sensors] --> N[Neural learning and grounding]
+    N --> G[Explicit symbolic representation]
+    G --> R[Reasoning, planning, and constraints]
+    R --> E[Execution and skills]
+    E --> M[Monitoring and assurance]
+    M -->|feedback and re-planning| R
+    M -->|perception cueing| S
+    R -->|learning signals or structural priors| N
+
+    H[Human oversight] --- M
+    C[Edge and cloud resources] --- N
+    C --- R
+    O[Other UAVs / heterogeneous agents] --- E
+
+    classDef neural fill:#eef,stroke:#446;
+    classDef symbolic fill:#efe,stroke:#464;
+    classDef system fill:#f6f6f6,stroke:#777;
+    class N neural;
+    class G,R symbolic;
+    class S,E,M,H,C,O system;
+
+    subgraph Legend["Proposed framework"]
+      L1[Neural component]
+      L2[Symbolic component]
+      L3[System/context]
+    end
