@@ -19,6 +19,26 @@ def minimal_taxonomy() -> dict:
     return {
         "version": "v0.1",
         "status": "proposed",
+        "display_categories": [
+            {
+                "id": "cat_perception",
+                "display_order": 1,
+                "name": "Perception category",
+                "name_zh": "感知类",
+                "description": "Perception description.",
+                "boundary": "Perception boundary.",
+                "subdirections": ["Grounding"],
+            },
+            {
+                "id": "cat_reasoning",
+                "display_order": 2,
+                "name": "Reasoning category",
+                "name_zh": "推理类",
+                "description": "Reasoning description.",
+                "boundary": "Reasoning boundary.",
+                "subdirections": [],
+            },
+        ],
         "axes": [
             {
                 "id": "functional_position",
@@ -161,6 +181,11 @@ def base_record(**overrides) -> dict:
         "checked_at": "2026-09-20",
         "bibliography_type": "misc",
         "metadata_conflict_scope": [],
+        "primary_category": None,
+        "secondary_categories": [],
+        "classification_rationale": "Test classification rationale.",
+        "classification_evidence_refs": ["https://arxiv.org/abs/2601.00001"],
+        "classification_status": "provisional",
     }
     record.update(overrides)
     return record
@@ -199,6 +224,83 @@ class ValidationTests(unittest.TestCase):
         ):
             ok, errors = manage.validate_data()
         return ok, errors
+
+    def test_five_display_categories_are_unique_ordered_and_bilingual(self):
+        categories = manage.taxonomy_display_categories()
+        ids = [item["id"] for item in categories]
+        self.assertEqual(
+            ids,
+            [
+                "perception_world_modeling",
+                "reasoning_mission_planning",
+                "navigation_control",
+                "safety_verification",
+                "collaboration_interaction",
+            ],
+        )
+        self.assertEqual([item["display_order"] for item in categories], [1, 2, 3, 4, 5])
+        self.assertTrue(all(item["name"].strip() for item in categories))
+        self.assertTrue(all(item["name_zh"].strip() for item in categories))
+
+    def test_invalid_primary_category_is_rejected(self):
+        ok, errors = self.validate_records([base_record(primary_category="missing")])
+        self.assertFalse(ok)
+        self.assertTrue(any("primary_category" in error for error in errors))
+
+    def test_duplicate_secondary_category_is_rejected(self):
+        ok, errors = self.validate_records(
+            [base_record(secondary_categories=["cat_perception", "cat_perception"])]
+        )
+        self.assertFalse(ok)
+        self.assertTrue(any("must not contain duplicates" in error for error in errors))
+
+    def test_primary_category_in_secondary_is_rejected(self):
+        ok, errors = self.validate_records(
+            [
+                base_record(
+                    primary_category="cat_perception",
+                    secondary_categories=["cat_perception"],
+                )
+            ]
+        )
+        self.assertFalse(ok)
+        self.assertTrue(any("primary_category must not also appear" in error for error in errors))
+
+    def test_null_primary_with_provisional_status_is_allowed(self):
+        ok, errors = self.validate_records(
+            [
+                base_record(
+                    primary_category=None,
+                    secondary_categories=[],
+                    classification_status="provisional",
+                )
+            ]
+        )
+        self.assertTrue(ok, errors)
+
+    def test_architecture_article_is_not_core_method(self):
+        record = base_record(
+            record_type="position",
+            screening_status="candidate",
+            relevance="direct_uav",
+        )
+        self.assertEqual(manage.count_core_methods([record]), 0)
+
+    def test_cross_theme_secondary_does_not_double_unique_study_count(self):
+        first = base_record(
+            id="p-one",
+            work_id="work-same",
+            primary_category="cat_perception",
+            secondary_categories=["cat_reasoning"],
+        )
+        second = base_record(
+            id="p-two",
+            work_id="work-same",
+            arxiv_id="2601.00002",
+            primary_category="cat_reasoning",
+            secondary_categories=["cat_perception"],
+        )
+        self.assertEqual(manage.distinct_non_withdrawn_work_ids([first, second]), 1)
 
     def test_seed_data_is_valid(self):
         ok, errors = manage.validate_data()

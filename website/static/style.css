@@ -125,7 +125,7 @@ h2 {
 
 .controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(130px, auto)) auto;
+  grid-template-columns: minmax(0, 1fr) repeat(4, minmax(130px, auto)) auto;
   gap: .65rem;
   align-items: end;
 }

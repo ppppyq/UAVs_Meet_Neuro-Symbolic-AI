@@ -58,6 +58,17 @@ from it and must not be edited as a separate source of truth.
 - `metadata_conflict_scope`: non-empty when `metadata_status` is `conflict`;
   otherwise `null` or `[]`.
 
+### Display-category fields
+
+- `primary_category`: one `display_categories` ID from `taxonomy.json`, or
+  `null` for auxiliary records.
+- `secondary_categories`: zero or more additional `display_categories` IDs,
+  deduplicated and never containing the primary category.
+- `classification_rationale`: written reason for the assignment.
+- `classification_evidence_refs`: source URLs or locator references used for
+  the assignment.
+- `classification_status`: `provisional` or `reviewed`.
+
 ## Counting rules
 
 Only a record that is all of the following counts as a core UAV method:
@@ -72,7 +83,8 @@ Different versions of the same `work_id` are counted once.
 
 ## Other files
 
-- `taxonomy.json`: proposed multi-axis taxonomy.
+- `taxonomy.json`: proposed multi-axis taxonomy plus five reader-facing
+  `display_categories`.
 - `reference-sources.json`: reference repositories, pages, and their uses. They
   are not research-paper records.
 - `search-log.json`: searches that were actually performed, with limitations.

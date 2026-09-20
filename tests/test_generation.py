@@ -193,9 +193,9 @@ class CheckGenerationTests(unittest.TestCase):
             "<!-- BEGIN GENERATED:OVERVIEW -->\n"
             "old\n"
             "<!-- END GENERATED:OVERVIEW -->\n"
-            "<!-- BEGIN GENERATED:PAPER-TABLE -->\n"
+            "<!-- BEGIN GENERATED:RESEARCH-THEMES -->\n"
             "old\n"
-            "<!-- END GENERATED:PAPER-TABLE -->\n"
+            "<!-- END GENERATED:RESEARCH-THEMES -->\n"
         )
         zh = en
         (root / "README.md").write_text(en, encoding="utf-8")
@@ -205,6 +205,18 @@ class CheckGenerationTests(unittest.TestCase):
             "<!-- BEGIN GENERATED:EVIDENCE-MATRIX -->\n"
             "old\n"
             "<!-- END GENERATED:EVIDENCE-MATRIX -->\n",
+            encoding="utf-8",
+        )
+        (root / "docs" / "paper-index.md").write_text(
+            "<!-- BEGIN GENERATED:PAPER-INDEX -->\n"
+            "old\n"
+            "<!-- END GENERATED:PAPER-INDEX -->\n",
+            encoding="utf-8",
+        )
+        (root / "docs" / "category-coverage.md").write_text(
+            "<!-- BEGIN GENERATED:CATEGORY-COVERAGE -->\n"
+            "old\n"
+            "<!-- END GENERATED:CATEGORY-COVERAGE -->\n",
             encoding="utf-8",
         )
 
@@ -228,6 +240,12 @@ class CheckGenerationTests(unittest.TestCase):
         readme_zh = root / "README.zh-CN.md"
         bib = root / "paper" / "references.bib"
         evidence = root / "docs" / "evidence-matrix.md"
+        paper_index = root / "docs" / "paper-index.md"
+        category_coverage = root / "docs" / "category-coverage.md"
+        paper_index = root / "docs" / "paper-index.md"
+        category_coverage = root / "docs" / "category-coverage.md"
+        paper_index = root / "docs" / "paper-index.md"
+        category_coverage = root / "docs" / "category-coverage.md"
         with (
             mock.patch.object(manage, "ROOT", root),
             mock.patch.object(manage, "PAPERS_PATH", papers_path),
@@ -236,6 +254,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "README_ZH_PATH", readme_zh),
             mock.patch.object(manage, "BIB_PATH", bib),
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
+            mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
+            mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
         ):
             manage.generate_tracked(records, root)
             ok, errors = manage.compare_tracked()
@@ -249,6 +269,8 @@ class CheckGenerationTests(unittest.TestCase):
         readme_zh = root / "README.zh-CN.md"
         bib = root / "paper" / "references.bib"
         evidence = root / "docs" / "evidence-matrix.md"
+        paper_index = root / "docs" / "paper-index.md"
+        category_coverage = root / "docs" / "category-coverage.md"
         with (
             mock.patch.object(manage, "ROOT", root),
             mock.patch.object(manage, "PAPERS_PATH", papers_path),
@@ -257,6 +279,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "README_ZH_PATH", readme_zh),
             mock.patch.object(manage, "BIB_PATH", bib),
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
+            mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
+            mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
         ):
             manage.generate_tracked(records, root)
             changed = json.loads(papers_path.read_text(encoding="utf-8"))
@@ -295,6 +319,8 @@ class CheckGenerationTests(unittest.TestCase):
         readme_zh = root / "README.zh-CN.md"
         bib = root / "paper" / "references.bib"
         evidence = root / "docs" / "evidence-matrix.md"
+        paper_index = root / "docs" / "paper-index.md"
+        category_coverage = root / "docs" / "category-coverage.md"
 
         def snapshot():
             return {
@@ -314,6 +340,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "README_ZH_PATH", readme_zh),
             mock.patch.object(manage, "BIB_PATH", bib),
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
+            mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
+            mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
         ):
             manage.generate_all(records, root)
             before = snapshot()

@@ -48,6 +48,22 @@ Status: manuscript in preparation.
   direction.
 - Gap: no method has yet been promoted to `included` after full-text review.
 
+The methods section maps to five reader-facing research themes rather than
+treating `functional_position` as a single hierarchy:
+
+1. Neuro-Symbolic Perception & World Modeling
+   (`perception_world_modeling`)
+2. Neuro-Symbolic Reasoning & Mission Planning
+   (`reasoning_mission_planning`)
+3. Neuro-Symbolic Navigation & Control (`navigation_control`)
+4. Neuro-Symbolic Safety & Verification (`safety_verification`)
+5. Neuro-Symbolic Collaboration & Interaction
+   (`collaboration_interaction`)
+
+Within each theme, the manuscript distinguishes reviewed core methods,
+candidate methods, and related architectures/perspectives. A paper has exactly
+one primary theme; secondary theme links are cross-references only.
+
 ## 6. Evaluation, Benchmarks, and Evidence Quality
 
 - Questions: What evidence exists for safety, interpretability, generalization,

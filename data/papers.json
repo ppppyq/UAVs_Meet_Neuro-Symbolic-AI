@@ -75,7 +75,14 @@
       }
     ],
     "bibliography_type": "article",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": null,
+    "secondary_categories": [],
+    "classification_rationale": "Auxiliary/excluded record: Adjacent survey on foundation-model/LLM-based UAV systems. It is used for scope and related-work comparison, not as a core UAV neuro-symbolic method.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2501.02341"
+    ],
+    "classification_status": "provisional"
   },
   {
     "id": "p-2506.08045",
@@ -137,7 +144,14 @@
       }
     ],
     "bibliography_type": "misc",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": null,
+    "secondary_categories": [],
+    "classification_rationale": "Adjacent survey of agentic UAVs; not mapped to a UAV display theme because it does not establish a central neuro-symbolic UAV method.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2506.08045"
+    ],
+    "classification_status": "provisional"
   },
   {
     "id": "p-2609.19961",
@@ -223,7 +237,17 @@
       }
     ],
     "bibliography_type": "misc",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": "reasoning_mission_planning",
+    "secondary_categories": [
+      "safety_verification",
+      "collaboration_interaction"
+    ],
+    "classification_rationale": "Primary theme is reasoning and mission planning because task/goal management and neuro-symbolic planning are the article's central architectural contribution; verification/metacognition and network/skill collaboration are supporting secondary themes.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2609.19961v1"
+    ],
+    "classification_status": "reviewed"
   },
   {
     "id": "p-2607.02277",
@@ -334,7 +358,16 @@
       "venue",
       "doi",
       "publication_status"
-    ]
+    ],
+    "primary_category": "safety_verification",
+    "secondary_categories": [
+      "perception_world_modeling"
+    ],
+    "classification_rationale": "Primary theme is safety and verification because deterministic Scallop rules assess landing safety over a probabilistic scene graph; perception and world modeling support that assurance objective.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2607.02277v2"
+    ],
+    "classification_status": "reviewed"
   },
   {
     "id": "p-2510.22204",
@@ -420,7 +453,14 @@
       }
     ],
     "bibliography_type": "misc",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": null,
+    "secondary_categories": [],
+    "classification_rationale": "Auxiliary/excluded record: Withdrawn arXiv version. The arXiv page states a major update is uploaded at 2607.02277; this record is retained for provenance and must not be counted as a separate core method.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2510.22204"
+    ],
+    "classification_status": "provisional"
   },
   {
     "id": "p-2012.05876",
@@ -484,7 +524,14 @@
       }
     ],
     "bibliography_type": "misc",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": null,
+    "secondary_categories": [],
+    "classification_rationale": "Auxiliary/excluded record: General neuro-symbolic AI background. It provides foundations but has no direct UAV-specific validation and is not counted as a UAV method.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2012.05876"
+    ],
+    "classification_status": "provisional"
   },
   {
     "id": "p-1805.10872",
@@ -551,6 +598,349 @@
       }
     ],
     "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": [],
+    "primary_category": null,
+    "secondary_categories": [],
+    "classification_rationale": "General neural-probabilistic-logic foundation; not mapped to a UAV display theme in this record.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/1805.10872"
+    ],
+    "classification_status": "provisional"
+  },
+  {
+    "id": "p-2409.10196",
+    "work_id": "work-neusis",
+    "title": "NEUSIS: A Compositional Neuro-Symbolic Framework for Autonomous Perception, Reasoning, and Planning in Complex UAV Search Missions",
+    "authors": [
+      "Zhixi Cai",
+      "Cristian Rojas Cardenas",
+      "Kevin Leo",
+      "Chenyuan Zhang",
+      "Kal Backman",
+      "Hanbing Li",
+      "Boying Li",
+      "Mahsa Ghorbanali",
+      "Stavya Datta",
+      "Lizhen Qu",
+      "Julian Gutierrez Santiago",
+      "Alexey Ignatiev",
+      "Yuan-Fang Li",
+      "Mor Vered",
+      "Peter J. Stuckey",
+      "Maria Garcia de la Banda",
+      "Hamid Rezatofighi"
+    ],
+    "year": 2024,
+    "canonical_url": "https://arxiv.org/abs/2409.10196",
+    "arxiv_id": "2409.10196",
+    "doi": null,
+    "venue": null,
+    "publication_status": "preprint",
+    "record_type": "method",
+    "code_url": "https://github.com/ControlNet/NEUSIS",
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "GRiD integrates vision foundation models, a fine-tuned CLIP classifier for object attributes/types, 2D tracking, and LLM-generated reasoner code adapted from HYDRA to ground objects in 3D from RGB, depth, and GPS.",
+    "symbolic_component": "A probabilistic world model accumulates noisy GRiD detections with Bayesian position filtering, discrete attribute ranking, physical constraints, and explicit reporting; SNaC performs hierarchical selection, navigation, and coverage planning.",
+    "coupling_mechanism": "GRiD neural perception produces noisy symbolic detections and attributes; the probabilistic world model reasons over and accumulates those symbols, then SNaC consumes the updated belief map for hierarchical planning.",
+    "inclusion_rationale": "Candidate direct UAV method: full text documents neuro-symbolic perception, a probabilistic symbolic world model, and hierarchical symbolic planning evaluated in AirSim/Unreal simulations. No real-flight validation was identified.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "grounding",
+        "representation",
+        "reasoning",
+        "planning"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic"
+      ],
+      "symbolic_mechanism": [
+        "probabilistic_logic",
+        "symbolic_planning"
+      ],
+      "uav_task": [
+        "search_and_exploration",
+        "navigation"
+      ],
+      "system_deployment": [
+        "single_uav"
+      ]
+    },
+    "uav_evidence": [
+      "simulation"
+    ],
+    "summary": "NEUSIS combines GRiD neuro-symbolic visual perception/grounding, a probabilistic world model for persistent environment reasoning, and the SNaC hierarchical selection-navigation-coverage planner. It is evaluated on HAMERITT search missions in a 500m x 500m AirSim/Unreal environment.",
+    "limitations": "Reported validation is simulation-only in AirSim/Unreal; no real-flight results were identified. The official repository was located, but its replication status and license were not fully audited in this iteration.",
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "primary_category": "perception_world_modeling",
+    "secondary_categories": [
+      "reasoning_mission_planning",
+      "navigation_control"
+    ],
+    "classification_rationale": "Primary theme is perception and world modeling because GRiD grounding and the probabilistic world model are the central coupling; SNaC planning and navigation are secondary.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2409.10196v1",
+      "https://github.com/ControlNet/NEUSIS"
+    ],
+    "classification_status": "reviewed",
+    "evidence_legacy": "Full-text HTML version was read on 2026-09-20; GRiD, the probabilistic world model, SNaC, and HAMERITT/AirSim evaluation were verified. Official GitHub repository was located by web search.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2409.10196",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv API and abs page returned matching title, authors, abstract, and submission metadata on 2026-09-20.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2409.10196v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2409.10196v1",
+        "locator": "Sec. I-III; GRiD, Probabilistic World Model, SNaC, HAMERITT benchmark",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations"
+        ],
+        "claim": "Full text describes GRiD adapted from HYDRA with fine-tuned CLIP and vision foundation models, a probabilistic world model with Bayesian position filtering and attribute ranking, SNaC hierarchical planning, and HAMERITT/AirSim/Unreal simulation. No real-flight validation was identified.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://github.com/ControlNet/NEUSIS",
+        "source_kind": "official_code",
+        "source_version": "GitHub repository",
+        "locator": null,
+        "supports_fields": [
+          "code_url"
+        ],
+        "claim": "Web search identified ControlNet/NEUSIS as the official repository for this paper.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
+  },
+  {
+    "id": "p-2603.27583",
+    "work_id": "work-llm-stl",
+    "title": "LLM-Enabled Low-Altitude UAV Natural Language Navigation via Signal Temporal Logic Specification Translation and Repair",
+    "authors": [
+      "Yuqi Ping",
+      "Huahao Ding",
+      "Tianhao Liang",
+      "Longyu Zhou",
+      "Guangyu Lei",
+      "Xinglin Chen",
+      "Junwei Wu",
+      "Jieyu Zhou",
+      "Tingting Zhang"
+    ],
+    "year": 2026,
+    "canonical_url": "https://arxiv.org/abs/2603.27583",
+    "arxiv_id": "2603.27583",
+    "doi": null,
+    "venue": null,
+    "publication_status": "preprint",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "abstract_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "A reasoning-enhanced large language model uses chain-of-thought supervision and group-relative policy optimization to translate free-form natural language into executable Signal Temporal Logic specifications.",
+    "symbolic_component": "Signal Temporal Logic specifications, mixed-integer linear programming trajectory synthesis, and a repair mechanism that combines MILP-based diagnosis with constraint relaxation while enforcing safety guarantees.",
+    "coupling_mechanism": "The LLM translates natural language into STL; MILP synthesizes trajectories from those specifications, and infeasibility diagnosis feeds back into LLM-guided semantic repair.",
+    "inclusion_rationale": "Candidate direct UAV method from the abstract: LLM-to-STL translation plus MILP trajectory synthesis is clearly neural-symbolic for low-altitude navigation. Full-text HTML was unavailable, so technical claims remain abstract-level.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "assurance",
+        "execution",
+        "planning",
+        "reasoning"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic",
+        "symbolic_to_neural"
+      ],
+      "symbolic_mechanism": [
+        "constraint_reasoning",
+        "symbolic_planning",
+        "temporal_logic"
+      ],
+      "uav_task": [
+        "navigation"
+      ],
+      "system_deployment": [
+        "single_uav"
+      ]
+    },
+    "uav_evidence": [
+      "simulation",
+      "real_flight"
+    ],
+    "summary": "Abstract reports a unified framework translating natural-language UAV navigation instructions into STL, synthesizing trajectories with MILP, and repairing infeasible specifications via MILP diagnosis and LLM reasoning. Extensive simulations and real-world flight experiments are claimed.",
+    "limitations": "Only the abstract/metadata were reviewed; full-text HTML timed out on 2026-09-20. Quantitative results, real-flight details, and safety guarantees have not been independently verified from the full text.",
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "primary_category": "navigation_control",
+    "secondary_categories": [
+      "reasoning_mission_planning",
+      "safety_verification"
+    ],
+    "classification_rationale": "Abstract-level classification: NL-to-STL translation and MILP trajectory synthesis place the work primarily in navigation and control; reasoning and safety are secondary.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2603.27583"
+    ],
+    "classification_status": "provisional",
+    "evidence_legacy": "arXiv API and abs page returned matching title, authors, and abstract on 2026-09-20. Full-text HTML https://arxiv.org/html/2603.27583v1 timed out and was not reviewed.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2603.27583",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata",
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations"
+        ],
+        "claim": "Abstract reports an LLM translating NL to STL, MILP trajectory synthesis, a specification repair mechanism with safety guarantees, and extensive simulation plus real-world flight experiments. Full text was not accessed because the HTML version timed out.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
+  },
+  {
+    "id": "p-2603.07824",
+    "work_id": "work-mint",
+    "title": "Reasoning Knowledge-Gap in Drone Planning via LLM-based Active Elicitation",
+    "authors": [
+      "Zeyu Fang",
+      "Beomyeol Yu",
+      "Cheng Liu",
+      "Zeyuan Yang",
+      "Rongqian Chen",
+      "Yuxin Lin",
+      "Mahdi Imani",
+      "Tian Lan"
+    ],
+    "year": 2026,
+    "canonical_url": "https://arxiv.org/abs/2603.07824",
+    "arxiv_id": "2603.07824",
+    "doi": null,
+    "venue": null,
+    "publication_status": "preprint",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "A vision-language model processes RGB-D observations and constructs a local semantic map; an LLM selects optimal binary questions for active human elicitation.",
+    "symbolic_component": "The Minimal Information Neuro-Symbolic Tree (MINT) explicitly structures obstacle and goal knowledge gaps; a hierarchical planner evaluates trajectory cost/divergence and goal entropy over hypothesis branches.",
+    "coupling_mechanism": "The VLM identifies semantic uncertainty; MINT represents it as a symbolic tree; the LLM chooses a binary query; the human answer prunes the tree and updates the semantic map and plan.",
+    "inclusion_rationale": "Candidate direct UAV method: full text documents a neuro-symbolic tree, LLM active elicitation, NVIDIA Isaac simulation, and real-world quadrotor deployment. No code repository was identified.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "execution",
+        "grounding",
+        "planning",
+        "reasoning",
+        "representation"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "symbolic_planning"
+      ],
+      "uav_task": [
+        "navigation",
+        "search_and_exploration"
+      ],
+      "system_deployment": [
+        "human_uav",
+        "single_uav"
+      ]
+    },
+    "uav_evidence": [
+      "simulation",
+      "real_flight"
+    ],
+    "summary": "MINT structures knowledge gaps about obstacles and goals into a queryable neuro-symbolic tree, uses an LLM to ask optimal binary questions, and updates plans after human responses. It integrates VLM perception, voice interaction, and low-level UAV control in NVIDIA Isaac simulations and real-world quadrotor trials.",
+    "limitations": "Reported real-world deployment is feasibility-oriented rather than a broad controlled benchmark; no official code repository was identified. The paper does not provide evidence that MINT should be treated as multi-UAV distributed reasoning.",
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "primary_category": "collaboration_interaction",
+    "secondary_categories": [
+      "reasoning_mission_planning"
+    ],
+    "classification_rationale": "Primary theme is collaboration and interaction because active human-UAV knowledge elicitation is the central contribution; MINT reasoning also supports mission planning as a secondary theme.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2603.07824v1"
+    ],
+    "classification_status": "reviewed",
+    "evidence_legacy": "Full-text HTML version was read on 2026-09-20; MINT, NVIDIA Isaac simulation, and real-world quadrotor deployment were verified.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2603.07824",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv API and abs page returned matching title, authors, abstract, and submission metadata on 2026-09-20.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2603.07824v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2603.07824v1",
+        "locator": "Introduction, Methodology, Experimental Results; MINT, NVIDIA Isaac, real-world quadrotor",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations"
+        ],
+        "claim": "Full text describes VLM semantic-map construction, MINT neuro-symbolic tree construction, LLM optimal binary query generation, plan update after human response, NVIDIA Isaac simulation, and real-world quadrotor deployment. No official code repository was identified.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
     "metadata_conflict_scope": []
   }
 ]

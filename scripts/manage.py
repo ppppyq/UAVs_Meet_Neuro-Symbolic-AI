@@ -38,6 +38,8 @@ README_EN_PATH = ROOT / "README.md"
 README_ZH_PATH = ROOT / "README.zh-CN.md"
 BIB_PATH = PAPER_DIR / "references.bib"
 EVIDENCE_MATRIX_PATH = DOCS_DIR / "evidence-matrix.md"
+PAPER_INDEX_PATH = DOCS_DIR / "paper-index.md"
+CATEGORY_COVERAGE_PATH = DOCS_DIR / "category-coverage.md"
 
 OVERVIEW_MARKER_START = "<!-- BEGIN GENERATED:OVERVIEW -->"
 OVERVIEW_MARKER_END = "<!-- END GENERATED:OVERVIEW -->"
@@ -45,6 +47,12 @@ PAPER_TABLE_MARKER_START = "<!-- BEGIN GENERATED:PAPER-TABLE -->"
 PAPER_TABLE_MARKER_END = "<!-- END GENERATED:PAPER-TABLE -->"
 EVIDENCE_MATRIX_MARKER_START = "<!-- BEGIN GENERATED:EVIDENCE-MATRIX -->"
 EVIDENCE_MATRIX_MARKER_END = "<!-- END GENERATED:EVIDENCE-MATRIX -->"
+RESEARCH_THEMES_MARKER_START = "<!-- BEGIN GENERATED:RESEARCH-THEMES -->"
+RESEARCH_THEMES_MARKER_END = "<!-- END GENERATED:RESEARCH-THEMES -->"
+PAPER_INDEX_MARKER_START = "<!-- BEGIN GENERATED:PAPER-INDEX -->"
+PAPER_INDEX_MARKER_END = "<!-- END GENERATED:PAPER-INDEX -->"
+CATEGORY_COVERAGE_MARKER_START = "<!-- BEGIN GENERATED:CATEGORY-COVERAGE -->"
+CATEGORY_COVERAGE_MARKER_END = "<!-- END GENERATED:CATEGORY-COVERAGE -->"
 
 VALID_METADATA_STATUS = {"unverified", "verified", "conflict"}
 VALID_READING_STATUS = {"unread", "abstract_reviewed", "fulltext_reviewed"}
@@ -58,6 +66,7 @@ VALID_SOURCE_KIND = {"abstract", "fulltext", "publisher", "official_code"}
 VALID_ATTRIBUTION = {"author_reported", "reviewer_synthesis", "unverified"}
 VALID_BIBLIOGRAPHY_TYPE = {"article", "inproceedings", "misc", "unpublished", "other"}
 VALID_CONFLICT_SCOPE = {"title", "identity", "fulltext", "venue", "doi", "publication_status"}
+VALID_CLASSIFICATION_STATUS = {"provisional", "reviewed"}
 
 REQUIRED_FIELDS = {
     "id",
@@ -88,6 +97,11 @@ REQUIRED_FIELDS = {
     "uav_evidence",
     "summary",
     "limitations",
+    "primary_category",
+    "secondary_categories",
+    "classification_rationale",
+    "classification_evidence_refs",
+    "classification_status",
     "evidence_legacy",
     "evidence_items",
     "checked_at",
@@ -220,11 +234,56 @@ def taxonomy_axis_map() -> tuple[dict[str, list[str]], set[str]]:
     return result, all_tags
 
 
+def taxonomy_display_categories() -> list[dict[str, Any]]:
+    taxonomy = load_json(TAXONOMY_PATH)
+    if not isinstance(taxonomy, dict):
+        raise ManageError(f"{TAXONOMY_PATH}: root must be an object")
+    categories = taxonomy.get("display_categories")
+    if not isinstance(categories, list) or not categories:
+        raise ManageError(f"{TAXONOMY_PATH}: missing non-empty display_categories array")
+    result: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    seen_orders: set[int] = set()
+    for category in categories:
+        if not isinstance(category, dict):
+            raise ManageError(f"{TAXONOMY_PATH}: display_categories entry must be an object")
+        category_id = category.get("id")
+        if not isinstance(category_id, str) or not category_id:
+            raise ManageError(f"{TAXONOMY_PATH}: display_categories id is missing")
+        if category_id in seen_ids:
+            raise ManageError(f"{TAXONOMY_PATH}: duplicate display category id {category_id}")
+        seen_ids.add(category_id)
+        order = category.get("display_order")
+        if not isinstance(order, int) or isinstance(order, bool) or order <= 0:
+            raise ManageError(f"{TAXONOMY_PATH}: display category {category_id} display_order must be a positive integer")
+        if order in seen_orders:
+            raise ManageError(f"{TAXONOMY_PATH}: duplicate display category display_order {order}")
+        seen_orders.add(order)
+        for key in ("name", "name_zh", "description", "boundary"):
+            if not isinstance(category.get(key), str) or not category.get(key).strip():
+                raise ManageError(f"{TAXONOMY_PATH}: display category {category_id} requires non-empty {key}")
+        subdirections = category.get("subdirections", [])
+        if not isinstance(subdirections, list) or not all(
+            isinstance(item, str) and item.strip() for item in subdirections
+        ):
+            raise ManageError(
+                f"{TAXONOMY_PATH}: display category {category_id} subdirections must be an array of non-empty strings"
+            )
+        result.append(category)
+    result.sort(key=lambda item: item["display_order"])
+    return result
+
+
+def display_category_ids() -> set[str]:
+    return {item["id"] for item in taxonomy_display_categories()}
+
+
 def validate_data() -> tuple[bool, list[str]]:
     errors: list[str] = []
     try:
         papers = load_json(PAPERS_PATH)
         axis_map, _ = taxonomy_axis_map()
+        category_ids = display_category_ids()
     except ManageError as exc:
         return False, [str(exc)]
 
@@ -371,6 +430,49 @@ def validate_data() -> tuple[bool, list[str]]:
             for item in pending:
                 if not isinstance(item, dict) or not isinstance(item.get("tag"), str):
                     errors.append(f"{PAPERS_PATH}: {location}: taxonomy_migration_pending entries must be objects with a tag")
+
+        primary_category = record.get("primary_category")
+        if primary_category is not None:
+            if not isinstance(primary_category, str) or primary_category not in category_ids:
+                errors.append(
+                    f"{PAPERS_PATH}: {location}: primary_category must be null or a valid display category id, got {primary_category!r}"
+                )
+
+        secondary_categories = record.get("secondary_categories")
+        if not isinstance(secondary_categories, list) or not all(
+            isinstance(item, str) for item in secondary_categories
+        ):
+            errors.append(f"{PAPERS_PATH}: {location}: secondary_categories must be an array of strings")
+        else:
+            if len(secondary_categories) != len(set(secondary_categories)):
+                errors.append(f"{PAPERS_PATH}: {location}: secondary_categories must not contain duplicates")
+            for category_id in secondary_categories:
+                if category_id not in category_ids:
+                    errors.append(
+                        f"{PAPERS_PATH}: {location}: unknown secondary category {category_id!r}"
+                    )
+            if primary_category in secondary_categories:
+                errors.append(
+                    f"{PAPERS_PATH}: {location}: primary_category must not also appear in secondary_categories"
+                )
+
+        rationale = record.get("classification_rationale")
+        if not isinstance(rationale, str) or not rationale.strip():
+            errors.append(f"{PAPERS_PATH}: {location}: classification_rationale must be a non-empty string")
+
+        evidence_refs = record.get("classification_evidence_refs")
+        if not isinstance(evidence_refs, list) or not all(
+            isinstance(item, str) and item.strip() for item in evidence_refs
+        ):
+            errors.append(
+                f"{PAPERS_PATH}: {location}: classification_evidence_refs must be an array of non-empty strings"
+            )
+
+        classification_status = record.get("classification_status")
+        if classification_status not in VALID_CLASSIFICATION_STATUS:
+            errors.append(
+                f"{PAPERS_PATH}: {location}: classification_status must be one of {sorted(VALID_CLASSIFICATION_STATUS)}"
+            )
 
         evidence = record.get("uav_evidence")
         if not isinstance(evidence, list):
@@ -537,6 +639,32 @@ def count_core_methods(papers: list[dict[str, Any]]) -> int:
     return count
 
 
+def distinct_non_withdrawn_work_ids(papers: list[dict[str, Any]]) -> int:
+    return len(
+        {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("publication_status") != "withdrawn"
+        }
+    )
+
+
+def distinct_primary_work_ids(
+    papers: list[dict[str, Any]], category_id: str | None = None
+) -> int:
+    return len(
+        {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("publication_status") != "withdrawn"
+            and (
+                category_id is None
+                or record.get("primary_category") == category_id
+            )
+        }
+    )
+
+
 def papers_stats(papers: list[dict[str, Any]]) -> dict[str, int]:
     return {
         "total": len(papers),
@@ -558,6 +686,7 @@ def papers_stats(papers: list[dict[str, Any]]) -> dict[str, int]:
         "migration_pending": sum(
             1 for r in papers if r.get("taxonomy_migration_pending")
         ),
+        "unique_seed_studies": distinct_non_withdrawn_work_ids(papers),
     }
 
 
@@ -701,6 +830,328 @@ def taxonomy_display_tags(record: dict[str, Any]) -> list[str]:
     return [f"{axis}:{tag}" for axis, values in tags.items() for tag in values]
 
 
+def category_name(category: dict[str, Any], language: str) -> str:
+    if language == "zh":
+        return category.get("name_zh") or category.get("name") or category.get("id") or ""
+    return category.get("name") or category.get("id") or ""
+
+
+def category_name_for_id(category_id: str, language: str = "en") -> str:
+    for category in taxonomy_display_categories():
+        if category.get("id") == category_id:
+            return category_name(category, language)
+    return category_id
+
+
+def category_cell(record: dict[str, Any]) -> str:
+    primary = record.get("primary_category")
+    secondary = record.get("secondary_categories") or []
+    names: list[str] = []
+    if primary:
+        names.append(category_name_for_id(primary))
+    names.extend(category_name_for_id(item) for item in secondary if item != primary)
+    return ", ".join(names)
+
+
+def theme_primary_records(
+    papers: list[dict[str, Any]], category_id: str
+) -> list[dict[str, Any]]:
+    return [record for record in papers if record.get("primary_category") == category_id]
+
+
+def theme_secondary_records(
+    papers: list[dict[str, Any]], category_id: str
+) -> list[dict[str, Any]]:
+    return [
+        record
+        for record in papers
+        if category_id in (record.get("secondary_categories") or [])
+        and record.get("primary_category") != category_id
+    ]
+
+
+def publication_label(record: dict[str, Any]) -> str:
+    status = record.get("publication_status") or ""
+    if status == "published" and record.get("venue"):
+        return f"Published ({record.get('venue')})"
+    if status == "published":
+        return "Published"
+    return str(status or "unknown").replace("_", " ")
+
+
+def paper_links_markdown(record: dict[str, Any]) -> str:
+    parts: list[str] = []
+    if record.get("canonical_url"):
+        parts.append(f"[paper]({record['canonical_url']})")
+    else:
+        parts.append("\u2014")
+    if record.get("code_url"):
+        parts.append(f"[code]({record['code_url']})")
+    else:
+        parts.append("code: \u2014 / not verified")
+    return " \u00b7 ".join(parts)
+
+
+def compact_theme_table_markdown(records: list[dict[str, Any]]) -> str:
+    if not records:
+        return ""
+    headers = ["Paper", "Neural\u2013Symbolic Coupling", "UAV Task", "Evidence / Review", "Publication", "Links"]
+    lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
+    for record in records:
+        title = markdown_escape(record.get("title"))
+        canonical = record.get("canonical_url") or ""
+        if canonical:
+            paper_cell = f"[{title}]({canonical})"
+        else:
+            paper_cell = title
+        tags = record.get("taxonomy_tags") or {}
+        task = ", ".join(tags.get("uav_task", [])) or "\u2014"
+        evidence = (
+            f"{record.get('reading_status') or ''} / {', '.join(record.get('uav_evidence', [])) or '\u2014'}"
+        )
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    paper_cell,
+                    markdown_escape(record.get("coupling_mechanism") or "\u2014"),
+                    markdown_escape(task),
+                    markdown_escape(evidence),
+                    markdown_escape(publication_label(record)),
+                    paper_links_markdown(record),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def research_theme_section_markdown(
+    papers: list[dict[str, Any]], category: dict[str, Any], language: str
+) -> str:
+    category_id = category["id"]
+    primary = theme_primary_records(papers, category_id)
+    secondary = theme_secondary_records(papers, category_id)
+    parts: list[str] = []
+    parts.append(f"### {category_name(category, language)}")
+    parts.append("")
+    parts.append(category.get("description") or "")
+    parts.append("")
+    parts.append(f"**Boundary:** {category.get('boundary') or ''}")
+    subdirections = category.get("subdirections") or []
+    if subdirections:
+        parts.append("")
+        parts.append("**Subdirections:** " + "; ".join(subdirections))
+
+    reviewed = [record for record in primary if record.get("screening_status") == "included"]
+    candidates = [
+        record
+        for record in primary
+        if record.get("screening_status") == "candidate"
+        and record.get("relevance") == "direct_uav"
+        and record.get("record_type") == "method"
+    ]
+    perspectives = [
+        record
+        for record in primary
+        if record not in reviewed
+        and record not in candidates
+        and record.get("screening_status") != "excluded"
+    ]
+
+    if reviewed:
+        parts.append("")
+        parts.append("#### Reviewed core methods")
+        parts.append("")
+        parts.append(compact_theme_table_markdown(reviewed))
+    if candidates:
+        parts.append("")
+        parts.append("#### Candidate methods")
+        parts.append("")
+        parts.append(compact_theme_table_markdown(candidates))
+    if perspectives:
+        parts.append("")
+        parts.append("#### Related architectures / perspectives")
+        parts.append("")
+        parts.append(compact_theme_table_markdown(perspectives))
+    if secondary:
+        parts.append("")
+        parts.append("#### Cross-theme links")
+        parts.append("")
+        parts.append(
+            ", ".join(
+                f"`{record.get('id')}`" for record in secondary
+            )
+            + " appear in a different primary theme and are listed here for cross-reference only."
+        )
+    if not (reviewed or candidates or perspectives):
+        parts.append("")
+        parts.append("_No seed method is currently assigned to this primary theme._")
+    return "\n".join(parts)
+
+
+def auxiliary_records(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [record for record in papers if not record.get("primary_category")]
+
+
+def auxiliary_section_markdown(papers: list[dict[str, Any]]) -> str:
+    records = auxiliary_records(papers)
+    parts = ["### Surveys, Foundations & System Architectures", ""]
+    if not records:
+        parts.append("_No auxiliary records._")
+        return "\n".join(parts)
+    headers = ["Paper", "Role", "Reading", "Status", "Links"]
+    lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
+    for record in records:
+        title = markdown_escape(record.get("title"))
+        canonical = record.get("canonical_url") or ""
+        paper_cell = f"[{title}]({canonical})" if canonical else title
+        role = markdown_escape(record.get("record_type") or "")
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    paper_cell,
+                    role,
+                    markdown_escape(record.get("reading_status") or ""),
+                    markdown_escape(record.get("screening_status") or ""),
+                    paper_links_markdown(record),
+                ]
+            )
+            + " |"
+        )
+    parts.append("\n".join(lines) + "\n")
+    return "\n".join(parts)
+
+
+def research_themes_markdown(papers: list[dict[str, Any]], language: str) -> str:
+    categories = taxonomy_display_categories()
+    parts: list[str] = []
+    aux = auxiliary_section_markdown(papers)
+    if aux:
+        parts.append(aux)
+        parts.append("")
+    for category in categories:
+        parts.append(research_theme_section_markdown(papers, category, language))
+        parts.append("")
+    return "\n".join(parts).rstrip() + "\n"
+
+
+def category_coverage_markdown(papers: list[dict[str, Any]]) -> str:
+    stats = papers_stats(papers)
+    categories = taxonomy_display_categories()
+    lines: list[str] = []
+    lines.append(f"- Unique seed studies (non-withdrawn, distinct `work_id`): **{stats['unique_seed_studies']}**")
+    lines.append(f"- Formally included core methods (deduplicated): **{stats['core_methods']}**")
+    fulltext_work_ids = {
+        str(record.get("work_id") or record.get("id"))
+        for record in papers
+        if record.get("reading_status") == "fulltext_reviewed"
+        and record.get("publication_status") != "withdrawn"
+    }
+    abstract_work_ids = {
+        str(record.get("work_id") or record.get("id"))
+        for record in papers
+        if record.get("reading_status") == "abstract_reviewed"
+        and record.get("publication_status") != "withdrawn"
+    }
+    lines.append(f"- Full-text reviewed unique works: **{len(fulltext_work_ids)}**")
+    lines.append(f"- Abstract-reviewed unique works: **{len(abstract_work_ids)}**")
+    direct_candidates = [
+        record
+        for record in papers
+        if record.get("screening_status") == "candidate"
+        and record.get("relevance") == "direct_uav"
+        and record.get("record_type") == "method"
+        and record.get("publication_status") != "withdrawn"
+    ]
+    candidate_work_ids = {str(record.get("work_id") or record.get("id")) for record in direct_candidates}
+    lines.append(f"- Direct UAV candidate methods (distinct `work_id`, non-withdrawn): **{len(candidate_work_ids)}**")
+    architecture_work_ids = {
+        str(record.get("work_id") or record.get("id"))
+        for record in papers
+        if record.get("relevance") == "direct_uav"
+        and record.get("record_type") == "position"
+        and record.get("publication_status") != "withdrawn"
+    }
+    lines.append(f"- Direct UAV architectures / perspectives (distinct `work_id`): **{len(architecture_work_ids)}**")
+    lines.append("")
+    lines.append("Primary assignments are mutually exclusive; secondary assignments are cross-references and do not add a study to more than one primary theme.")
+    lines.append("")
+    lines.append("| Display category | Primary unique works | Reading depth | Included core methods | Candidate methods | Perspectives | Gap note |")
+    lines.append("|---|---|---|---|---|---|---|")
+    for category in categories:
+        category_id = category["id"]
+        primary_ids = {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("primary_category") == category_id
+            and record.get("publication_status") != "withdrawn"
+        }
+        included_ids = {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("primary_category") == category_id
+            and record.get("screening_status") == "included"
+            and record.get("record_type") == "method"
+        }
+        candidate_ids = {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("primary_category") == category_id
+            and record.get("screening_status") == "candidate"
+            and record.get("record_type") == "method"
+        }
+        perspective_ids = {
+            str(record.get("work_id") or record.get("id"))
+            for record in papers
+            if record.get("primary_category") == category_id
+            and record.get("record_type") == "position"
+        }
+        fulltext_count = len(
+            {
+                str(record.get("work_id") or record.get("id"))
+                for record in papers
+                if record.get("primary_category") == category_id
+                and record.get("reading_status") == "fulltext_reviewed"
+                and record.get("publication_status") != "withdrawn"
+            }
+        )
+        abstract_count = len(
+            {
+                str(record.get("work_id") or record.get("id"))
+                for record in papers
+                if record.get("primary_category") == category_id
+                and record.get("reading_status") == "abstract_reviewed"
+                and record.get("publication_status") != "withdrawn"
+            }
+        )
+        reading_depth = f"fulltext={fulltext_count}, abstract={abstract_count}"
+        gap = ""
+        if not primary_ids:
+            gap = "no primary seed"
+        elif not included_ids:
+            gap = "no formally included core method"
+        elif not candidate_ids and not perspective_ids:
+            gap = "coverage is included-only"
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    markdown_escape(category_name(category, "en")),
+                    str(len(primary_ids)),
+                    reading_depth,
+                    str(len(included_ids)),
+                    str(len(candidate_ids)),
+                    str(len(perspective_ids)),
+                    gap,
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def overview_markdown(papers: list[dict[str, Any]], language: str) -> str:
     stats = papers_stats(papers)
     if language == "zh":
@@ -713,6 +1164,7 @@ def overview_markdown(papers: list[dict[str, Any]], language: str) -> str:
             f"- 候选条目：{stats['candidates']}\n"
             f"- 直接 UAV 候选方法：{stats['direct_uav_candidates']}\n"
             f"- 核心 UAV 方法（已纳入、去重、非撤回）：{stats['core_methods']}\n"
+            f"- 唯一种子研究（去重、非撤回）：{stats['unique_seed_studies']}\n"
             f"- 撤回/版本关联条目：{stats['withdrawn']}\n"
             f"- 待复核分类迁移：{stats['migration_pending']}\n"
         )
@@ -725,6 +1177,7 @@ def overview_markdown(papers: list[dict[str, Any]], language: str) -> str:
         f"- Candidate records: {stats['candidates']}\n"
         f"- Direct UAV candidate methods: {stats['direct_uav_candidates']}\n"
         f"- Core UAV methods (included, deduplicated, non-withdrawn): {stats['core_methods']}\n"
+        f"- Unique seed studies (deduplicated, non-withdrawn): {stats['unique_seed_studies']}\n"
         f"- Withdrawn/version-linked records: {stats['withdrawn']}\n"
         f"- Taxonomy migration pending: {stats['migration_pending']}\n"
     )
@@ -733,6 +1186,7 @@ def overview_markdown(papers: list[dict[str, Any]], language: str) -> str:
 def paper_table_markdown(records: list[dict[str, Any]]) -> str:
     headers = [
         "ID",
+        "Category",
         "Title",
         "Authors",
         "Year",
@@ -750,6 +1204,7 @@ def paper_table_markdown(records: list[dict[str, Any]]) -> str:
         canonical_cell = f"[{markdown_escape(canonical)}]({canonical})" if canonical else ""
         row = [
             markdown_escape(record.get("id")),
+            markdown_escape(category_cell(record)),
             markdown_escape(record.get("title")),
             markdown_escape(authors),
             str(record.get("year") or ""),
@@ -775,6 +1230,7 @@ def overview_html(papers: list[dict[str, Any]]) -> str:
         ("Candidate records", str(stats["candidates"])),
         ("Direct UAV candidate methods", str(stats["direct_uav_candidates"])),
         ("Core UAV methods", str(stats["core_methods"])),
+        ("Unique seed studies", str(stats["unique_seed_studies"])),
         ("Withdrawn records", str(stats["withdrawn"])),
         ("Migration pending", str(stats["migration_pending"])),
     ]
@@ -839,6 +1295,7 @@ def version_conflict_hint(record: dict[str, Any]) -> str:
 def paper_table_html(records: list[dict[str, Any]]) -> str:
     headers = [
         "Title",
+        "Category",
         "Authors",
         "Year",
         "Type",
@@ -882,6 +1339,7 @@ def paper_table_html(records: list[dict[str, Any]]) -> str:
             [
                 "<tr>",
                 f"<td>{title_cell}</td>",
+                f"<td>{html.escape(category_cell(record))}</td>",
                 f"<td>{authors}</td>",
                 f"<td>{html.escape(str(record.get('year') or ''))}</td>",
                 f"<td>{html.escape(record.get('record_type') or '')}</td>",
@@ -948,6 +1406,7 @@ def notes_available_map(records: list[dict[str, Any]]) -> dict[str, bool]:
 def evidence_matrix_markdown(records: list[dict[str, Any]]) -> str:
     headers = [
         "ID",
+        "Category",
         "Screening",
         "Neural component",
         "Symbolic mechanism",
@@ -967,6 +1426,7 @@ def evidence_matrix_markdown(records: list[dict[str, Any]]) -> str:
         )
         row = [
             markdown_escape(record.get("id")),
+            markdown_escape(category_cell(record)),
             markdown_escape(record.get("screening_status")),
             markdown_escape(record.get("neural_component")),
             symbolic,
@@ -1006,12 +1466,38 @@ def generate_readme(papers: list[dict[str, Any]], source: Path, target: Path, la
     )
     text = apply_generated_block(
         text,
-        PAPER_TABLE_MARKER_START,
-        PAPER_TABLE_MARKER_END,
-        paper_table_markdown(papers),
+        RESEARCH_THEMES_MARKER_START,
+        RESEARCH_THEMES_MARKER_END,
+        research_themes_markdown(papers, language),
         str(source),
     )
     write_text(target, text)
+
+
+def generate_paper_index(papers: list[dict[str, Any]], output_path: Path) -> None:
+    source = PAPER_INDEX_PATH
+    text = source.read_text(encoding="utf-8")
+    text = apply_generated_block(
+        text,
+        PAPER_INDEX_MARKER_START,
+        PAPER_INDEX_MARKER_END,
+        paper_table_markdown(papers),
+        str(source),
+    )
+    write_text(output_path, text)
+
+
+def generate_category_coverage(papers: list[dict[str, Any]], output_path: Path) -> None:
+    source = CATEGORY_COVERAGE_PATH
+    text = source.read_text(encoding="utf-8")
+    text = apply_generated_block(
+        text,
+        CATEGORY_COVERAGE_MARKER_START,
+        CATEGORY_COVERAGE_MARKER_END,
+        category_coverage_markdown(papers),
+        str(source),
+    )
+    write_text(output_path, text)
 
 
 def generate_evidence_matrix(papers: list[dict[str, Any]], output_path: Path) -> None:
@@ -1066,6 +1552,8 @@ def generate_tracked(papers: list[dict[str, Any]], output_root: Path) -> None:
     generate_readme(papers, README_ZH_PATH, output_root / "README.zh-CN.md", "zh")
     write_text(output_root / "paper" / "references.bib", render_bibtex(papers))
     generate_evidence_matrix(papers, output_root / "docs" / "evidence-matrix.md")
+    generate_paper_index(papers, output_root / "docs" / "paper-index.md")
+    generate_category_coverage(papers, output_root / "docs" / "category-coverage.md")
 
 
 def generate_all(papers: list[dict[str, Any]], output_root: Path) -> None:
@@ -1142,6 +1630,8 @@ def compare_tracked() -> tuple[bool, list[str]]:
         "README.zh-CN.md": README_ZH_PATH.read_bytes(),
         "paper/references.bib": BIB_PATH.read_bytes(),
         "docs/evidence-matrix.md": EVIDENCE_MATRIX_PATH.read_bytes(),
+        "docs/paper-index.md": PAPER_INDEX_PATH.read_bytes(),
+        "docs/category-coverage.md": CATEGORY_COVERAGE_PATH.read_bytes(),
     }
     errors.extend(compare_file_maps(expected, actual, "tracked generated output"))
     check_local_markdown_links(ROOT, errors)
@@ -1162,6 +1652,8 @@ def compare_expected_with_actual() -> tuple[bool, list[str]]:
             "README.zh-CN.md": README_ZH_PATH.read_bytes(),
             "paper/references.bib": BIB_PATH.read_bytes(),
             "docs/evidence-matrix.md": EVIDENCE_MATRIX_PATH.read_bytes(),
+            "docs/paper-index.md": PAPER_INDEX_PATH.read_bytes(),
+            "docs/category-coverage.md": CATEGORY_COVERAGE_PATH.read_bytes(),
         }
     )
     errors.extend(compare_file_maps(expected, actual, "generated output"))
@@ -1184,33 +1676,37 @@ def migrate_data(apply: bool = False) -> dict[str, Any]:
     if not isinstance(papers, list):
         raise ManageError(f"{PAPERS_PATH}: root must be an array")
     axis_map, _ = taxonomy_axis_map()
+    category_ids = display_category_ids()
     before = len(papers)
     changed = 0
     pending_total = 0
     for record in papers:
         if not isinstance(record, dict):
             raise ManageError(f"{PAPERS_PATH}: non-object record")
+        record_changed = False
         old_tags = record.get("taxonomy_tags")
-        if isinstance(old_tags, dict):
-            continue
-        if not isinstance(old_tags, list):
+        if isinstance(old_tags, list):
+            new_tags: dict[str, list[str]] = {}
+            pending: list[dict[str, str]] = []
+            for tag in old_tags:
+                owners, notes = migrate_taxonomy_tag(axis_map, str(tag))
+                for owner in owners:
+                    new_tags.setdefault(owner, [])
+                    if tag not in new_tags[owner]:
+                        new_tags[owner].append(tag)
+                pending.extend(notes)
+            for axis in new_tags:
+                new_tags[axis].sort()
+            record["taxonomy_tags"] = new_tags
+            record["taxonomy_migration_pending"] = record.get("taxonomy_migration_pending", []) + pending
+            pending_total += len(pending)
+            record_changed = True
+        elif not isinstance(old_tags, dict):
             raise ManageError(f"{PAPERS_PATH}: record {record.get('id')}: cannot migrate taxonomy_tags {old_tags!r}")
-        new_tags: dict[str, list[str]] = {}
-        pending: list[dict[str, str]] = []
-        for tag in old_tags:
-            owners, notes = migrate_taxonomy_tag(axis_map, str(tag))
-            for owner in owners:
-                new_tags.setdefault(owner, [])
-                if tag not in new_tags[owner]:
-                    new_tags[owner].append(tag)
-            pending.extend(notes)
-        for axis in new_tags:
-            new_tags[axis].sort()
-        record["taxonomy_tags"] = new_tags
-        record["taxonomy_migration_pending"] = record.get("taxonomy_migration_pending", []) + pending
 
         if "evidence" in record and "evidence_legacy" not in record:
             record["evidence_legacy"] = record.get("evidence")
+            record_changed = True
         record.pop("evidence", None)
         if "evidence_items" not in record:
             item = {
@@ -1224,6 +1720,7 @@ def migrate_data(apply: bool = False) -> dict[str, Any]:
                 "accessed_at": record.get("checked_at"),
             }
             record["evidence_items"] = [item]
+            record_changed = True
 
         if "bibliography_type" not in record:
             record["bibliography_type"] = "misc"
@@ -1231,14 +1728,69 @@ def migrate_data(apply: bool = False) -> dict[str, Any]:
                 record["bibliography_type"] = "article"
             if record.get("record_type") == "method" and "NeurIPS" in str(record.get("venue") or ""):
                 record["bibliography_type"] = "inproceedings"
+            record_changed = True
         if "metadata_conflict_scope" not in record:
             if record.get("metadata_status") == "conflict":
                 record["metadata_conflict_scope"] = ["venue", "doi", "publication_status"]
             else:
                 record["metadata_conflict_scope"] = []
+            record_changed = True
 
-        changed += 1
-        pending_total += len(pending)
+        if "primary_category" not in record:
+            record["primary_category"] = None
+            record_changed = True
+        elif record["primary_category"] not in category_ids and record["primary_category"] is not None:
+            raise ManageError(
+                f"{PAPERS_PATH}: record {record.get('id')}: unknown primary_category {record['primary_category']!r}"
+            )
+
+        if "secondary_categories" not in record:
+            record["secondary_categories"] = []
+            record_changed = True
+        elif isinstance(record["secondary_categories"], list):
+            deduped: list[str] = []
+            seen_secondary: set[str] = set()
+            for category_id in record["secondary_categories"]:
+                if category_id not in category_ids:
+                    raise ManageError(
+                        f"{PAPERS_PATH}: record {record.get('id')}: unknown secondary category {category_id!r}"
+                    )
+                if category_id not in seen_secondary:
+                    deduped.append(category_id)
+                    seen_secondary.add(category_id)
+            if deduped != record["secondary_categories"]:
+                record["secondary_categories"] = deduped
+                record_changed = True
+
+        if "classification_rationale" not in record:
+            if record.get("exclusion_reason"):
+                rationale = f"Auxiliary/excluded record: {record['exclusion_reason']}"
+            elif record.get("inclusion_rationale"):
+                rationale = f"Tentative classification from existing evidence: {record['inclusion_rationale']}"
+            else:
+                rationale = "Not yet classified into a UAV display theme."
+            record["classification_rationale"] = rationale
+            record_changed = True
+
+        if "classification_evidence_refs" not in record:
+            refs = [
+                item.get("source_url")
+                for item in record.get("evidence_items", [])
+                if isinstance(item, dict) and item.get("source_url")
+            ]
+            record["classification_evidence_refs"] = refs
+            record_changed = True
+
+        if "classification_status" not in record:
+            record["classification_status"] = "provisional"
+            record_changed = True
+
+        if record.get("primary_category") in record.get("secondary_categories", []):
+            raise ManageError(
+                f"{PAPERS_PATH}: record {record.get('id')}: primary_category must not appear in secondary_categories"
+            )
+
+        changed += int(record_changed)
 
     result = {
         "before": before,
@@ -1267,11 +1819,12 @@ def command_validate() -> int:
     stats = papers_stats(papers)
     print("Validation passed.")
     print(
-        "  records={} candidates={} fulltext_reviewed={} core_methods={} migration_pending={}".format(
+        "  records={} candidates={} fulltext_reviewed={} core_methods={} unique_seed_studies={} migration_pending={}".format(
             stats["total"],
             stats["candidates"],
             stats["fulltext_reviewed"],
             stats["core_methods"],
+            stats["unique_seed_studies"],
             stats["migration_pending"],
         )
     )

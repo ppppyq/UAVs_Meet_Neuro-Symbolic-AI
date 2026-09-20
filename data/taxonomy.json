@@ -7,48 +7,48 @@
     {
       "id": "functional_position",
       "name": "Functional position",
-      "zh": "????",
+      "zh": "功能位置",
       "definition": "Where the neural and symbolic components participate in the UAV autonomy stack.",
       "tags": [
         {
           "id": "grounding",
           "name": "Grounding",
-          "zh": "????/??",
+          "zh": "符号接地",
           "definition": "The system grounds symbols in raw sensor input or translates perception into a symbolic vocabulary.",
           "inclusion_exclusion": "Include when a neural component supplies symbols, detections, scene elements, or world state to symbolic reasoning. Exclude when perception is only a conventional detector without semantic coupling."
         },
         {
           "id": "representation",
           "name": "Representation",
-          "zh": "????",
+          "zh": "表征",
           "definition": "The work builds or maintains an explicit symbolic representation such as a scene graph, knowledge graph, logical theory, or program.",
           "inclusion_exclusion": "Include when the representation has explicit semantics and is used by reasoning. Exclude when a graph is only an internal neural feature map."
         },
         {
           "id": "reasoning",
           "name": "Reasoning",
-          "zh": "??",
+          "zh": "推理",
           "definition": "The work applies logic, constraints, probabilistic logic, or another symbolic inference mechanism.",
           "inclusion_exclusion": "Include when symbolic inference affects a decision. Exclude when a neural model merely outputs a label without a symbolic inference step."
         },
         {
           "id": "planning",
           "name": "Planning",
-          "zh": "??",
+          "zh": "规划",
           "definition": "The work uses symbolic or neuro-symbolic planning to produce an action sequence, mission, path, or behavior policy.",
           "inclusion_exclusion": "Include when neural components inform a symbolic planner or symbolic structure guides a learned policy. Exclude pure neural policy search without symbolic structure."
         },
         {
           "id": "execution",
           "name": "Execution",
-          "zh": "??",
+          "zh": "执行",
           "definition": "The work couples a learned controller or skill executor with symbolic constraints, skills, or control structures.",
           "inclusion_exclusion": "Include when symbolic constraints guard or parameterize execution. Exclude conventional feedback control unless it is functionally coupled to neural learning."
         },
         {
           "id": "assurance",
           "name": "Assurance",
-          "zh": "???????",
+          "zh": "可信保障",
           "definition": "The work includes verification, monitoring, shielding, explainability, or formal safety evidence tied to neural-symbolic integration.",
           "inclusion_exclusion": "Include when assurance explicitly interacts with learned components. Exclude standalone formal methods on a fixed, purely symbolic model."
         }
@@ -57,41 +57,41 @@
     {
       "id": "integration_direction",
       "name": "Integration direction",
-      "zh": "????",
+      "zh": "融合方向",
       "definition": "The dominant direction of information or influence between neural and symbolic components.",
       "tags": [
         {
           "id": "neural_to_symbolic",
           "name": "Neural to symbolic",
-          "zh": "?????",
+          "zh": "神经到符号",
           "definition": "Neural outputs are lifted into symbols that are then reasoned about.",
           "inclusion_exclusion": "Use when perception or neural representation feeds symbolic inference. Do not assume bidirectionality if only one direction is documented."
         },
         {
           "id": "symbolic_to_neural",
           "name": "Symbolic to neural",
-          "zh": "?????",
+          "zh": "符号到神经",
           "definition": "Symbolic knowledge, rules, or structure guide or constrain neural learning.",
           "inclusion_exclusion": "Use when symbolic priors affect training, architecture, or objective. Exclude vague claims that rules are used 'somewhere'."
         },
         {
           "id": "bidirectional",
           "name": "Bidirectional",
-          "zh": "??",
+          "zh": "双向",
           "definition": "Neural and symbolic components influence each other in a closed loop.",
           "inclusion_exclusion": "Use when the paper documents both directions. Bidirectionality is not the only legitimate form of neuro-symbolic integration."
         },
         {
           "id": "other",
           "name": "Other",
-          "zh": "??",
+          "zh": "其他",
           "definition": "A documented integration direction not covered by the other labels.",
           "inclusion_exclusion": "Use only when the paper gives enough detail to justify this label."
         },
         {
           "id": "unknown",
           "name": "Unknown",
-          "zh": "??",
+          "zh": "未知",
           "definition": "The integration direction is not yet clear from the reviewed material.",
           "inclusion_exclusion": "Use when evidence is insufficient; update after fuller review."
         }
@@ -100,76 +100,76 @@
     {
       "id": "symbolic_mechanism",
       "name": "Symbolic mechanism",
-      "zh": "????",
+      "zh": "符号机制",
       "definition": "The kind of explicit symbolic knowledge representation or inference mechanism.",
       "tags": [
         {
           "id": "logic_rules",
           "name": "Logic rules",
-          "zh": "????",
+          "zh": "逻辑规则",
           "definition": "Uses explicit logical rules or constraints.",
           "inclusion_exclusion": "Include when rules are represented explicitly and applied to a decision. Exclude heuristic thresholds unless they have clear logical semantics."
         },
         {
           "id": "probabilistic_logic",
           "name": "Probabilistic logic",
-          "zh": "????",
+          "zh": "概率逻辑",
           "definition": "Uses probabilistic logic programming or uncertain logical inference.",
           "inclusion_exclusion": "Include when probabilities and logical structure are jointly reasoned about."
         },
         {
           "id": "temporal_logic",
           "name": "Temporal logic",
-          "zh": "????",
+          "zh": "时序逻辑",
           "definition": "Uses temporal logics such as LTL, STL, or MTL for specifications or monitoring.",
           "inclusion_exclusion": "Include when temporal specifications are explicit and coupled to learning. Exclude purely hand-coded monitors without neural coupling."
         },
         {
           "id": "symbolic_planning",
           "name": "Symbolic planning",
-          "zh": "????",
+          "zh": "符号规划",
           "definition": "Uses classical planning, task planning, or PDDL-like representations.",
           "inclusion_exclusion": "Include when a symbolic planner is present. Exclude trajectory optimization without an explicit discrete symbolic model."
         },
         {
           "id": "knowledge_graph",
           "name": "Knowledge graph",
-          "zh": "????",
+          "zh": "知识图谱",
           "definition": "Uses an explicit graph of entities and relations with semantic interpretation.",
           "inclusion_exclusion": "Include when graph semantics drive reasoning. Exclude a graph used only as an adjacency matrix for message passing."
         },
         {
           "id": "scene_graph",
           "name": "Scene graph",
-          "zh": "???",
+          "zh": "场景图",
           "definition": "Uses a scene graph whose nodes and edges have object/attribute/relation semantics.",
           "inclusion_exclusion": "Include when the scene graph is consumed by symbolic reasoning. Exclude latent neural scene features without explicit symbolic structure."
         },
         {
           "id": "program_representation",
           "name": "Program representation",
-          "zh": "????",
+          "zh": "程序表示",
           "definition": "Represents policies or reasoning as programs, DSLs, or executable symbolic artifacts.",
           "inclusion_exclusion": "Include when programs are explicitly reasoned about or synthesized with neural components."
         },
         {
           "id": "constraint_reasoning",
           "name": "Constraint reasoning",
-          "zh": "????",
+          "zh": "约束推理",
           "definition": "Uses constraint satisfaction, constraint optimization, or explicit feasibility constraints.",
           "inclusion_exclusion": "Include when constraints have explicit semantics. Exclude generic optimization penalties without interpretable constraints."
         },
         {
           "id": "other",
           "name": "Other",
-          "zh": "??",
+          "zh": "其他",
           "definition": "A documented symbolic mechanism not listed above.",
           "inclusion_exclusion": "Use with a written rationale."
         },
         {
           "id": "unknown",
           "name": "Unknown",
-          "zh": "??",
+          "zh": "未知",
           "definition": "The symbolic mechanism is not yet clear.",
           "inclusion_exclusion": "Use when evidence is insufficient."
         }
@@ -178,69 +178,69 @@
     {
       "id": "uav_task",
       "name": "UAV task",
-      "zh": "UAV ??",
+      "zh": "UAV 任务",
       "definition": "The aerial autonomy task or application domain addressed by the work.",
       "tags": [
         {
           "id": "navigation",
           "name": "Navigation",
-          "zh": "??",
+          "zh": "导航",
           "definition": "Path following, collision avoidance, or local navigation.",
           "inclusion_exclusion": "Include for motion-level navigation tasks."
         },
         {
           "id": "mission_planning",
           "name": "Mission planning",
-          "zh": "????",
+          "zh": "任务规划",
           "definition": "High-level goal decomposition, task assignment, or mission sequencing.",
           "inclusion_exclusion": "Include for symbolic task/mission planning. Exclude low-level trajectory tracking."
         },
         {
           "id": "search_and_exploration",
           "name": "Search and exploration",
-          "zh": "?????",
+          "zh": "搜索与探索",
           "definition": "Searching an area, exploring unknown space, or target tracking.",
           "inclusion_exclusion": "Include for search, coverage, and exploration tasks."
         },
         {
           "id": "landing",
           "name": "Landing",
-          "zh": "??",
+          "zh": "着陆",
           "definition": "Landing-site selection, approach, or safe landing assessment.",
           "inclusion_exclusion": "Include for landing-specific neuro-symbolic methods."
         },
         {
           "id": "inspection",
           "name": "Inspection",
-          "zh": "??",
+          "zh": "巡检",
           "definition": "Infrastructure inspection, fire inspection, or visual survey of structures.",
           "inclusion_exclusion": "Include for inspection/visual survey tasks."
         },
         {
           "id": "aerial_manipulation",
           "name": "Aerial manipulation",
-          "zh": "????",
+          "zh": "空中操作",
           "definition": "Physical interaction or manipulation by a UAV.",
           "inclusion_exclusion": "Include for aerial manipulation tasks."
         },
         {
           "id": "multi_uav_coordination",
           "name": "Multi-UAV coordination",
-          "zh": "??????",
+          "zh": "多无人机协同",
           "definition": "Coordination, task allocation, or collective behavior across multiple UAVs.",
           "inclusion_exclusion": "Include when multi-UAV interaction is central."
         },
         {
           "id": "communication_and_networking",
           "name": "Communication and networking",
-          "zh": "?????",
+          "zh": "通信与组网",
           "definition": "Networked UAV decision-making, communication constraints, or edge-cloud interaction.",
           "inclusion_exclusion": "Include when networking constraints shape autonomy."
         },
         {
           "id": "other",
           "name": "Other",
-          "zh": "??",
+          "zh": "其他",
           "definition": "Another UAV task or application domain.",
           "inclusion_exclusion": "Use with a written rationale."
         }
@@ -249,44 +249,111 @@
     {
       "id": "system_deployment",
       "name": "System and deployment form",
-      "zh": "???????",
+      "zh": "系统与部署形态",
       "definition": "The system composition and deployment configuration.",
       "tags": [
         {
           "id": "single_uav",
           "name": "Single UAV",
-          "zh": "????",
+          "zh": "单无人机",
           "definition": "The method targets one UAV.",
           "inclusion_exclusion": "Use when a single platform is the primary system."
         },
         {
           "id": "multi_uav",
           "name": "Multi-UAV",
-          "zh": "????",
+          "zh": "多无人机",
           "definition": "The method targets multiple cooperating UAVs.",
           "inclusion_exclusion": "Use when multiple platforms interact."
         },
         {
           "id": "human_uav",
           "name": "Human-UAV",
-          "zh": "???????",
+          "zh": "人机协同",
           "definition": "The system involves human interaction, oversight, or shared control.",
           "inclusion_exclusion": "Use when human input or supervision is central."
         },
         {
           "id": "edge_cloud",
           "name": "Edge-cloud",
-          "zh": "????",
+          "zh": "边云协同",
           "definition": "Computation is split between onboard edge resources and cloud or remote resources.",
           "inclusion_exclusion": "Use when edge-cloud placement is a material design factor."
         },
         {
           "id": "heterogeneous_robots",
           "name": "Heterogeneous robots",
-          "zh": "?????",
+          "zh": "异构机器人",
           "definition": "The system includes heterogeneous robot types or UAV-ground collaboration.",
           "inclusion_exclusion": "Use when heterogeneity affects the method."
         }
+      ]
+    }
+  ],
+  "display_categories": [
+    {
+      "id": "perception_world_modeling",
+      "display_order": 1,
+      "name": "Neuro-Symbolic Perception & World Modeling",
+      "name_zh": "神经符号感知与世界建模",
+      "description": "Methods where neural perception grounds explicit symbols or maintains a probabilistic/semantic world model used by symbolic reasoning.",
+      "boundary": "Use when perception and world-state maintenance are functionally coupled to symbolic structure. Exclude standalone detectors or purely latent world models without explicit symbolic semantics.",
+      "subdirections": [
+        "Symbol grounding and scene graphs",
+        "Probabilistic and semantic world models",
+        "Multimodal perception for UAV search"
+      ]
+    },
+    {
+      "id": "reasoning_mission_planning",
+      "display_order": 2,
+      "name": "Neuro-Symbolic Reasoning & Mission Planning",
+      "name_zh": "神经符号推理与任务规划",
+      "description": "Methods that combine explicit logic, constraints, probabilistic logic, or symbolic planning with learned components for mission-level reasoning and task sequencing.",
+      "boundary": "Use for explicit symbolic inference or mission/task planning. Exclude low-level trajectory optimization without a discrete symbolic model.",
+      "subdirections": [
+        "Logic and constraint reasoning",
+        "Task planning and goal management",
+        "Uncertainty-aware reasoning"
+      ]
+    },
+    {
+      "id": "navigation_control",
+      "display_order": 3,
+      "name": "Neuro-Symbolic Navigation & Control",
+      "name_zh": "神经符号导航与控制",
+      "description": "Methods that couple learned perception/language interfaces with symbolic specifications, constraints, planners, or control structures for motion-level UAV navigation.",
+      "boundary": "Use for motion-level navigation and control where symbolic structure shapes or guards learned behavior. Exclude pure end-to-end control without explicit semantics.",
+      "subdirections": [
+        "Natural-language to formal specification",
+        "Constraint-guided trajectory synthesis",
+        "Safe motion planning"
+      ]
+    },
+    {
+      "id": "safety_verification",
+      "display_order": 4,
+      "name": "Neuro-Symbolic Safety & Verification",
+      "name_zh": "神经符号安全与验证",
+      "description": "Methods focused on safety constraints, verification, monitoring, shielding, or assurance evidence tied to neural-symbolic integration.",
+      "boundary": "Use when assurance is explicitly coupled to learned components. Exclude standalone formal methods on fixed purely symbolic models.",
+      "subdirections": [
+        "Runtime monitoring and shielding",
+        "Landing and safety assessment",
+        "Formal verification of learned components"
+      ]
+    },
+    {
+      "id": "collaboration_interaction",
+      "display_order": 5,
+      "name": "Neuro-Symbolic Collaboration & Interaction",
+      "name_zh": "神经符号协同与交互",
+      "description": "Methods where explicit symbolic structure supports human-UAV, multi-UAV, or networked collaboration and information exchange.",
+      "boundary": "Use when collaboration/interaction is central to the neuro-symbolic method, not merely a deployment label.",
+      "subdirections": [
+        "Human-UAV knowledge interaction",
+        "Multi-UAV coordination",
+        "Networked and edge-cloud autonomy"
       ]
     }
   ]

@@ -9,6 +9,7 @@
   var searchInput = document.getElementById("search");
   var taskSelect = document.getElementById("task-filter");
   var directionSelect = document.getElementById("direction-filter");
+  var themeSelect = document.getElementById("theme-filter");
   var statusSelect = document.getElementById("status-filter");
   var resetButton = document.getElementById("reset-filters");
   var resultCount = document.getElementById("result-count");
@@ -23,6 +24,12 @@
     }).filter(Boolean);
   }
 
+  function displayCategories() {
+    return (taxonomy.display_categories || []).slice().sort(function (a, b) {
+      return (a.display_order || 0) - (b.display_order || 0);
+    });
+  }
+
   function unique(values) {
     return Array.from(new Set(values)).sort();
   }
@@ -32,6 +39,15 @@
       var option = document.createElement("option");
       option.value = value;
       option.textContent = value.replace(/_/g, " ");
+      select.appendChild(option);
+    });
+  }
+
+  function populateThemeSelect(select, categories) {
+    categories.forEach(function (category) {
+      var option = document.createElement("option");
+      option.value = category.id;
+      option.textContent = category.name;
       select.appendChild(option);
     });
   }
@@ -63,6 +79,28 @@
   function tagValues(paper, axisId) {
     var tags = paper.taxonomy_tags || {};
     return Array.isArray(tags[axisId]) ? tags[axisId] : [];
+  }
+
+  function categoryName(categoryId) {
+    var match = displayCategories().filter(function (category) {
+      return category.id === categoryId;
+    })[0];
+    return match ? match.name : categoryId;
+  }
+
+  function categoryText(paper) {
+    var primary = paper.primary_category || "";
+    var secondary = paper.secondary_categories || [];
+    var names = [];
+    if (primary) {
+      names.push(categoryName(primary));
+    }
+    secondary.forEach(function (categoryId) {
+      if (categoryId !== primary) {
+        names.push(categoryName(categoryId));
+      }
+    });
+    return names.join(", ") || "\u2014";
   }
 
   function allTags(paper) {
@@ -98,6 +136,15 @@
     var direction = directionSelect.value;
     if (direction && tagValues(paper, "integration_direction").indexOf(direction) === -1) {
       return false;
+    }
+
+    var theme = themeSelect.value;
+    if (theme) {
+      var primary = paper.primary_category || "";
+      var secondary = paper.secondary_categories || [];
+      if (primary !== theme && secondary.indexOf(theme) === -1) {
+        return false;
+      }
     }
 
     var status = statusSelect.value;
@@ -178,6 +225,7 @@
         "<td>" + escapeHtml((paper.authors || []).join(", ")) + "</td>",
         "<td>" + escapeHtml(paper.year) + "</td>",
         "<td>" + escapeHtml(paper.record_type || "") + "</td>",
+        "<td>" + escapeHtml(categoryText(paper)) + "</td>",
         "<td><span class=\"status " + escapeHtml(paper.screening_status || "") + "\">" + escapeHtml(paper.screening_status || "") + "</span></td>",
         "<td><span class=\"status " + escapeHtml(paper.metadata_status || "") + "\">" + escapeHtml(paper.metadata_status || "") + "</span></td>",
         "<td>" + escapeHtml(paper.reading_status || "") + "</td>",
@@ -194,7 +242,7 @@
       '<div class="table-wrap"><table>',
       "<thead><tr>",
       "<th>Title and tags</th><th>Authors</th><th>Year</th><th>Type</th>",
-      "<th>Screening</th><th>Metadata</th><th>Reading</th><th>Relevance</th>",
+      "<th>Category</th><th>Screening</th><th>Metadata</th><th>Reading</th><th>Relevance</th>",
       "<th>Version/conflict</th><th>Evidence</th><th>Evidence and notes</th><th>Links</th>",
       "</tr></thead><tbody>",
       rows,
@@ -204,6 +252,7 @@
 
   populateSelect(taskSelect, axisTags("uav_task"));
   populateSelect(directionSelect, axisTags("integration_direction"));
+  populateThemeSelect(themeSelect, displayCategories());
   populateSelect(statusSelect, unique(papers.map(function (paper) {
     return paper.screening_status || "";
   }).filter(Boolean)));
@@ -211,11 +260,13 @@
   searchInput.addEventListener("input", renderTable);
   taskSelect.addEventListener("change", renderTable);
   directionSelect.addEventListener("change", renderTable);
+  themeSelect.addEventListener("change", renderTable);
   statusSelect.addEventListener("change", renderTable);
   resetButton.addEventListener("click", function () {
     searchInput.value = "";
     taskSelect.value = "";
     directionSelect.value = "";
+    themeSelect.value = "";
     statusSelect.value = "";
     renderTable();
   });
