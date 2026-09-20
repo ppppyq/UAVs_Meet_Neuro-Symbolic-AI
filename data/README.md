@@ -44,8 +44,19 @@ from it and must not be edited as a separate source of truth.
   `hardware_in_loop`, `real_flight`, `none`, or `unknown`.
 - `summary`
 - `limitations`
-- `evidence`: source URL, version, location, and the judgment it supports.
+- `evidence_legacy`: human-readable evidence summary kept for provenance.
+- `evidence_items`: structured source entries with `source_url`, `source_kind`,
+  `source_version`, `locator`, `supports_fields`, `claim`, `attribution`, and
+  `accessed_at`.
 - `checked_at`: real access date, or `null` if not checked.
+- `taxonomy_tags`: object keyed by taxonomy axis ID. Each value is an array of
+  tag IDs defined for that axis.
+- `taxonomy_migration_pending`: unresolved legacy-tag migrations with a reason.
+- `bibliography_type`: `article`, `inproceedings`, `misc`, `unpublished`, or
+  `other`. BibTeX generation uses this explicit field rather than inferring
+  type from `record_type` or venue keywords.
+- `metadata_conflict_scope`: non-empty when `metadata_status` is `conflict`;
+  otherwise `null` or `[]`.
 
 ## Counting rules
 

@@ -7,5 +7,23 @@
     "source": "https://export.arxiv.org/api/query?id_list=...",
     "screening_notes": "Metadata and abstracts were inspected. No systematic database or citation search was performed in this initialization.",
     "limitations": "Abstract-level review only; no full-text review; no additional seed expansion."
+  },
+  {
+    "id": "search-2026-09-20-fulltext-direct-uav",
+    "date": "2026-09-20",
+    "entry": "Full-text review of the two direct UAV candidates identified in the seed set.",
+    "query_or_resource": "https://arxiv.org/html/2609.19961v1; https://arxiv.org/html/2607.02277v2; https://arxiv.org/abs/2607.02277",
+    "source": "arXiv HTML full-text and abstract pages",
+    "screening_notes": "2609.19961 is a position/architecture article with an illustrative LAESim use case and no standalone quantitative benchmark, HIL, or real-flight validation found. 2607.02277 is an actual landing-assessment method with simulation and hardware-in-the-loop evidence and no real-flight validation found; its venue/DOI metadata remains in conflict.",
+    "limitations": "Only two direct UAV candidates are currently under review; the bounded target of roughly 6-12 candidates has not been reached. Reference tracking from seed papers was not systematically expanded in this iteration."
+  },
+  {
+    "id": "search-2026-09-20-bounded-candidate-status",
+    "date": "2026-09-20",
+    "entry": "Status of bounded candidate discovery.",
+    "query_or_resource": "Seed records in data/papers.json; no new database search executed",
+    "source": "data/papers.json",
+    "screening_notes": "The seven-record seed set contains two direct UAV candidates: p-2609.19961 (position/architecture) and p-2607.02277 (method). The withdrawn record p-2510.22204 is provenance for p-2607.02277 and is not a separate candidate.",
+    "limitations": "Do not treat this as an exhaustive 6-12 candidate search. Future iterations should prefer reference tracking from the full texts rather than abstract-only queries."
   }
 ]

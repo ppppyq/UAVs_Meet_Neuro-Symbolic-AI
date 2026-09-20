@@ -10,6 +10,9 @@ permissions:
 jobs:
   validate-and-check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -17,8 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
-          cache: "pip"
+          python-version: ${{ matrix.python-version }}
 
       - name: Validate data
         run: python scripts/manage.py validate
@@ -26,8 +28,14 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests -v
 
+      - name: Check tracked generated files before build
+        run: python scripts/manage.py check --tracked-only
+
       - name: Build generated artifacts
         run: python scripts/manage.py build
 
       - name: Check generated artifacts
         run: python scripts/manage.py check
+
+      - name: Detect tracked generated-file drift
+        run: git diff --exit-code

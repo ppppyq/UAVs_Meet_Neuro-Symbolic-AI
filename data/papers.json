@@ -38,19 +38,44 @@
     "coupling_mechanism": null,
     "inclusion_rationale": null,
     "exclusion_reason": "Adjacent survey on foundation-model/LLM-based UAV systems. It is used for scope and related-work comparison, not as a core UAV neuro-symbolic method.",
-    "taxonomy_tags": [
-      "grounding",
-      "mission_planning",
-      "communication_and_networking",
-      "other"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "grounding"
+      ],
+      "uav_task": [
+        "communication_and_networking",
+        "mission_planning"
+      ]
+    },
     "uav_evidence": [
       "conceptual"
     ],
     "summary": "Surveys UAV-LLM integration, multimodal data resources, task categories, and a roadmap toward agentic low-altitude mobility.",
     "limitations": "Survey/position paper; not a neuro-symbolic method evaluation. Full text was not re-read for this initialization.",
-    "evidence": "arXiv abs page and arXiv API returned matching title, author list, DOI, and Information Fusion publication information on 2026-09-20.",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [
+      {
+        "tag": "other",
+        "reason": "ambiguous across axes: integration_direction, symbolic_mechanism, uav_task"
+      }
+    ],
+    "evidence_legacy": "arXiv abs page and arXiv API returned matching title, author list, DOI, and Information Fusion publication information on 2026-09-20. Full text was not re-read for this iteration.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2501.02341",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv abs page and arXiv API returned matching title, author list, DOI, and Information Fusion publication information on 2026-09-20.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "article",
+    "metadata_conflict_scope": []
   },
   {
     "id": "p-2506.08045",
@@ -80,18 +105,39 @@
     "coupling_mechanism": null,
     "inclusion_rationale": null,
     "exclusion_reason": "Adjacent multidomain survey of agentic UAVs; used for boundary comparison rather than as a direct UAV neuro-symbolic method.",
-    "taxonomy_tags": [
-      "planning",
-      "mission_planning",
-      "multi_uav_coordination"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "planning"
+      ],
+      "uav_task": [
+        "mission_planning",
+        "multi_uav_coordination"
+      ]
+    },
     "uav_evidence": [
       "conceptual"
     ],
     "summary": "Provides a foundation and comparative analysis of agentic UAV architecture, applications, challenges, and a future roadmap.",
     "limitations": "Survey-level scope; does not isolate explicit symbolic representations or verify neuro-symbolic coupling per method.",
-    "evidence": "arXiv abs page and arXiv API returned matching title, authors, and submission metadata on 2026-09-20.",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "arXiv abs page and arXiv API returned matching title, authors, and submission metadata on 2026-09-20.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2506.08045",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv abs page and arXiv API returned matching title, authors, and submission metadata on 2026-09-20.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
   },
   {
     "id": "p-2609.19961",
@@ -112,39 +158,72 @@
     "doi": null,
     "venue": null,
     "publication_status": "preprint",
-    "record_type": "method",
+    "record_type": "position",
     "code_url": null,
     "related_versions": [],
     "metadata_status": "verified",
-    "reading_status": "abstract_reviewed",
+    "reading_status": "fulltext_reviewed",
     "human_reviewed": false,
     "screening_status": "candidate",
     "relevance": "direct_uav",
-    "neural_component": "Neural grounding for uncertain observations and environment understanding, plus learned or reusable skill components.",
-    "symbolic_component": "Explicit evidence conditions, neuro-symbolic planning, verification and metacognition, shared knowledge/memory, and task/goal management.",
-    "coupling_mechanism": "Neural grounding informs symbolic reasoning and closed-loop agentic interaction; skills and mission completion are checked against explicit evidence conditions.",
-    "inclusion_rationale": "Candidate direct UAV work: the abstract explicitly combines neural grounding, symbolic reasoning, and closed-loop agentic interaction for networked UAVs. Full-text review is still required before inclusion.",
+    "neural_component": "Neural modules interpret multimodal observations, mission instructions, and contextual inputs to ground objects, states, and reusable skills.",
+    "symbolic_component": "Task/goal management, symbolic rules and skill preconditions, neuro-symbolic planning, verification/metacognition, shared knowledge/memory, and explicit evidence conditions.",
+    "coupling_mechanism": "Neural grounding feeds an agentic symbolic planning and verification loop; execution/connectivity feedback updates task state and triggers sensing or replanning.",
+    "inclusion_rationale": "Candidate direct UAV position paper: full-text review confirms a reference NSAAI architecture and an illustrative LAESim urban fire-inspection case, but not a standalone evaluated algorithm. It should not be counted as a core method.",
     "exclusion_reason": null,
-    "taxonomy_tags": [
-      "grounding",
-      "reasoning",
-      "planning",
-      "assurance",
-      "bidirectional",
-      "logic_rules",
-      "mission_planning",
-      "communication_and_networking",
-      "multi_uav",
-      "edge_cloud"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "assurance",
+        "grounding",
+        "planning",
+        "reasoning"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "logic_rules"
+      ],
+      "uav_task": [
+        "communication_and_networking",
+        "mission_planning"
+      ],
+      "system_deployment": [
+        "edge_cloud",
+        "multi_uav"
+      ]
+    },
     "uav_evidence": [
       "conceptual",
       "simulation"
     ],
-    "summary": "Proposes neuro-symbolic agentic AI for networked low-altitude UAVs and illustrates an urban fire-inspection case in LAESim with verified image-delivery skills and evidence conditions.",
-    "limitations": "Abstract-level review only. The paper describes a reference architecture and a simulation case; quantitative, hardware-in-the-loop, or real-flight evidence was not established in this record.",
-    "evidence": "arXiv abs page and arXiv API returned matching title, authors, abstract, and submission metadata on 2026-09-20.",
-    "checked_at": "2026-09-20"
+    "summary": "Full-text review: presents an NSAAI reference architecture (task/goal management, neuro-symbolic planning, verification/metacognition, skill execution/network interaction, shared knowledge/memory) and an illustrative LAESim urban fire-inspection case with evidence-grounded skill reuse.",
+    "limitations": "Position/architecture article rather than a benchmarked method. The available full text describes the use case qualitatively; no independent quantitative benchmark table, hardware-in-the-loop study, or real-flight validation was identified in the reviewed HTML version.",
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "Full-text HTML version at https://arxiv.org/html/2609.19961v1 was read on 2026-09-20; it presents a reference architecture and an illustrative LAESim use case rather than a standalone benchmarked method.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/html/2609.19961v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2609.19961v1",
+        "locator": "Sec. III-IV; HTML full-text version",
+        "supports_fields": [
+          "record_type",
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations"
+        ],
+        "claim": "The full text presents a reference architecture and an illustrative LAESim urban fire-inspection case, rather than a standalone quantitative method evaluation.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
   },
   {
     "id": "p-2607.02277",
@@ -167,7 +246,7 @@
     "venue": "Proceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146, July 2026",
     "publication_status": "conflict",
     "record_type": "method",
-    "code_url": null,
+    "code_url": "https://github.com/Janus117/NeuroSymbolicLand",
     "related_versions": [
       {
         "id": "p-2510.22204",
@@ -175,35 +254,87 @@
       }
     ],
     "metadata_status": "conflict",
-    "reading_status": "abstract_reviewed",
+    "reading_status": "fulltext_reviewed",
     "human_reviewed": false,
     "screening_status": "candidate",
     "relevance": "direct_uav",
-    "neural_component": "Lightweight onboard perception that constructs a probabilistic semantic scene graph from visual input.",
-    "symbolic_component": "Explicit symbolic safety constraints over the probabilistic scene graph for terrain flatness, obstacle clearance, and spatial consistency.",
-    "coupling_mechanism": "Perception produces a probabilistic scene graph; symbolic constraints evaluate candidate landing regions over that explicit representation.",
+    "neural_component": "An INT8-quantized SegFormer-B0 with geometric post-processing constructs a probabilistic semantic scene graph (PSSG) from onboard visual input.",
+    "symbolic_component": "Deterministic Scallop rules express terrain-flatness, obstacle-clearance, and spatial-consistency constraints over the PSSG. Rules are authored offline with LLM assistance and refined with a human in the loop.",
+    "coupling_mechanism": "Neural perception populates the PSSG; deterministic symbolic rules then evaluate candidate landing regions over that explicit representation. The runtime does not query the LLM; LLM-assisted authoring occurs offline before deployment.",
     "inclusion_rationale": "Candidate direct UAV work: neural perception and explicit symbolic safety reasoning are functionally coupled for landing-site assessment. Full-text review and venue conflict resolution are required before inclusion.",
     "exclusion_reason": null,
-    "taxonomy_tags": [
-      "grounding",
-      "representation",
-      "reasoning",
-      "assurance",
-      "neural_to_symbolic",
-      "scene_graph",
-      "constraint_reasoning",
-      "landing",
-      "single_uav",
-      "edge_cloud"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "assurance",
+        "grounding",
+        "reasoning",
+        "representation"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic"
+      ],
+      "symbolic_mechanism": [
+        "constraint_reasoning",
+        "scene_graph"
+      ],
+      "uav_task": [
+        "landing"
+      ],
+      "system_deployment": [
+        "edge_cloud",
+        "single_uav"
+      ]
+    },
     "uav_evidence": [
       "simulation",
       "hardware_in_loop"
     ],
-    "summary": "NEUROSYMLAND combines lightweight perception with explicit safety reasoning over a probabilistic semantic scene graph, reports 61/72 successful simulated assessments and 100 hardware-in-the-loop trials, and profiles edge-resource usage.",
-    "limitations": "Abstract-level review only. Reported evidence is simulation and hardware-in-the-loop, not real flight. The arXiv page has conflicting publication comments (IROS 2026 versus FSE/PACMPL journal reference).",
-    "evidence": "arXiv abs page on 2026-09-20: Comments say 'Accepted to the IROS 2026'; Journal reference says 'roceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146, July 2026'; Related DOI is 10.1145/3808153. Conflict recorded.",
-    "checked_at": "2026-09-20"
+    "summary": "NeuroSymLand combines an INT8-quantized SegFormer-B0 with geometric post-processing into a probabilistic semantic scene graph (PSSG), then executes deterministic Scallop safety rules for landing-site assessment. The full text reports 61 successful assessments out of 72 simulated scenarios, 100 hardware-in-the-loop profiling trials, and edge-resource profiling. Code is available at https://github.com/Janus117/NeuroSymbolicLand. Rules are authored offline with LLM assistance and refined with a human in the loop; runtime execution does not query the LLM.",
+    "limitations": "Full-text review found no real-flight validation; reported evidence is simulation and hardware-in-the-loop. Venue metadata is unresolved (arXiv comments say IROS 2026 while the journal reference says Proceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146), and the DOI has not been confirmed against a publisher record. The runtime symbolic engine is deterministic, but rule authoring depends on an offline LLM-assisted and human-in-the-loop workflow.",
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "Full-text HTML version at https://arxiv.org/html/2607.02277v2 was read on 2026-09-20. arXiv abs page on 2026-09-20: Comments say 'Accepted to the IROS 2026'; Journal reference says 'Proceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146, July 2026'; Related DOI is 10.1145/3808153. Conflict recorded.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/html/2607.02277v2",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2607.02277v2",
+        "locator": "Sec. I-III; HTML full-text version; method, experiments, and code URL",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "code_url",
+          "summary",
+          "limitations"
+        ],
+        "claim": "The full text describes an INT8-quantized SegFormer-B0 with geometric post-processing, a probabilistic semantic scene graph (PSSG), deterministic Scallop rule execution, offline LLM-assisted rule authoring with human-in-the-loop refinement, 61 successful assessments out of 72 simulated scenarios, 100 hardware-in-the-loop profiling trials, and the code repository at https://github.com/Janus117/NeuroSymbolicLand. No real-flight validation was identified.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/abs/2607.02277",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata",
+          "venue",
+          "doi",
+          "publication_status"
+        ],
+        "claim": "arXiv abs page on 2026-09-20: Comments say 'Accepted to the IROS 2026'; Journal reference says 'Proceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146, July 2026'; Related DOI is 10.1145/3808153. Conflict recorded.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": [
+      "venue",
+      "doi",
+      "publication_status"
+    ]
   },
   {
     "id": "p-2510.22204",
@@ -243,26 +374,53 @@
     "coupling_mechanism": "Perception-driven world modeling is separated from logic-based safety reasoning; symbolic rules are executed over the probabilistic scene graph.",
     "inclusion_rationale": null,
     "exclusion_reason": "Withdrawn arXiv version. The arXiv page states a major update is uploaded at 2607.02277; this record is retained for provenance and must not be counted as a separate core method.",
-    "taxonomy_tags": [
-      "grounding",
-      "representation",
-      "reasoning",
-      "assurance",
-      "neural_to_symbolic",
-      "scene_graph",
-      "constraint_reasoning",
-      "landing",
-      "single_uav",
-      "edge_cloud"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "assurance",
+        "grounding",
+        "reasoning",
+        "representation"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic"
+      ],
+      "symbolic_mechanism": [
+        "constraint_reasoning",
+        "scene_graph"
+      ],
+      "uav_task": [
+        "landing"
+      ],
+      "system_deployment": [
+        "edge_cloud",
+        "single_uav"
+      ]
+    },
     "uav_evidence": [
       "simulation",
       "hardware_in_loop"
     ],
     "summary": "Withdrawn earlier version of a neuro-symbolic UAV landing-site assessment framework.",
     "limitations": "Withdrawn; use only as version provenance. The newer record is p-2607.02277.",
-    "evidence": "arXiv abs page on 2026-09-20 states the paper has been withdrawn by Weixian Qian and points to 2607.02277 as the major update.",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "arXiv abs page on 2026-09-20 states the paper has been withdrawn by Weixian Qian and points to 2607.02277 as the major update.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2510.22204",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv abs page on 2026-09-20 states the paper has been withdrawn by Weixian Qian and points to 2607.02277 as the major update.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
   },
   {
     "id": "p-2012.05876",
@@ -291,19 +449,42 @@
     "coupling_mechanism": "Principled integration of neural learning with symbolic knowledge representation and logical reasoning.",
     "inclusion_rationale": null,
     "exclusion_reason": "General neuro-symbolic AI background. It provides foundations but has no direct UAV-specific validation and is not counted as a UAV method.",
-    "taxonomy_tags": [
-      "reasoning",
-      "neural_to_symbolic",
-      "symbolic_to_neural",
-      "logic_rules"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "reasoning"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic",
+        "symbolic_to_neural"
+      ],
+      "symbolic_mechanism": [
+        "logic_rules"
+      ]
+    },
     "uav_evidence": [
       "none"
     ],
     "summary": "Relates recent and early neural-symbolic computing results and identifies key ingredients for trustworthy, safe, interpretable AI.",
     "limitations": "Position/survey paper from 2020; not a UAV system evaluation.",
-    "evidence": "arXiv abs page and arXiv API returned matching title, authors, and abstract on 2026-09-20.",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "arXiv abs page and arXiv API returned matching title, authors, and abstract on 2026-09-20.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2012.05876",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv abs page and arXiv API returned matching title, authors, and abstract on 2026-09-20.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "misc",
+    "metadata_conflict_scope": []
   },
   {
     "id": "p-1805.10872",
@@ -335,18 +516,41 @@
     "coupling_mechanism": "Neural predicates are embedded inside probabilistic logic programs and can be trained end-to-end with examples.",
     "inclusion_rationale": null,
     "exclusion_reason": "General neural-probabilistic-logic foundation. It is background for coupling mechanisms but has no direct UAV validation in this record.",
-    "taxonomy_tags": [
-      "reasoning",
-      "neural_to_symbolic",
-      "probabilistic_logic",
-      "program_representation"
-    ],
+    "taxonomy_tags": {
+      "functional_position": [
+        "reasoning"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic"
+      ],
+      "symbolic_mechanism": [
+        "probabilistic_logic",
+        "program_representation"
+      ]
+    },
     "uav_evidence": [
       "none"
     ],
     "summary": "Introduces DeepProbLog, integrating neural networks with probabilistic logic programming through neural predicates.",
     "limitations": "Background method; not UAV-specific in this record.",
-    "evidence": "arXiv abs page and arXiv API returned matching title, authors, and NeurIPS comment on 2026-09-20. GitHub repository page verified the code URL.",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "taxonomy_migration_pending": [],
+    "evidence_legacy": "arXiv abs page and arXiv API returned matching title, authors, and NeurIPS comment on 2026-09-20. GitHub repository page verified the code URL.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/1805.10872",
+        "source_kind": "abstract",
+        "source_version": "arxiv-abstract",
+        "locator": null,
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "arXiv abs page and arXiv API returned matching title, authors, and NeurIPS comment on 2026-09-20. GitHub repository page verified the code URL.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-20"
+      }
+    ],
+    "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": []
   }
 ]

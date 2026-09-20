@@ -3,7 +3,8 @@
   "suggested_repository_name": "UAVs_Meet_Neuro-Symbolic-AI",
   "working_title": "UAVs Meet Neuro-Symbolic AI: Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy",
   "status": "manuscript-in-preparation",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "data_schema_version": "0.2.0",
   "research_question": "How can neural learning and explicit symbolic representations, reasoning, and constraints be integrated to support trustworthy UAV autonomy?",
   "authors": [
     "Yuqi Ping"

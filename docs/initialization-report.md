@@ -2,6 +2,10 @@
 
 Generated manually for the initialization, not by a build script.
 
+Note: this file is a historical record of the initialization pass. The
+subsequent full-text, CI, data, website, and paper changes are recorded in
+[iteration-02-report.md](iteration-02-report.md).
+
 ## Environment
 
 - Working directory: project root.

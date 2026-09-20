@@ -12,9 +12,10 @@
       <p class="eyebrow">Literature-review workspace · manuscript in preparation</p>
       <h1>UAVs Meet Neuro-Symbolic AI</h1>
       <p class="subtitle">Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy</p>
+      {{PROJECT_INFO_HTML}}
       <p class="status-note">This is a proposed research framework and evidence
         knowledge base. It is not a completed systematic review and not an
-        experimental system. Author and venue information remain TODO.</p>
+        experimental system.</p>
     </div>
   </header>
 
@@ -26,16 +27,10 @@
 
     <section class="framework" aria-labelledby="framework-heading">
       <h2 id="framework-heading">Proposed framework</h2>
-      <p>The diagrams below are editable Mermaid sketches, not experimental
-        results.</p>
-      <pre class="mermaid-source"><code>flowchart TD
-    Perception --&gt; Neural grounding
-    Neural grounding --&gt; Symbolic representation
-    Symbolic representation --&gt; Reasoning and planning
-    Reasoning and planning --&gt; Execution
-    Execution --&gt; Monitoring and assurance
-    Monitoring and assurance --&gt;|feedback| Reasoning and planning
-    Monitoring and assurance --&gt;|cueing| Perception</code></pre>
+      <p>The diagrams below are editable Mermaid sketches loaded from
+        <code>assets/figures/*.mmd</code>, not experimental results and not
+        rendered static SVGs.</p>
+      {{FIGURE_SOURCES_HTML}}
     </section>
 
     <section class="filters" aria-labelledby="filters-heading">
@@ -88,6 +83,9 @@
 
   <script>
     window.__PAPER_DATA__ = {{PAPER_DATA_JSON}};
+    window.__TAXONOMY_DATA__ = {{TAXONOMY_DATA_JSON}};
+    window.__PROJECT_DATA__ = {{PROJECT_DATA_JSON}};
+    window.__NOTES_AVAILABLE__ = {{NOTES_AVAILABLE_JSON}};
   </script>
   <script src="static/app.js"></script>
 </body>

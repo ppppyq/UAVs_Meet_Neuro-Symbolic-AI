@@ -60,6 +60,23 @@ h1 {
   font-size: .92rem;
 }
 
+.site-header dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: .25rem .75rem;
+  margin: 1rem 0 0;
+  font-size: .9rem;
+}
+
+.site-header dt {
+  font-weight: 600;
+  color: #334155;
+}
+
+.site-header dd {
+  margin: 0;
+}
+
 main {
   padding: 2rem 0 4rem;
 }
@@ -98,6 +115,12 @@ h2 {
   color: #e2e8f0;
   border-radius: 6px;
   font-size: .88rem;
+}
+
+.framework h3 {
+  margin: 1rem 0 .5rem;
+  font-size: .92rem;
+  color: #334155;
 }
 
 .controls {

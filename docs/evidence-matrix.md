@@ -1,0 +1,21 @@
+# Evidence matrix
+
+This matrix is generated from `data/papers.json` by
+`scripts/manage.py build`. It compares neural components, symbolic mechanisms,
+coupling, task, validation environment, evidence locations, and limitations.
+Candidate records and formally included records are distinguished by the
+`Screening` column.
+
+<!-- BEGIN GENERATED:EVIDENCE-MATRIX -->
+
+| ID | Screening | Neural component | Symbolic mechanism | Coupling | Task | Validation evidence | Evidence locations | Limitations |
+|---|---|---|---|---|---|---|---|---|
+| p-2501.02341 | excluded | Large language models, vision-language models, and foundation models used as components of agentic UAV systems. |  |  | communication_and_networking, mission_planning | conceptual | abstract:no-locator | Survey/position paper; not a neuro-symbolic method evaluation. Full text was not re-read for this initialization. |
+| p-2506.08045 | excluded | Learning and agentic AI architectures for autonomous aerial intelligence. |  |  | mission_planning, multi_uav_coordination | conceptual | abstract:no-locator | Survey-level scope; does not isolate explicit symbolic representations or verify neuro-symbolic coupling per method. |
+| p-2609.19961 | candidate | Neural modules interpret multimodal observations, mission instructions, and contextual inputs to ground objects, states, and reusable skills. | logic_rules | Neural grounding feeds an agentic symbolic planning and verification loop; execution/connectivity feedback updates task state and triggers sensing or replanning. | communication_and_networking, mission_planning | conceptual, simulation | fulltext:Sec. III-IV; HTML full-text version | Position/architecture article rather than a benchmarked method. The available full text describes the use case qualitatively; no independent quantitative benchmark table, hardware-in-the-loop study, or real-flight validation was identified in the reviewed HTML version. |
+| p-2607.02277 | candidate | An INT8-quantized SegFormer-B0 with geometric post-processing constructs a probabilistic semantic scene graph (PSSG) from onboard visual input. | constraint_reasoning, scene_graph | Neural perception populates the PSSG; deterministic symbolic rules then evaluate candidate landing regions over that explicit representation. The runtime does not query the LLM; LLM-assisted authoring occurs offline before deployment. | landing | simulation, hardware_in_loop | fulltext:Sec. I-III; HTML full-text version; method, experiments, and code URL; abstract:no-locator | Full-text review found no real-flight validation; reported evidence is simulation and hardware-in-the-loop. Venue metadata is unresolved (arXiv comments say IROS 2026 while the journal reference says Proceedings of the ACM on Software Engineering, Vol. 3, FSE, Article FSE146), and the DOI has not been confirmed against a publisher record. The runtime symbolic engine is deterministic, but rule authoring depends on an offline LLM-assisted and human-in-the-loop workflow. |
+| p-2510.22204 | excluded | Lightweight segmentation model incrementally constructs a probabilistic semantic scene graph. | constraint_reasoning, scene_graph | Perception-driven world modeling is separated from logic-based safety reasoning; symbolic rules are executed over the probabilistic scene graph. | landing | simulation, hardware_in_loop | abstract:no-locator | Withdrawn; use only as version provenance. The newer record is p-2607.02277. |
+| p-2012.05876 | excluded | Deep learning and neural-network-based learning. | logic_rules | Principled integration of neural learning with symbolic knowledge representation and logical reasoning. |  | none | abstract:no-locator | Position/survey paper from 2020; not a UAV system evaluation. |
+| p-1805.10872 | excluded | Neural predicates whose probabilities are parameterized by neural networks. | probabilistic_logic, program_representation | Neural predicates are embedded inside probabilistic logic programs and can be trained end-to-end with examples. |  | none | abstract:no-locator | Background method; not UAV-specific in this record. |
+
+<!-- END GENERATED:EVIDENCE-MATRIX -->
