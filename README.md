@@ -297,7 +297,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and
 - [Paper outline](docs/paper-outline.md)
 - [Iteration 02 report](docs/iteration-02-report.md)
 - [Iteration 03 report](docs/iteration-03-report.md)
-- [Compiled manuscript](paper/main.pdf)
+- [LaTeX manuscript source](paper/main.tex)
 
 ## 🙏 Reference sources and acknowledgements
 

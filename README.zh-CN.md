@@ -281,7 +281,7 @@ py -3.14 scripts/manage.py serve
 - [论文大纲](docs/paper-outline.md)
 - [第二次迭代报告](docs/iteration-02-report.md)
 - [第三次迭代报告](docs/iteration-03-report.md)
-- [已编译手稿](paper/main.pdf)
+- [LaTeX 手稿源文件](paper/main.tex)
 
 ## 🙏 参考来源与致谢
 
