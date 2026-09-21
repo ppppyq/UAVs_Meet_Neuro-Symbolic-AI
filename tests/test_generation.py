@@ -173,7 +173,8 @@ class GenerationTests(unittest.TestCase):
             manage.generate_site(papers, Path(tmp))
             rendered = (Path(tmp) / "index.html").read_text(encoding="utf-8")
         self.assertIn("<table>", html_table)
-        self.assertIn("<table>", rendered)
+        self.assertIn("paper-card", rendered)
+        self.assertIn("status-pill candidate", rendered)
         self.assertIn("abstract_reviewed", rendered)
         self.assertIn("candidate", rendered)
         self.assertIn("A &amp; B", rendered)
@@ -336,7 +337,7 @@ class CheckGenerationTests(unittest.TestCase):
         (website_dir / "static").mkdir(parents=True, exist_ok=True)
         (website_dir / "template.html").write_text(
             "{{OVERVIEW_HTML}}{{PAPER_TABLE_HTML}}{{PROJECT_INFO_HTML}}{{FIGURE_SOURCES_HTML}}"
-            "{{FOUNDATIONS_HTML}}"
+            "{{FOUNDATIONS_HTML}}{{CATEGORY_CARDS_HTML}}"
             "{{PAPER_DATA_JSON}}{{TAXONOMY_DATA_JSON}}{{PROJECT_DATA_JSON}}{{NOTES_AVAILABLE_JSON}}",
             encoding="utf-8",
         )

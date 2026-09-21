@@ -122,6 +122,7 @@ WEBSITE_TOKENS = (
     "{{PROJECT_INFO_HTML}}",
     "{{FIGURE_SOURCES_HTML}}",
     "{{FOUNDATIONS_HTML}}",
+    "{{CATEGORY_CARDS_HTML}}",
     "{{PAPER_DATA_JSON}}",
     "{{TAXONOMY_DATA_JSON}}",
     "{{PROJECT_DATA_JSON}}",
@@ -1386,6 +1387,72 @@ def foundations_markdown(language: str) -> str:
     return "\n".join(parts).rstrip() + "\n"
 
 
+def foundations_cards_html() -> str:
+    resources = load_foundational_resources()
+    groups = [
+        ("paper", "Foundational papers"),
+        ("book", "Books and edited collections"),
+        ("workshop", "Workshops and community resources"),
+        ("collection", "Collections and special issues"),
+    ]
+    blocks: list[str] = []
+    for resource_type, title in groups:
+        records = [resource for resource in resources if resource.get("resource_type") == resource_type]
+        if not records:
+            continue
+        cards: list[str] = []
+        for resource in records:
+            contributors = ", ".join(resource.get("contributors") or [])
+            venue = resource_venue_label(resource)
+            link_parts: list[str] = []
+            if resource.get("doi"):
+                link_parts.append(
+                    f'<a class="pill-link" href="https://doi.org/{html.escape(str(resource["doi"]))}" rel="noopener noreferrer">DOI</a>'
+                )
+            if resource.get("arxiv_id"):
+                link_parts.append(
+                    f'<a class="pill-link" href="https://arxiv.org/abs/{html.escape(str(resource["arxiv_id"]))}" rel="noopener noreferrer">arXiv</a>'
+                )
+            if resource.get("url") and not resource.get("doi") and not resource.get("arxiv_id"):
+                link_parts.append(
+                    f'<a class="pill-link" href="{html.escape(str(resource["url"]))}" rel="noopener noreferrer">page</a>'
+                )
+            cards.append(
+                '<article class="foundation-card">'
+                f'<span class="status-pill">{html.escape(resource_type)}</span>'
+                f"<h3>{html.escape(resource.get('title') or '')}</h3>"
+                f"<p>{html.escape(resource.get('summary') or '')}</p>"
+                '<div class="foundation-meta">'
+                f"<span>{html.escape(resource_contributor_label(resource))}: {html.escape(contributors)}</span>"
+                f"<span>{html.escape(str(resource.get('year') or ''))}</span>"
+                f"<span>{html.escape(venue)}</span>"
+                "</div>"
+                f'<div class="paper-actions">{"".join(link_parts)}</div>'
+                "</article>"
+            )
+        blocks.append(f"<h3>{html.escape(title)}</h3>" f'<div class="foundation-grid">{"".join(cards)}</div>')
+    return "".join(blocks)
+
+
+def project_info_cards_html(project: dict[str, Any]) -> str:
+    authors = ", ".join(str(a) for a in project.get("authors") or [])
+    affiliations = "; ".join(str(a) for a in project.get("affiliations") or [])
+    github_url = project.get("github_url") or ""
+    license_name = project.get("license") or ""
+    status = str(project.get("status") or "not specified")
+    chips = [
+        ("Authors", authors or "not specified"),
+        ("Affiliation", affiliations or "not specified"),
+        ("Repository", github_url or "not specified"),
+        ("License", license_name or "not specified"),
+        ("Status", status),
+    ]
+    return '<div class="hero-meta">' + "".join(
+        f'<span class="meta-chip"><strong>{html.escape(label)}</strong> {html.escape(value)}</span>'
+        for label, value in chips
+    ) + "</div>"
+
+
 def foundations_html() -> str:
     resources = load_foundational_resources()
     groups = [
@@ -1506,25 +1573,55 @@ def paper_table_markdown(records: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def category_cards_html(papers: list[dict[str, Any]]) -> str:
+    categories = taxonomy_display_categories()
+    cards: list[str] = []
+    for index, category in enumerate(categories, start=1):
+        category_id = category["id"]
+        primary_count = distinct_primary_work_ids(papers, category_id)
+        subdirections = "".join(
+            f'<span class="tag">{html.escape(item)}</span>'
+            for item in category.get("subdirections") or []
+        )
+        cards.append(
+            '<article class="theme-card" data-theme="'
+            + html.escape(category_id)
+            + '" tabindex="0" role="button" aria-label="Filter papers by '
+            + html.escape(category.get("name") or category_id)
+            + '">'
+            f'<span class="theme-index">{index}</span>'
+            f"<h3>{html.escape(category.get('name') or category_id)}</h3>"
+            f'<div class="theme-name-zh">{html.escape(category.get("name_zh") or "")}</div>'
+            f'<div class="theme-description">{html.escape(category.get("description") or "")}</div>'
+            f'<div class="theme-boundary">{html.escape(category.get("boundary") or "")}</div>'
+            f'<div class="theme-subdirections">{subdirections}</div>'
+            f'<div class="theme-count">{primary_count} primary work{"s" if primary_count != 1 else ""}</div>'
+            "</article>"
+        )
+    return "".join(cards)
+
+
 def overview_html(papers: list[dict[str, Any]]) -> str:
     stats = papers_stats(papers)
-    rows = [
-        ("Total records", str(stats["total"])),
-        ("Metadata verified", str(stats["metadata_verified"])),
-        ("Metadata conflicts", str(stats["metadata_conflict"])),
-        ("Abstract-reviewed", str(stats["abstract_reviewed"])),
-        ("Full-text reviewed", str(stats["fulltext_reviewed"])),
-        ("Candidate records", str(stats["candidates"])),
-        ("Direct UAV candidate methods", str(stats["direct_uav_candidates"])),
-        ("Core UAV methods", str(stats["core_methods"])),
-        ("Unique seed studies", str(stats["unique_seed_studies"])),
-        ("Withdrawn records", str(stats["withdrawn"])),
-        ("Migration pending", str(stats["migration_pending"])),
+    foundations = load_foundational_resources()
+    values = [
+        (str(stats["total"]), "Tracked records"),
+        (str(stats["unique_seed_studies"]), "Unique seed studies"),
+        (str(stats["fulltext_reviewed"]), "Full-text reviewed"),
+        (str(stats["candidates"]), "Candidate records"),
+        (str(stats["core_methods"]), "Included core methods"),
+        (str(stats["direct_uav_candidates"]), "Direct UAV candidates"),
+        (str(len(foundations)), "Foundational resources"),
+        (str(len(taxonomy_display_categories())), "Display themes"),
     ]
-    items = "\n".join(
-        f"<dt>{html.escape(label)}</dt><dd>{html.escape(value)}</dd>" for label, value in rows
+    cards = "".join(
+        '<div class="stat-card">'
+        f'<span class="stat-value">{html.escape(value)}</span>'
+        f'<span class="stat-label">{html.escape(label)}</span>'
+        "</div>"
+        for value, label in values
     )
-    return f"<dl>\n{items}\n</dl>\n"
+    return cards
 
 
 def evidence_summary(record: dict[str, Any]) -> str:
@@ -1577,6 +1674,61 @@ def version_conflict_hint(record: dict[str, Any]) -> str:
     if record.get("publication_status") == "withdrawn":
         parts.append("withdrawn")
     return "; ".join(parts) if parts else ""
+
+
+def paper_card_html(record: dict[str, Any]) -> str:
+    title = html.escape(record.get("title") or "")
+    authors = html.escape(", ".join(record.get("authors", [])))
+    screening = record.get("screening_status") or ""
+    summary = record.get("summary") or record.get("classification_rationale") or ""
+    tags = "".join(
+        f'<span class="tag">{html.escape(tag)}</span>' for tag in taxonomy_display_tags(record)
+    )
+    canonical = record.get("canonical_url") or ""
+    code = record.get("code_url") or ""
+    links: list[str] = []
+    if canonical:
+        links.append(
+            f'<a class="pill-link" href="{html.escape(canonical)}" rel="noopener noreferrer">paper</a>'
+        )
+    if code:
+        links.append(
+            f'<a class="pill-link" href="{html.escape(code)}" rel="noopener noreferrer">code</a>'
+        )
+    else:
+        links.append('<span class="pill-link muted">code: not verified</span>')
+    evidence = evidence_links_html(record)
+    if evidence and evidence != "\u2014":
+        links.append(evidence)
+    note = note_link_html(record)
+    if note:
+        links.append(note)
+    version_hint = version_conflict_hint(record)
+    if version_hint:
+        links.append(f'<span class="pill-link muted">{html.escape(version_hint)}</span>')
+    meta_parts = [
+        f"<span>{authors}</span>",
+        f"<span>{html.escape(str(record.get('year') or ''))}</span>",
+        f"<span>{html.escape(record.get('record_type') or '')}</span>",
+        f"<span>{html.escape(category_cell(record))}</span>",
+    ]
+    return (
+        '<article class="paper-card">'
+        '<div class="paper-card-head">'
+        f"<h3>{title}</h3>"
+        f'<span class="status-pill {html.escape(screening)}">{html.escape(screening)}</span>'
+        "</div>"
+        f'<div class="paper-meta">{"".join(meta_parts)}</div>'
+        f'<p class="paper-summary">{html.escape(summary)}</p>'
+        f'<div class="tag-list">{tags}</div>'
+        f'<div class="paper-actions">{"".join(links)}</div>'
+        "</article>"
+    )
+
+
+def paper_cards_html(records: list[dict[str, Any]]) -> str:
+    cards = "".join(paper_card_html(record) for record in records)
+    return f'<div class="paper-grid">{cards}</div>'
 
 
 def paper_table_html(records: list[dict[str, Any]]) -> str:
@@ -1828,10 +1980,11 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
     project = load_json(PROJECT_PATH)
     rendered = (
         template.replace("{{OVERVIEW_HTML}}", overview_html(papers))
-        .replace("{{PAPER_TABLE_HTML}}", paper_table_html(papers))
-        .replace("{{PROJECT_INFO_HTML}}", project_info_html(project))
+        .replace("{{PAPER_TABLE_HTML}}", paper_cards_html(papers))
+        .replace("{{PROJECT_INFO_HTML}}", project_info_cards_html(project))
         .replace("{{FIGURE_SOURCES_HTML}}", figure_sources_html())
-        .replace("{{FOUNDATIONS_HTML}}", foundations_html())
+        .replace("{{FOUNDATIONS_HTML}}", foundations_cards_html())
+        .replace("{{CATEGORY_CARDS_HTML}}", category_cards_html(papers))
         .replace("{{PAPER_DATA_JSON}}", json_for_script(papers))
         .replace("{{TAXONOMY_DATA_JSON}}", json_for_script(taxonomy))
         .replace("{{PROJECT_DATA_JSON}}", json_for_script(project))

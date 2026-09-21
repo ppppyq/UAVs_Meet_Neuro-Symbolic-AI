@@ -4,83 +4,126 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>UAVs Meet Neuro-Symbolic AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚁</text></svg>">
   <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
-  <header class="site-header">
+  <header class="hero">
+    <canvas id="hero-webgl" aria-hidden="true"></canvas>
     <div class="wrap">
-      <p class="eyebrow">Literature-review workspace · manuscript in preparation</p>
-      <h1>UAVs Meet Neuro-Symbolic AI</h1>
-      <p class="subtitle">Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy</p>
-      {{PROJECT_INFO_HTML}}
-      <p class="status-note">This is a proposed research framework and evidence
-        knowledge base. It is not a completed systematic review and not an
-        experimental system.</p>
+      <div class="hero-copy">
+        <p class="eyebrow">Neurosymbolic AI × UAV Autonomy</p>
+        <h1>UAVs Meet Neuro-Symbolic AI</h1>
+        <p class="subtitle">Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy</p>
+        <p class="hero-description">A working literature survey connecting learned aerial perception with explicit, auditable reasoning for trustworthy UAV autonomy.</p>
+        {{PROJECT_INFO_HTML}}
+        <p class="hero-description">This is a proposed research framework and evidence knowledge base. It is not a completed systematic review and not an experimental system.</p>
+      </div>
+      <div class="hero-stats">{{OVERVIEW_HTML}}</div>
     </div>
   </header>
 
   <main class="wrap">
-    <section class="overview" aria-labelledby="overview-heading">
-      <h2 id="overview-heading">Project overview</h2>
-      {{OVERVIEW_HTML}}
+    <section aria-labelledby="survey-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="survey-heading">Survey at a glance</h2>
+          <p class="lede">A deliberately narrow survey: learned components and explicit symbolic mechanisms must be functionally coupled, not merely coexist.</p>
+        </div>
+      </div>
+      <div class="survey-grid">
+        <article class="survey-card">
+          <h3>Research question</h3>
+          <p>How can neural learning and explicit symbolic representations, reasoning, and constraints be integrated to support trustworthy UAV autonomy?</p>
+        </article>
+        <article class="survey-card">
+          <h3>What counts as neuro-symbolic</h3>
+          <ul>
+            <li>a neural-learning component</li>
+            <li>an explicit symbolic representation or constraint mechanism</li>
+            <li>a functional coupling that affects learning or inference</li>
+            <li>a stated UAV problem and described validation scope</li>
+          </ul>
+        </article>
+      </div>
     </section>
 
-    <section class="framework" aria-labelledby="framework-heading">
-      <h2 id="framework-heading">Proposed framework</h2>
-      <p>The diagrams below are editable Mermaid sketches loaded from
-        <code>assets/figures/*.mmd</code>, not experimental results and not
-        rendered static SVGs.</p>
-      {{FIGURE_SOURCES_HTML}}
+    <section id="themes" aria-labelledby="themes-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="themes-heading">Five research themes</h2>
+          <p>Primary assignments are mutually exclusive; secondary themes are cross-references only.</p>
+        </div>
+      </div>
+      <div class="theme-grid">{{CATEGORY_CARDS_HTML}}</div>
     </section>
 
-    <section class="foundations" aria-labelledby="foundations-heading">
-      <h2 id="foundations-heading">Foundations, books & workshops</h2>
-      <p>Auxiliary neuro-symbolic foundations, books, and community resources.
-        They are not counted as UAV paper records or core methods.</p>
+    <section id="papers" class="papers-section" aria-labelledby="papers-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="papers-heading">Survey papers</h2>
+          <p>Each card is generated from the same evidence database and shows screening, reading, and validation status.</p>
+        </div>
+      </div>
+      <div class="controls">
+        <label for="search">Search title and keywords
+          <input id="search" type="search" placeholder="e.g. landing, logic, UAV">
+        </label>
+        <label for="task-filter">Task
+          <select id="task-filter">
+            <option value="">All tasks</option>
+          </select>
+        </label>
+        <label for="direction-filter">Integration direction
+          <select id="direction-filter">
+            <option value="">All directions</option>
+          </select>
+        </label>
+        <label for="theme-filter">Research theme
+          <select id="theme-filter">
+            <option value="">All themes</option>
+          </select>
+        </label>
+        <label for="status-filter">Status
+          <select id="status-filter">
+            <option value="">All statuses</option>
+          </select>
+        </label>
+        <button id="reset-filters" type="button">Reset</button>
+      </div>
+      <p id="result-count" aria-live="polite"></p>
+      <div class="papers">{{PAPER_TABLE_HTML}}</div>
+    </section>
+
+    <section id="foundations" aria-labelledby="foundations-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="foundations-heading">Foundations, books &amp; workshops</h2>
+          <p>Auxiliary resources for background, book-length references, and community venues.</p>
+        </div>
+      </div>
       {{FOUNDATIONS_HTML}}
     </section>
 
-    <section class="filters" aria-labelledby="filters-heading">
-      <h2 id="filters-heading">Paper list</h2>
-      <div class="controls">
-        <label for="search">Search title and keywords</label>
-        <input id="search" type="search" placeholder="e.g. landing, logic, UAV">
-
-        <label for="task-filter">Task</label>
-        <select id="task-filter">
-          <option value="">All tasks</option>
-        </select>
-
-        <label for="direction-filter">Integration direction</label>
-        <select id="direction-filter">
-          <option value="">All directions</option>
-        </select>
-
-        <label for="theme-filter">Research theme</label>
-        <select id="theme-filter">
-          <option value="">All themes</option>
-        </select>
-
-        <label for="status-filter">Status</label>
-        <select id="status-filter">
-          <option value="">All statuses</option>
-        </select>
-
-        <button id="reset-filters" type="button">Reset filters</button>
+    <section id="framework" aria-labelledby="framework-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="framework-heading">Proposed framework</h2>
+          <p>Editable Mermaid sketches from <code>assets/figures/*.mmd</code>, not experimental results.</p>
+        </div>
       </div>
-      <p id="result-count" aria-live="polite"></p>
+      {{FIGURE_SOURCES_HTML}}
     </section>
 
-    <section class="papers" aria-label="Paper table">
-      {{PAPER_TABLE_HTML}}
-    </section>
-
-    <section class="methodology" aria-labelledby="methodology-heading">
-      <h2 id="methodology-heading">Methodology and contributions</h2>
-      <p>See the repository documents for the review methodology, proposed
-        taxonomy, evidence rules, and paper outline. In this generated page,
-        paper status and evidence fields are shown directly from
-        <code>data/papers.json</code>.</p>
+    <section id="methodology" aria-labelledby="methodology-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="methodology-heading">Methodology and contributions</h2>
+        </div>
+      </div>
+      <article class="method-card">
+        <p>See the repository documents for the review methodology, proposed taxonomy, evidence rules, and paper outline. Paper status and evidence fields are shown directly from <code>data/papers.json</code>.</p>
+      </article>
     </section>
   </main>
 
@@ -99,6 +142,7 @@
     window.__PROJECT_DATA__ = {{PROJECT_DATA_JSON}};
     window.__NOTES_AVAILABLE__ = {{NOTES_AVAILABLE_JSON}};
   </script>
+  <script src="static/webgl.js"></script>
   <script src="static/app.js"></script>
 </body>
 </html>
