@@ -33,6 +33,7 @@ DOCS_DIR = ROOT / "docs"
 
 PAPERS_PATH = DATA_DIR / "papers.json"
 TAXONOMY_PATH = DATA_DIR / "taxonomy.json"
+FOUNDATIONS_PATH = DATA_DIR / "foundational-resources.json"
 PROJECT_PATH = ROOT / "project.json"
 README_EN_PATH = ROOT / "README.md"
 README_ZH_PATH = ROOT / "README.zh-CN.md"
@@ -40,6 +41,7 @@ BIB_PATH = PAPER_DIR / "references.bib"
 EVIDENCE_MATRIX_PATH = DOCS_DIR / "evidence-matrix.md"
 PAPER_INDEX_PATH = DOCS_DIR / "paper-index.md"
 CATEGORY_COVERAGE_PATH = DOCS_DIR / "category-coverage.md"
+FOUNDATIONS_DOC_PATH = DOCS_DIR / "foundations.md"
 
 OVERVIEW_MARKER_START = "<!-- BEGIN GENERATED:OVERVIEW -->"
 OVERVIEW_MARKER_END = "<!-- END GENERATED:OVERVIEW -->"
@@ -53,6 +55,8 @@ PAPER_INDEX_MARKER_START = "<!-- BEGIN GENERATED:PAPER-INDEX -->"
 PAPER_INDEX_MARKER_END = "<!-- END GENERATED:PAPER-INDEX -->"
 CATEGORY_COVERAGE_MARKER_START = "<!-- BEGIN GENERATED:CATEGORY-COVERAGE -->"
 CATEGORY_COVERAGE_MARKER_END = "<!-- END GENERATED:CATEGORY-COVERAGE -->"
+FOUNDATIONS_MARKER_START = "<!-- BEGIN GENERATED:FOUNDATIONS -->"
+FOUNDATIONS_MARKER_END = "<!-- END GENERATED:FOUNDATIONS -->"
 
 VALID_METADATA_STATUS = {"unverified", "verified", "conflict"}
 VALID_READING_STATUS = {"unread", "abstract_reviewed", "fulltext_reviewed"}
@@ -67,6 +71,9 @@ VALID_ATTRIBUTION = {"author_reported", "reviewer_synthesis", "unverified"}
 VALID_BIBLIOGRAPHY_TYPE = {"article", "inproceedings", "misc", "unpublished", "other"}
 VALID_CONFLICT_SCOPE = {"title", "identity", "fulltext", "venue", "doi", "publication_status"}
 VALID_CLASSIFICATION_STATUS = {"provisional", "reviewed"}
+VALID_RESOURCE_TYPE = {"paper", "book", "workshop", "collection"}
+VALID_CONTRIBUTOR_ROLE = {"authors", "editors", "organizers"}
+VALID_FOUNDATION_VERIFICATION = {"verified", "unverified"}
 
 REQUIRED_FIELDS = {
     "id",
@@ -114,6 +121,7 @@ WEBSITE_TOKENS = (
     "{{PAPER_TABLE_HTML}}",
     "{{PROJECT_INFO_HTML}}",
     "{{FIGURE_SOURCES_HTML}}",
+    "{{FOUNDATIONS_HTML}}",
     "{{PAPER_DATA_JSON}}",
     "{{TAXONOMY_DATA_JSON}}",
     "{{PROJECT_DATA_JSON}}",
@@ -276,6 +284,133 @@ def taxonomy_display_categories() -> list[dict[str, Any]]:
 
 def display_category_ids() -> set[str]:
     return {item["id"] for item in taxonomy_display_categories()}
+
+
+def load_foundational_resources() -> list[dict[str, Any]]:
+    data = load_json(FOUNDATIONS_PATH)
+    if not isinstance(data, dict):
+        raise ManageError(f"{FOUNDATIONS_PATH}: root must be an object")
+    resources = data.get("resources")
+    if not isinstance(resources, list) or not resources:
+        raise ManageError(f"{FOUNDATIONS_PATH}: missing non-empty resources array")
+    return resources
+
+
+def validate_foundational_resources() -> list[str]:
+    errors: list[str] = []
+    try:
+        resources = load_foundational_resources()
+    except ManageError as exc:
+        return [str(exc)]
+
+    seen_ids: set[str] = set()
+    for index, resource in enumerate(resources):
+        location = f"resource {index}"
+        if not isinstance(resource, dict):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: expected object")
+            continue
+        location = f"resource {resource.get('id', index)}"
+        required = {
+            "id",
+            "title",
+            "resource_type",
+            "year",
+            "url",
+            "arxiv_id",
+            "doi",
+            "isbn",
+            "venue",
+            "publisher",
+            "contributors",
+            "contributor_role",
+            "summary",
+            "role",
+            "verification_status",
+            "evidence",
+        }
+        missing = sorted(required - set(resource))
+        if missing:
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: missing fields {', '.join(missing)}")
+
+        resource_id = resource.get("id")
+        if not isinstance(resource_id, str) or not resource_id:
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: id must be a non-empty string")
+        elif resource_id in seen_ids:
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: duplicate id {resource_id}")
+        else:
+            seen_ids.add(resource_id)
+
+        if not isinstance(resource.get("title"), str) or not resource.get("title").strip():
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: title must be a non-empty string")
+        if resource.get("resource_type") not in VALID_RESOURCE_TYPE:
+            errors.append(
+                f"{FOUNDATIONS_PATH}: {location}: resource_type must be one of {sorted(VALID_RESOURCE_TYPE)}"
+            )
+        year = resource.get("year")
+        if not isinstance(year, int) or isinstance(year, bool) or year <= 0:
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: year must be a positive integer")
+        if not is_http_url(resource.get("url"), required=True):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: url must be an http(s) URL")
+        if resource.get("arxiv_id") and not is_valid_arxiv_id(resource.get("arxiv_id")):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: invalid arXiv ID {resource.get('arxiv_id')!r}")
+        if resource.get("doi") and not is_valid_doi(resource.get("doi")):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: invalid DOI {resource.get('doi')!r}")
+        if not resource.get("arxiv_id") and not resource.get("doi") and not resource.get("url"):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: at least one of arxiv_id, doi, or url must be present")
+
+        isbn = resource.get("isbn")
+        if not isinstance(isbn, list) or not all(isinstance(item, str) and item.strip() for item in isbn):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: isbn must be an array of non-empty strings")
+        if not isinstance(resource.get("venue"), str) or not resource.get("venue").strip():
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: venue must be a non-empty string")
+        if resource.get("publisher") is not None and (
+            not isinstance(resource.get("publisher"), str) or not resource.get("publisher").strip()
+        ):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: publisher must be a non-empty string or null")
+
+        contributors = resource.get("contributors")
+        if not isinstance(contributors, list) or not contributors or not all(
+            isinstance(item, str) and item.strip() for item in contributors
+        ):
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: contributors must be a non-empty array of strings")
+        if resource.get("contributor_role") not in VALID_CONTRIBUTOR_ROLE:
+            errors.append(
+                f"{FOUNDATIONS_PATH}: {location}: contributor_role must be one of {sorted(VALID_CONTRIBUTOR_ROLE)}"
+            )
+        if not isinstance(resource.get("summary"), str) or not resource.get("summary").strip():
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: summary must be a non-empty string")
+        if not isinstance(resource.get("role"), str) or not resource.get("role").strip():
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: role must be a non-empty string")
+        if resource.get("verification_status") not in VALID_FOUNDATION_VERIFICATION:
+            errors.append(
+                f"{FOUNDATIONS_PATH}: {location}: verification_status must be one of {sorted(VALID_FOUNDATION_VERIFICATION)}"
+            )
+
+        evidence = resource.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence must be a non-empty array")
+            continue
+        for item in evidence:
+            if not isinstance(item, dict):
+                errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence entries must be objects")
+                continue
+            for key in ("source_url", "source_kind", "source_version", "claim", "accessed_at"):
+                if key not in item:
+                    errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence entry missing {key}")
+            if not is_http_url(item.get("source_url"), required=True):
+                errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence source_url must be an http(s) URL")
+            if item.get("source_kind") not in VALID_SOURCE_KIND:
+                errors.append(
+                    f"{FOUNDATIONS_PATH}: {location}: invalid evidence source_kind {item.get('source_kind')!r}"
+                )
+            if not isinstance(item.get("source_version"), str) or not item.get("source_version").strip():
+                errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence source_version must be non-empty")
+            if not isinstance(item.get("claim"), str) or not item.get("claim").strip():
+                errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence claim must be non-empty")
+            if not is_valid_date(item.get("accessed_at")):
+                errors.append(f"{FOUNDATIONS_PATH}: {location}: evidence accessed_at must be a valid ISO date")
+
+    return errors
 
 
 def validate_data() -> tuple[bool, list[str]]:
@@ -616,6 +751,7 @@ def validate_data() -> tuple[bool, list[str]]:
                             f"{relation!r} with {rel_id}.{reciprocal!r}"
                         )
 
+    errors.extend(validate_foundational_resources())
     return (not errors), errors
 
 
@@ -1152,6 +1288,157 @@ def category_coverage_markdown(papers: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def resource_contributor_label(resource: dict[str, Any]) -> str:
+    role = resource.get("contributor_role") or "contributors"
+    labels = {
+        "authors": "Authors",
+        "editors": "Editors",
+        "organizers": "Organizers",
+    }
+    return labels.get(role, role.replace("_", " ").capitalize())
+
+
+def resource_links_markdown(resource: dict[str, Any]) -> str:
+    links: list[str] = []
+    if resource.get("doi"):
+        links.append(f"[DOI](https://doi.org/{resource['doi']})")
+    if resource.get("arxiv_id"):
+        links.append(f"[arXiv](https://arxiv.org/abs/{resource['arxiv_id']})")
+    if resource.get("url") and not resource.get("doi") and not resource.get("arxiv_id"):
+        links.append(f"[page]({resource['url']})")
+    isbn = resource.get("isbn") or []
+    if isbn:
+        links.append("ISBN " + ", ".join(markdown_escape(item) for item in isbn))
+    return " \u00b7 ".join(links) if links else "\u2014"
+
+
+def resource_venue_label(resource: dict[str, Any]) -> str:
+    venue = resource.get("venue") or ""
+    publisher = resource.get("publisher") or ""
+    if publisher and publisher.lower() not in venue.lower():
+        return f"{venue}; {publisher}" if venue else publisher
+    return venue
+
+
+def foundations_section_markdown(
+    resources: list[dict[str, Any]], resource_type: str, language: str
+) -> str:
+    records = [resource for resource in resources if resource.get("resource_type") == resource_type]
+    if not records:
+        return ""
+    titles = {
+        "paper": "Foundational papers",
+        "book": "Books and edited collections",
+        "workshop": "Workshops and community resources",
+        "collection": "Collections and special issues",
+    }
+    if language == "zh":
+        titles = {
+            "paper": "基础论文",
+            "book": "书籍与编著",
+            "workshop": "Workshop 与社区资源",
+            "collection": "专辑与特刊",
+        }
+    lines = [f"### {titles.get(resource_type, resource_type)}", ""]
+    if not records:
+        return ""
+    headers = ["Resource", "Contributors", "Year", "Venue / Publisher", "Links"]
+    lines.append("| " + " | ".join(headers) + " |")
+    lines.append("|" + "---|" * len(headers))
+    for resource in records:
+        contributors = ", ".join(resource.get("contributors") or [])
+        venue = resource_venue_label(resource)
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    markdown_escape(resource.get("title")),
+                    markdown_escape(f"{resource_contributor_label(resource)}: {contributors}"),
+                    str(resource.get("year") or ""),
+                    markdown_escape(venue),
+                    resource_links_markdown(resource),
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def foundations_markdown(language: str) -> str:
+    resources = load_foundational_resources()
+    parts: list[str] = []
+    intro = (
+        "These resources provide background, book-length references, and community "
+        "venues. They are auxiliary: they are not counted as UAV paper records or "
+        "core methods."
+    )
+    if language == "zh":
+        intro = (
+            "以下资源用于提供理论基础、书籍参考和社区信息。它们是辅助性资源，"
+            "不计入 UAV 文献记录或核心方法统计。"
+        )
+    parts.append(intro)
+    parts.append("")
+    for resource_type in ("paper", "book", "workshop", "collection"):
+        section = foundations_section_markdown(resources, resource_type, language)
+        if section:
+            parts.append(section)
+    return "\n".join(parts).rstrip() + "\n"
+
+
+def foundations_html() -> str:
+    resources = load_foundational_resources()
+    groups = [
+        ("paper", "Foundational papers"),
+        ("book", "Books and edited collections"),
+        ("workshop", "Workshops and community resources"),
+        ("collection", "Collections and special issues"),
+    ]
+    blocks: list[str] = []
+    for resource_type, title in groups:
+        records = [resource for resource in resources if resource.get("resource_type") == resource_type]
+        if not records:
+            continue
+        rows: list[str] = []
+        for resource in records:
+            contributors = ", ".join(resource.get("contributors") or [])
+            venue = resource_venue_label(resource)
+            link_parts: list[str] = []
+            if resource.get("doi"):
+                link_parts.append(
+                    f'<a href="https://doi.org/{html.escape(str(resource["doi"]))}" rel="noopener noreferrer">DOI</a>'
+                )
+            if resource.get("arxiv_id"):
+                link_parts.append(
+                    f'<a href="https://arxiv.org/abs/{html.escape(str(resource["arxiv_id"]))}" rel="noopener noreferrer">arXiv</a>'
+                )
+            if resource.get("url") and not resource.get("doi") and not resource.get("arxiv_id"):
+                link_parts.append(
+                    f'<a href="{html.escape(str(resource["url"]))}" rel="noopener noreferrer">page</a>'
+                )
+            links = " \u00b7 ".join(link_parts) or "\u2014"
+            rows.append(
+                "<tr>"
+                f"<td>{html.escape(resource.get('title') or '')}</td>"
+                f"<td>{html.escape(resource_contributor_label(resource))}: "
+                f"{html.escape(contributors)}</td>"
+                f"<td>{html.escape(str(resource.get('year') or ''))}</td>"
+                f"<td>{html.escape(venue)}</td>"
+                f"<td>{links}</td>"
+                "</tr>"
+            )
+        blocks.append(
+            f"<h3>{html.escape(title)}</h3>"
+            '<div class="table-wrap"><table><thead><tr>'
+            "<th>Resource</th><th>Contributors</th><th>Year</th>"
+            "<th>Venue / Publisher</th><th>Links</th>"
+            "</tr></thead><tbody>"
+            + "".join(rows)
+            + "</tbody></table></div>"
+        )
+    return "\n".join(blocks)
+
+
 def overview_markdown(papers: list[dict[str, Any]], language: str) -> str:
     stats = papers_stats(papers)
     if language == "zh":
@@ -1471,6 +1758,13 @@ def generate_readme(papers: list[dict[str, Any]], source: Path, target: Path, la
         research_themes_markdown(papers, language),
         str(source),
     )
+    text = apply_generated_block(
+        text,
+        FOUNDATIONS_MARKER_START,
+        FOUNDATIONS_MARKER_END,
+        foundations_markdown(language),
+        str(source),
+    )
     write_text(target, text)
 
 
@@ -1500,6 +1794,17 @@ def generate_category_coverage(papers: list[dict[str, Any]], output_path: Path) 
     write_text(output_path, text)
 
 
+def generate_foundations_doc(output_path: Path) -> None:
+    content = (
+        "# Foundations, books, and workshops\n\n"
+        "This file is generated from `data/foundational-resources.json` by "
+        "`scripts/manage.py build`. These resources are auxiliary and are not "
+        "counted as UAV paper records or core methods.\n\n"
+        + foundations_markdown("en")
+    )
+    write_text(output_path, content)
+
+
 def generate_evidence_matrix(papers: list[dict[str, Any]], output_path: Path) -> None:
     source = EVIDENCE_MATRIX_PATH
     text = source.read_text(encoding="utf-8")
@@ -1526,6 +1831,7 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
         .replace("{{PAPER_TABLE_HTML}}", paper_table_html(papers))
         .replace("{{PROJECT_INFO_HTML}}", project_info_html(project))
         .replace("{{FIGURE_SOURCES_HTML}}", figure_sources_html())
+        .replace("{{FOUNDATIONS_HTML}}", foundations_html())
         .replace("{{PAPER_DATA_JSON}}", json_for_script(papers))
         .replace("{{TAXONOMY_DATA_JSON}}", json_for_script(taxonomy))
         .replace("{{PROJECT_DATA_JSON}}", json_for_script(project))
@@ -1554,6 +1860,7 @@ def generate_tracked(papers: list[dict[str, Any]], output_root: Path) -> None:
     generate_evidence_matrix(papers, output_root / "docs" / "evidence-matrix.md")
     generate_paper_index(papers, output_root / "docs" / "paper-index.md")
     generate_category_coverage(papers, output_root / "docs" / "category-coverage.md")
+    generate_foundations_doc(output_root / "docs" / "foundations.md")
 
 
 def generate_all(papers: list[dict[str, Any]], output_root: Path) -> None:
@@ -1632,6 +1939,7 @@ def compare_tracked() -> tuple[bool, list[str]]:
         "docs/evidence-matrix.md": EVIDENCE_MATRIX_PATH.read_bytes(),
         "docs/paper-index.md": PAPER_INDEX_PATH.read_bytes(),
         "docs/category-coverage.md": CATEGORY_COVERAGE_PATH.read_bytes(),
+        "docs/foundations.md": FOUNDATIONS_DOC_PATH.read_bytes(),
     }
     errors.extend(compare_file_maps(expected, actual, "tracked generated output"))
     check_local_markdown_links(ROOT, errors)
@@ -1654,6 +1962,7 @@ def compare_expected_with_actual() -> tuple[bool, list[str]]:
             "docs/evidence-matrix.md": EVIDENCE_MATRIX_PATH.read_bytes(),
             "docs/paper-index.md": PAPER_INDEX_PATH.read_bytes(),
             "docs/category-coverage.md": CATEGORY_COVERAGE_PATH.read_bytes(),
+            "docs/foundations.md": FOUNDATIONS_DOC_PATH.read_bytes(),
         }
     )
     errors.extend(compare_file_maps(expected, actual, "generated output"))
@@ -1818,13 +2127,15 @@ def command_validate() -> int:
     papers = load_json(PAPERS_PATH)
     stats = papers_stats(papers)
     print("Validation passed.")
+    foundations = load_foundational_resources()
     print(
-        "  records={} candidates={} fulltext_reviewed={} core_methods={} unique_seed_studies={} migration_pending={}".format(
+        "  records={} candidates={} fulltext_reviewed={} core_methods={} unique_seed_studies={} foundations={} migration_pending={}".format(
             stats["total"],
             stats["candidates"],
             stats["fulltext_reviewed"],
             stats["core_methods"],
             stats["unique_seed_studies"],
+            len(foundations),
             stats["migration_pending"],
         )
     )

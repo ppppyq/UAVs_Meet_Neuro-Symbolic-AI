@@ -28,6 +28,9 @@ Status: manuscript in preparation.
   and functional coupling; what does not automatically qualify.
 - Evidence: `docs/scope.md`; general foundations such as Neurosymbolic AI: The
   3rd Wave and DeepProbLog.
+- Additional book-length and community resources are catalogued separately in
+  `data/foundational-resources.json` and `docs/foundations.md`; they are
+  auxiliary and do not count as UAV paper records or core methods.
 - Planned table/figure: concept-boundary table.
 - Gap: full-text synthesis of foundation papers not yet completed.
 

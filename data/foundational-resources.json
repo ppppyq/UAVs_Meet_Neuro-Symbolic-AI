@@ -1,0 +1,280 @@
+{
+  "schema_version": "0.1.0",
+  "note": "Auxiliary neuro-symbolic foundations, books, and community resources. These are not counted as UAV papers or core methods.",
+  "resources": [
+    {
+      "id": "fr-neural-symbolic-survey-2017",
+      "title": "Neural-Symbolic Learning and Reasoning: A Survey and Interpretation",
+      "resource_type": "paper",
+      "year": 2017,
+      "url": "https://arxiv.org/abs/1711.03902",
+      "arxiv_id": "1711.03902",
+      "doi": null,
+      "isbn": [],
+      "venue": "arXiv preprint",
+      "publisher": null,
+      "contributors": [
+        "Tarek R. Besold",
+        "Artur d'Avila Garcez",
+        "Sebastian Bader",
+        "Howard Bowman",
+        "Pedro Domingos",
+        "Pascal Hitzler",
+        "Kai-Uwe Kuehnberger",
+        "Luis C. Lamb",
+        "Daniel Lowd",
+        "Priscila Machado Vieira Lima",
+        "Leo de Penning",
+        "Gadi Pinkas",
+        "Hoifung Poon",
+        "Gerson Zaverucha"
+      ],
+      "contributor_role": "authors",
+      "summary": "A broad survey of neural-symbolic learning and reasoning, covering theoretical foundations, system realisations, applications, and open challenges.",
+      "role": "Foundational survey for defining neural-symbolic integration and its historical research programme.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://arxiv.org/abs/1711.03902",
+          "source_kind": "abstract",
+          "source_version": "arxiv-abstract",
+          "claim": "arXiv API and abs page returned matching title, author list, and abstract on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-neurosymbolic-programming-2021",
+      "title": "Neurosymbolic Programming",
+      "resource_type": "paper",
+      "year": 2021,
+      "url": "https://doi.org/10.1561/2500000049",
+      "arxiv_id": null,
+      "doi": "10.1561/2500000049",
+      "isbn": [],
+      "venue": "Foundations and Trends in Programming Languages, 7(3), 158-243",
+      "publisher": "Now Publishers",
+      "contributors": [
+        "Swarat Chaudhuri",
+        "Kevin Ellis",
+        "Oleksandr Polozov",
+        "Rishabh Singh",
+        "Armando Solar-Lezama",
+        "Yisong Yue"
+      ],
+      "contributor_role": "authors",
+      "summary": "A monograph-style survey of neuro-symbolic programming that combines learned components with explicit programs and symbolic reasoning.",
+      "role": "Foundational programming-language perspective on coupling neural learning with explicit symbolic programs.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.1561/2500000049",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, authors, venue, year, and DOI on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-neuro-symbolic-current-trends-2022",
+      "title": "Neuro-symbolic artificial intelligence: Current trends",
+      "resource_type": "paper",
+      "year": 2022,
+      "url": "https://doi.org/10.3233/aic-210084",
+      "arxiv_id": null,
+      "doi": "10.3233/aic-210084",
+      "isbn": [],
+      "venue": "AI Communications, 34(3), 197-209",
+      "publisher": "SAGE Publications",
+      "contributors": [
+        "Md Kamruzzaman Sarker",
+        "Lu Zhou",
+        "Aaron Eberhart",
+        "Pascal Hitzler"
+      ],
+      "contributor_role": "authors",
+      "summary": "A survey of current neuro-symbolic trends and research directions across knowledge representation, learning, reasoning, and explanation.",
+      "role": "Recent foundational overview that helps position UAV-specific integration work within the wider field.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.3233/aic-210084",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, authors, venue, year, pages, and DOI on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-neuro-symbolic-state-of-art-2021",
+      "title": "Neuro-Symbolic Artificial Intelligence: The State of the Art",
+      "resource_type": "book",
+      "year": 2021,
+      "url": "https://doi.org/10.3233/faia342",
+      "arxiv_id": null,
+      "doi": "10.3233/faia342",
+      "isbn": [
+        "9781643682440",
+        "9781643682457"
+      ],
+      "venue": "Frontiers in Artificial Intelligence and Applications",
+      "publisher": "IOS Press",
+      "contributors": [
+        "Pascal Hitzler",
+        "Md Kamruzzaman Sarker"
+      ],
+      "contributor_role": "editors",
+      "summary": "An edited collection on the state of the art of neuro-symbolic artificial intelligence.",
+      "role": "Book-length reference for foundations, methods, and application areas.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.3233/faia342",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, editors, publisher, ISBN, year, and DOI on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-compendium-neurosymbolic-ai-2023",
+      "title": "Compendium of Neurosymbolic Artificial Intelligence",
+      "resource_type": "book",
+      "year": 2023,
+      "url": "https://doi.org/10.3233/faia369",
+      "arxiv_id": null,
+      "doi": "10.3233/faia369",
+      "isbn": [
+        "9781643684062",
+        "9781643684079"
+      ],
+      "venue": "Frontiers in Artificial Intelligence and Applications",
+      "publisher": "IOS Press",
+      "contributors": [
+        "Pascal Hitzler",
+        "Md Kamruzzaman Sarker",
+        "Aaron Eberhart"
+      ],
+      "contributor_role": "editors",
+      "summary": "An edited compendium covering neuro-symbolic methods, systems, and application perspectives.",
+      "role": "Book-length collection for broader coverage beyond individual surveys.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.3233/faia369",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, editors, publisher, ISBN, year, and DOI on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-handbook-neurosymbolic-ai-kg-2025",
+      "title": "Handbook on Neurosymbolic AI and Knowledge Graphs",
+      "resource_type": "book",
+      "year": 2025,
+      "url": "https://doi.org/10.3233/faia400",
+      "arxiv_id": null,
+      "doi": "10.3233/faia400",
+      "isbn": [
+        "9781643685786",
+        "9781643685793"
+      ],
+      "venue": "Frontiers in Artificial Intelligence and Applications",
+      "publisher": "IOS Press",
+      "contributors": [
+        "Pascal Hitzler",
+        "Abhilekha Dalal",
+        "Mohammad Saeid Mahdavinejad",
+        "Sanaz Saki Norouzi"
+      ],
+      "contributor_role": "editors",
+      "summary": "A handbook focused on neuro-symbolic AI and knowledge graphs.",
+      "role": "Reference for symbolic knowledge representation and graph-based integration foundations.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.3233/faia400",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, editors, publisher, ISBN, year, and DOI on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-neurosymbolic-ai-foundations-applications-2026",
+      "title": "Neurosymbolic AI: Foundations and Applications",
+      "resource_type": "book",
+      "year": 2026,
+      "url": "https://doi.org/10.1002/9781394302406",
+      "arxiv_id": null,
+      "doi": "10.1002/9781394302406",
+      "isbn": [
+        "9781394302376",
+        "9781394302406"
+      ],
+      "venue": "Wiley",
+      "publisher": "Wiley",
+      "contributors": [
+        "Alvaro Velasquez",
+        "Shankar Sastry",
+        "Pradeep Ravikumar",
+        "Houbing Song",
+        "Sandeep Neema"
+      ],
+      "contributor_role": "editors",
+      "summary": "An edited book on neurosymbolic AI foundations and applications, including chapters on reasoning, assurance, safety, and legal AI.",
+      "role": "Recent edited reference explicitly linking neuro-symbolic foundations with application domains and assurance.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://doi.org/10.1002/9781394302406",
+          "source_kind": "publisher",
+          "source_version": "Crossref metadata",
+          "claim": "Crossref metadata returned title, subtitle, editors, publisher, ISBN, year, DOI, and chapter records on 2026-09-21.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    },
+    {
+      "id": "fr-icra25-foundation-models-neurosymbolic-robotics",
+      "title": "ICRA'25 Workshop on Foundation Models and Neuro-Symbolic AI for Robotics",
+      "resource_type": "workshop",
+      "year": 2025,
+      "url": "https://sairlab.org/icra25/",
+      "arxiv_id": null,
+      "doi": null,
+      "isbn": [],
+      "venue": "ICRA 2025, Atlanta, GA, USA",
+      "publisher": null,
+      "contributors": [
+        "Chen Wang",
+        "Lu Gan",
+        "Yunzhu Li",
+        "Jiajun Wu",
+        "Ayoung Kim",
+        "Letizia Gionfrida",
+        "Luigi Palmieri",
+        "Alexander Gray"
+      ],
+      "contributor_role": "organizers",
+      "summary": "A May 19, 2025 ICRA workshop on foundation models and neuro-symbolic AI for robotics, with invited talks, posters, spotlight/oral presentations, and an OpenReview archive of accepted workshop papers.",
+      "role": "Community venue for robotics-focused neuro-symbolic work and a source of related papers beyond UAV-specific records.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://sairlab.org/icra25/",
+          "source_kind": "publisher",
+          "source_version": "workshop website",
+          "claim": "Workshop page was read on 2026-09-21 and lists the title, May 19, 2025 date, ICRA 2025 venue, organizers, programme, and OpenReview archive policy.",
+          "accessed_at": "2026-09-21"
+        }
+      ]
+    }
+  ]
+}

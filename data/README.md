@@ -69,6 +69,15 @@ from it and must not be edited as a separate source of truth.
   the assignment.
 - `classification_status`: `provisional` or `reviewed`.
 
+### Foundational-resource fields
+
+`foundational-resources.json` is separate from `papers.json` so that books,
+workshops, and broad background surveys do not inflate UAV paper counts. Each
+resource records `resource_type` (`paper`, `book`, `workshop`, or
+`collection`), `contributors`, `contributor_role`, venue/publisher and ISBN/DOI
+metadata where available, a short summary and role, verification status, and
+source evidence.
+
 ## Counting rules
 
 Only a record that is all of the following counts as a core UAV method:
@@ -85,6 +94,9 @@ Different versions of the same `work_id` are counted once.
 
 - `taxonomy.json`: proposed multi-axis taxonomy plus five reader-facing
   `display_categories`.
+- `foundational-resources.json`: auxiliary foundational papers, books, and
+  workshops. These resources are not counted as UAV paper records or core
+  methods.
 - `reference-sources.json`: reference repositories, pages, and their uses. They
   are not research-paper records.
 - `search-log.json`: searches that were actually performed, with limitations.

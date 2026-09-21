@@ -90,6 +90,20 @@ class GenerationTests(unittest.TestCase):
         self.assertNotIn("</script><script>", text)
         self.assertIn("<\\/script>", text)
 
+    def test_foundations_markdown_contains_book_and_workshop(self):
+        text = manage.foundations_markdown("en")
+        self.assertIn("Neurosymbolic AI: Foundations and Applications", text)
+        self.assertIn("ICRA'25 Workshop", text)
+        self.assertIn("not counted as UAV paper records", text)
+
+    def test_foundations_html_contains_links_and_headings(self):
+        text = manage.foundations_html()
+        self.assertIn("Foundational papers", text)
+        self.assertIn("Books and edited collections", text)
+        self.assertIn("Workshops and community resources", text)
+        self.assertIn("https://doi.org/10.1002/9781394302406", text)
+        self.assertIn("https://sairlab.org/icra25/", text)
+
     def test_render_bibtex_excludes_withdrawn(self):
         records = [
             sample_record(id="p-verified", work_id="work-a", metadata_status="verified"),
@@ -196,6 +210,9 @@ class CheckGenerationTests(unittest.TestCase):
             "<!-- BEGIN GENERATED:RESEARCH-THEMES -->\n"
             "old\n"
             "<!-- END GENERATED:RESEARCH-THEMES -->\n"
+            "<!-- BEGIN GENERATED:FOUNDATIONS -->\n"
+            "old\n"
+            "<!-- END GENERATED:FOUNDATIONS -->\n"
         )
         zh = en
         (root / "README.md").write_text(en, encoding="utf-8")
@@ -228,24 +245,25 @@ class CheckGenerationTests(unittest.TestCase):
         (root / "paper").mkdir(parents=True, exist_ok=True)
         papers_path = root / "data" / "papers.json"
         taxonomy_path = root / "data" / "taxonomy.json"
+        foundations_path = root / "data" / "foundational-resources.json"
         papers_path.parent.mkdir(parents=True, exist_ok=True)
         papers_path.write_text(json.dumps(records), encoding="utf-8")
         taxonomy_path.write_text(json.dumps(manage.load_json(manage.TAXONOMY_PATH)), encoding="utf-8")
-        return root, papers_path, taxonomy_path
+        foundations_path.write_text(
+            json.dumps(manage.load_json(manage.FOUNDATIONS_PATH)), encoding="utf-8"
+        )
+        return root, papers_path, taxonomy_path, foundations_path
 
     def test_check_tracked_only_works_without_site(self):
         records = [sample_record()]
-        root, papers_path, taxonomy_path = self._make_tracked_fixture(records)
+        root, papers_path, taxonomy_path, foundations_path = self._make_tracked_fixture(records)
         readme_en = root / "README.md"
         readme_zh = root / "README.zh-CN.md"
         bib = root / "paper" / "references.bib"
         evidence = root / "docs" / "evidence-matrix.md"
         paper_index = root / "docs" / "paper-index.md"
         category_coverage = root / "docs" / "category-coverage.md"
-        paper_index = root / "docs" / "paper-index.md"
-        category_coverage = root / "docs" / "category-coverage.md"
-        paper_index = root / "docs" / "paper-index.md"
-        category_coverage = root / "docs" / "category-coverage.md"
+        foundations_doc = root / "docs" / "foundations.md"
         with (
             mock.patch.object(manage, "ROOT", root),
             mock.patch.object(manage, "PAPERS_PATH", papers_path),
@@ -256,6 +274,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
             mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
             mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
+            mock.patch.object(manage, "FOUNDATIONS_PATH", foundations_path),
+            mock.patch.object(manage, "FOUNDATIONS_DOC_PATH", foundations_doc),
         ):
             manage.generate_tracked(records, root)
             ok, errors = manage.compare_tracked()
@@ -264,13 +284,14 @@ class CheckGenerationTests(unittest.TestCase):
 
     def test_data_changed_without_regeneration_makes_check_fail(self):
         records = [sample_record()]
-        root, papers_path, taxonomy_path = self._make_tracked_fixture(records)
+        root, papers_path, taxonomy_path, foundations_path = self._make_tracked_fixture(records)
         readme_en = root / "README.md"
         readme_zh = root / "README.zh-CN.md"
         bib = root / "paper" / "references.bib"
         evidence = root / "docs" / "evidence-matrix.md"
         paper_index = root / "docs" / "paper-index.md"
         category_coverage = root / "docs" / "category-coverage.md"
+        foundations_doc = root / "docs" / "foundations.md"
         with (
             mock.patch.object(manage, "ROOT", root),
             mock.patch.object(manage, "PAPERS_PATH", papers_path),
@@ -281,6 +302,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
             mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
             mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
+            mock.patch.object(manage, "FOUNDATIONS_PATH", foundations_path),
+            mock.patch.object(manage, "FOUNDATIONS_DOC_PATH", foundations_doc),
         ):
             manage.generate_tracked(records, root)
             changed = json.loads(papers_path.read_text(encoding="utf-8"))
@@ -299,16 +322,21 @@ class CheckGenerationTests(unittest.TestCase):
         (root / "paper").mkdir(parents=True, exist_ok=True)
         papers_path = root / "data" / "papers.json"
         taxonomy_path = root / "data" / "taxonomy.json"
+        foundations_path = root / "data" / "foundational-resources.json"
         project_path = root / "project.json"
         website_dir = root / "website"
         site_dir = root / "site"
         papers_path.parent.mkdir(parents=True, exist_ok=True)
         papers_path.write_text(json.dumps(records), encoding="utf-8")
         taxonomy_path.write_text(json.dumps(manage.load_json(manage.TAXONOMY_PATH)), encoding="utf-8")
+        foundations_path.write_text(
+            json.dumps(manage.load_json(manage.FOUNDATIONS_PATH)), encoding="utf-8"
+        )
         project_path.write_text(json.dumps(manage.load_json(manage.PROJECT_PATH)), encoding="utf-8")
         (website_dir / "static").mkdir(parents=True, exist_ok=True)
         (website_dir / "template.html").write_text(
             "{{OVERVIEW_HTML}}{{PAPER_TABLE_HTML}}{{PROJECT_INFO_HTML}}{{FIGURE_SOURCES_HTML}}"
+            "{{FOUNDATIONS_HTML}}"
             "{{PAPER_DATA_JSON}}{{TAXONOMY_DATA_JSON}}{{PROJECT_DATA_JSON}}{{NOTES_AVAILABLE_JSON}}",
             encoding="utf-8",
         )
@@ -321,6 +349,7 @@ class CheckGenerationTests(unittest.TestCase):
         evidence = root / "docs" / "evidence-matrix.md"
         paper_index = root / "docs" / "paper-index.md"
         category_coverage = root / "docs" / "category-coverage.md"
+        foundations_doc = root / "docs" / "foundations.md"
 
         def snapshot():
             return {
@@ -342,6 +371,8 @@ class CheckGenerationTests(unittest.TestCase):
             mock.patch.object(manage, "EVIDENCE_MATRIX_PATH", evidence),
             mock.patch.object(manage, "PAPER_INDEX_PATH", paper_index),
             mock.patch.object(manage, "CATEGORY_COVERAGE_PATH", category_coverage),
+            mock.patch.object(manage, "FOUNDATIONS_PATH", foundations_path),
+            mock.patch.object(manage, "FOUNDATIONS_DOC_PATH", foundations_doc),
         ):
             manage.generate_all(records, root)
             before = snapshot()

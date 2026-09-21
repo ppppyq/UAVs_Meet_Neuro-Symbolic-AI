@@ -199,6 +199,40 @@ Methods where explicit symbolic structure supports human-UAV, multi-UAV, or netw
 
 <!-- END GENERATED:RESEARCH-THEMES -->
 
+## 🧭 基础论文、书籍与 workshop
+
+这里列出神经符号 AI 的基础论文、书籍和社区资源。它们属于辅助材料，不计入
+UAV 文献记录或核心方法统计。详见 [docs/foundations.md](docs/foundations.md)。
+
+<!-- BEGIN GENERATED:FOUNDATIONS -->
+
+以下资源用于提供理论基础、书籍参考和社区信息。它们是辅助性资源，不计入 UAV 文献记录或核心方法统计。
+
+### 基础论文
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| Neural-Symbolic Learning and Reasoning: A Survey and Interpretation | Authors: Tarek R. Besold, Artur d'Avila Garcez, Sebastian Bader, Howard Bowman, Pedro Domingos, Pascal Hitzler, Kai-Uwe Kuehnberger, Luis C. Lamb, Daniel Lowd, Priscila Machado Vieira Lima, Leo de Penning, Gadi Pinkas, Hoifung Poon, Gerson Zaverucha | 2017 | arXiv preprint | [arXiv](https://arxiv.org/abs/1711.03902) |
+| Neurosymbolic Programming | Authors: Swarat Chaudhuri, Kevin Ellis, Oleksandr Polozov, Rishabh Singh, Armando Solar-Lezama, Yisong Yue | 2021 | Foundations and Trends in Programming Languages, 7(3), 158-243; Now Publishers | [DOI](https://doi.org/10.1561/2500000049) |
+| Neuro-symbolic artificial intelligence: Current trends | Authors: Md Kamruzzaman Sarker, Lu Zhou, Aaron Eberhart, Pascal Hitzler | 2022 | AI Communications, 34(3), 197-209; SAGE Publications | [DOI](https://doi.org/10.3233/aic-210084) |
+
+### 书籍与编著
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| Neuro-Symbolic Artificial Intelligence: The State of the Art | Editors: Pascal Hitzler, Md Kamruzzaman Sarker | 2021 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia342) · ISBN 9781643682440, 9781643682457 |
+| Compendium of Neurosymbolic Artificial Intelligence | Editors: Pascal Hitzler, Md Kamruzzaman Sarker, Aaron Eberhart | 2023 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia369) · ISBN 9781643684062, 9781643684079 |
+| Handbook on Neurosymbolic AI and Knowledge Graphs | Editors: Pascal Hitzler, Abhilekha Dalal, Mohammad Saeid Mahdavinejad, Sanaz Saki Norouzi | 2025 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia400) · ISBN 9781643685786, 9781643685793 |
+| Neurosymbolic AI: Foundations and Applications | Editors: Alvaro Velasquez, Shankar Sastry, Pradeep Ravikumar, Houbing Song, Sandeep Neema | 2026 | Wiley | [DOI](https://doi.org/10.1002/9781394302406) · ISBN 9781394302376, 9781394302406 |
+
+### Workshop 与社区资源
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| ICRA'25 Workshop on Foundation Models and Neuro-Symbolic AI for Robotics | Organizers: Chen Wang, Lu Gan, Yunzhu Li, Jiajun Wu, Ayoung Kim, Letizia Gionfrida, Luigi Palmieri, Alexander Gray | 2025 | ICRA 2025, Atlanta, GA, USA | [page](https://sairlab.org/icra25/) |
+
+<!-- END GENERATED:FOUNDATIONS -->
+
 ## 🗂 仓库结构
 
 | 路径 | 用途 |
@@ -239,6 +273,7 @@ py -3.14 scripts/manage.py serve
 - [检索协议](docs/search-protocol.md)
 - [暂定分类体系](docs/taxonomy.md)
 - [主题覆盖统计](docs/category-coverage.md)
+- [基础论文、书籍与 workshop](docs/foundations.md)
 - [平铺论文索引](docs/paper-index.md)
 - [相关工作比较](docs/related-work-comparison.md)
 - [定位与可检验假设](docs/positioning.md)

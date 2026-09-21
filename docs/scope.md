@@ -55,6 +55,9 @@ If evidence is missing or insufficient, keep the record as `candidate`,
    mutually replacing linear technology generations.
 10. Do not claim “first”, “only”, or “uniformly superior” without a systematic,
     evidence-backed search.
+11. Foundational papers, books, and workshops listed in
+    `data/foundational-resources.json` are auxiliary context. They are not
+    counted as UAV paper records or core methods.
 
 ## Evidence categories
 

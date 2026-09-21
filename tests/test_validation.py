@@ -278,6 +278,38 @@ class ValidationTests(unittest.TestCase):
         )
         self.assertTrue(ok, errors)
 
+    def test_foundational_resources_are_valid(self):
+        errors = manage.validate_foundational_resources()
+        self.assertEqual(errors, [])
+
+    def test_foundational_resources_cover_papers_books_and_workshops(self):
+        resources = manage.load_foundational_resources()
+        resource_types = {resource["resource_type"] for resource in resources}
+        self.assertIn("paper", resource_types)
+        self.assertIn("book", resource_types)
+        self.assertIn("workshop", resource_types)
+
+    def test_foundational_workshop_without_doi_is_allowed(self):
+        resources = manage.load_foundational_resources()
+        workshop = next(
+            resource for resource in resources if resource["resource_type"] == "workshop"
+        )
+        self.assertIsNone(workshop["doi"])
+        self.assertIsNone(workshop["arxiv_id"])
+        self.assertTrue(workshop["url"].startswith("https://"))
+
+    def test_invalid_foundational_resource_type_is_rejected(self):
+        resources = manage.load_foundational_resources()
+        broken = copy.deepcopy(resources)
+        broken[0]["resource_type"] = "not-a-type"
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "foundational-resources.json"
+        path.write_text(json.dumps({"resources": broken}), encoding="utf-8")
+        with mock.patch.object(manage, "FOUNDATIONS_PATH", path):
+            errors = manage.validate_foundational_resources()
+        self.assertTrue(any("resource_type" in error for error in errors))
+
     def test_architecture_article_is_not_core_method(self):
         record = base_record(
             record_type="position",

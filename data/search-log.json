@@ -25,5 +25,14 @@
     "source": "data/papers.json",
     "screening_notes": "The seven-record seed set contains two direct UAV candidates: p-2609.19961 (position/architecture) and p-2607.02277 (method). The withdrawn record p-2510.22204 is provenance for p-2607.02277 and is not a separate candidate.",
     "limitations": "Do not treat this as an exhaustive 6-12 candidate search. Future iterations should prefer reference tracking from the full texts rather than abstract-only queries."
+  },
+  {
+    "id": "search-2026-09-21-foundations-books-workshops",
+    "date": "2026-09-21",
+    "entry": "Foundational neuro-symbolic papers, books, and community resources suggested for the auxiliary reference list.",
+    "query_or_resource": "arXiv exact-title and ID lookups; Crossref bibliographic and DOI metadata lookups; SAIRLab ICRA 2025 workshop page",
+    "source": "https://export.arxiv.org/api/query; https://api.crossref.org/works; https://sairlab.org/icra25/",
+    "screening_notes": "Added three foundational papers/monographs, four books/edited collections, and one robotics workshop as auxiliary resources. They are catalogued separately from UAV paper records and are not counted as core methods.",
+    "limitations": "Book chapter contents and workshop papers were not individually screened. The workshop page was verified, but its OpenReview archive contents were not enumerated in this iteration."
   }
 ]
