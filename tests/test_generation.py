@@ -187,6 +187,8 @@ class GenerationTests(unittest.TestCase):
                 themes = text.split(manage.RESEARCH_THEMES_MARKER_START)[1].split(manage.RESEARCH_THEMES_MARKER_END)[0]
                 self.assertLess(text.index(manage.FOUNDATIONS_MARKER_START), text.index(manage.RESEARCH_THEMES_MARKER_START))
                 for record in papers:
+                    if record.get("publication_status") == "withdrawn":
+                        continue
                     title = manage.markdown_escape(record["title"])
                     self.assertIn(title, themes if record.get("primary_category") else foundations)
                 self.assertNotIn("Surveys, Foundations & System Architectures", themes)
@@ -201,8 +203,8 @@ class GenerationTests(unittest.TestCase):
             manage.generate_site(papers, Path(tmp))
             rendered = (Path(tmp) / "papers.html").read_text(encoding="utf-8")
         self.assertIn("<table>", html_table)
-        self.assertIn("paper-card", rendered)
-        self.assertIn("status-pill candidate", rendered)
+        self.assertIn('class="literature-table"', rendered)
+        self.assertIn("Method · candidate", rendered)
         self.assertIn("abstract_reviewed", rendered)
         self.assertIn("candidate", rendered)
         self.assertIn("A &amp; B", rendered)
@@ -298,7 +300,7 @@ class GenerationTests(unittest.TestCase):
             self.assertIn("Primary match", text)
             self.assertIn("Secondary match", text)
             self.assertNotIn("Unrelated record", text)
-            self.assertEqual(text.count('class="paper-card"'), 2)
+            self.assertEqual(text.count('class="paper-row"'), 2)
             self.assertIn("Showing 2 of 2 papers.", text)
 
 
@@ -310,32 +312,32 @@ class LiteratureReviewTests(unittest.TestCase):
         with mock.patch.object(manage, "load_review", return_value=review):
             self.assertTrue(any("unknown source missing-paper" in error for error in manage.validate_review()))
 
-    def test_each_page_has_its_own_cited_review_without_javascript(self):
+    def test_pages_use_compact_tables_without_reviews(self):
         papers = manage.load_json(manage.PAPERS_PATH)
-        sources = manage.review_sources()
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             manage.generate_site(papers, root)
             for section in manage.load_review()["sections"]:
                 route = "foundations" if section["id"] == "foundations" else "theme-" + section["id"]
                 rendered = (root / (route + ".html")).read_text(encoding="utf-8")
-                self.assertEqual(rendered.count('id="synthesis-heading"'), 1)
-                self.assertIn(manage.html.escape(section["question_en"]), rendered)
-                for paragraph in section["paragraphs"]:
-                    for source_id in paragraph["sources"]:
-                        source = sources[source_id]
-                        url = source.get("canonical_url") or source["url"]
-                        self.assertIn('href="' + manage.html.escape(url, quote=True) + '"', rendered)
+                self.assertEqual(rendered.count('class="literature-table"'), 1)
+                self.assertNotIn('id="synthesis-heading"', rendered)
+                self.assertNotIn('class="paper-summary"', rendered)
+                self.assertNotIn('class="paper-card"', rendered)
                 self.assertNotIn("reference-pdf/", rendered)
-            self.assertNotIn('id="synthesis-heading"', (root / "index.html").read_text(encoding="utf-8"))
+                self.assertIn('<th scope="col">Code</th>', rendered)
+            self.assertNotIn('class="literature-table"', (root / "index.html").read_text(encoding="utf-8"))
 
-    def test_transferable_methods_are_not_labeled_as_architectures(self):
+    def test_transferable_and_candidate_labels_survive_simplification(self):
         papers = manage.load_json(manage.PAPERS_PATH)
         category = next(item for item in manage.taxonomy_display_categories() if item["id"] == "perception_world_modeling")
         rendered = manage.research_theme_section_markdown(papers, category, "en", 2)
-        transferable_section = rendered.split("### Transferable robotics methods", 1)[1].split("###", 1)[0]
-        self.assertIn("SayPlan", transferable_section)
-        self.assertIn("### Reviewed core methods", rendered)
+        self.assertIn("SayPlan", rendered)
+        self.assertIn("Method · transferable", rendered)
+        self.assertEqual(rendered.count("| Title | Type | Publication | Code |"), 1)
+        self.assertNotIn("###", rendered)
+        self.assertNotIn("Literature synthesis", rendered)
+        self.assertIn("candidate", manage.compact_theme_table_markdown([sample_record()]))
 
 
 class CheckGenerationTests(unittest.TestCase):

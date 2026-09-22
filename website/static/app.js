@@ -310,55 +310,13 @@
     return parts.join("; ");
   }
 
-  function paperCard(paper) {
+  function paperRow(paper) {
     var canonical = safeUrl(paper.canonical_url);
     var code = safeUrl(paper.code_url);
-    var links = [];
-    if (canonical) {
-      links.push('<a class="pill-link" href="' + escapeHtml(canonical) + '" rel="noopener noreferrer">paper</a>');
-    }
-    if (code) {
-      links.push('<a class="pill-link" href="' + escapeHtml(code) + '" rel="noopener noreferrer">code</a>');
-    } else {
-      links.push('<span class="pill-link muted">code: not verified</span>');
-    }
-    var evidence = evidenceLinks(paper);
-    if (evidence) {
-      links.push(evidence);
-    }
-    var note = noteLink(paper);
-    if (note) {
-      links.push(note);
-    }
-    var version = versionConflictHint(paper);
-    if (version) {
-      links.push('<span class="pill-link muted">' + escapeHtml(version) + "</span>");
-    }
-
-    var tags = allTags(paper).map(function (tag) {
-      return '<span class="tag">' + escapeHtml(tag) + "</span>";
-    }).join("");
-
-    var meta = [
-      "<span>" + escapeHtml((paper.authors || []).join(", ")) + "</span>",
-      "<span>" + escapeHtml(paper.year) + "</span>",
-      "<span>" + escapeHtml(paper.record_type || "") + "</span>",
-      "<span>" + escapeHtml(categoryText(paper)) + "</span>"
-    ].join("");
-
-    var summary = paper.summary || paper.classification_rationale || "";
-    return [
-      '<article class="paper-card">',
-      '<div class="paper-card-head">',
-      "<h3>" + escapeHtml(paper.title) + "</h3>",
-      '<span class="status-pill ' + escapeHtml(paper.screening_status || "") + '">' + escapeHtml(paper.screening_status || "") + "</span>",
-      "</div>",
-      '<div class="paper-meta">' + meta + "</div>",
-      '<p class="paper-summary">' + escapeHtml(summary) + "</p>",
-      '<div class="tag-list">' + tags + "</div>",
-      '<div class="paper-actions">' + links.join("") + "</div>",
-      "</article>"
-    ].join("");
+    var title = canonical ? '<a href="' + escapeHtml(canonical) + '" rel="noopener noreferrer">' + escapeHtml(paper.title) + '</a>' : escapeHtml(paper.title);
+    var codeLink = code ? '<a href="' + escapeHtml(code) + '" rel="noopener noreferrer">GitHub</a>' : '—';
+    return '<tr class="paper-row"><td>' + title + '</td><td>' + escapeHtml(paper.listing_type) +
+      '</td><td>' + escapeHtml(paper.listing_publication) + '</td><td>' + codeLink + '</td></tr>';
   }
 
   function renderCards() {
@@ -373,9 +331,8 @@
       paperContainer.innerHTML = '<p class="status-note">No papers match the current filters.</p>';
       return;
     }
-    paperContainer.innerHTML = '<div class="paper-grid">' +
-      visible.map(paperCard).join("") +
-      "</div>";
+    paperContainer.innerHTML = '<div class="table-wrap" tabindex="0" role="region" aria-label="Paper list"><table class="literature-table"><thead><tr><th scope="col">Title</th><th scope="col">Type</th><th scope="col">Publication</th><th scope="col">Code</th></tr></thead><tbody>' +
+      visible.map(paperRow).join("") + "</tbody></table></div>";
     observeReveals(paperContainer);
   }
 

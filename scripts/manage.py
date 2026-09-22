@@ -1016,39 +1016,50 @@ def paper_links_markdown(record: dict[str, Any]) -> str:
     return " \u00b7 ".join(parts)
 
 
+def listing_type(record: dict[str, Any]) -> str:
+    label = str(record.get("resource_type") or record.get("record_type") or "method").replace("_", " ").title()
+    if record.get("relevance") == "transferable":
+        label += " · transferable"
+    elif record.get("screening_status") == "candidate":
+        label += " · candidate"
+    return label
+
+
+def listing_publication(record: dict[str, Any]) -> str:
+    status = record.get("publication_status")
+    if status == "conflict":
+        venue = "Venue unverified"
+    elif status == "withdrawn":
+        venue = "Withdrawn"
+    elif status == "preprint":
+        venue = "arXiv"
+    else:
+        venue = record.get("venue") or "Unverified"
+    return f"{venue} · {record.get('year') or '—'}"
+
+
 def compact_theme_table_markdown(records: list[dict[str, Any]]) -> str:
-    if not records:
-        return ""
-    headers = ["Paper", "Neural\u2013Symbolic Coupling", "UAV Task", "Evidence / Review", "Publication", "Links"]
-    lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
+    lines = ["| Title | Type | Publication | Code |", "|---|---|---|---|"]
     for record in records:
+        url = record.get("canonical_url") or record.get("url") or ""
         title = markdown_escape(record.get("title"))
-        canonical = record.get("canonical_url") or ""
-        if canonical:
-            paper_cell = f"[{title}]({canonical})"
-        else:
-            paper_cell = title
-        tags = record.get("taxonomy_tags") or {}
-        task = ", ".join(tags.get("uav_task", [])) or "\u2014"
-        evidence_types = ", ".join(record.get("uav_evidence", [])) or "\u2014"
-        evidence = (
-            f"{record.get('reading_status') or ''} / {evidence_types}"
-        )
-        lines.append(
-            "| "
-            + " | ".join(
-                [
-                    paper_cell,
-                    markdown_escape(record.get("coupling_mechanism") or "\u2014"),
-                    markdown_escape(task),
-                    markdown_escape(evidence),
-                    markdown_escape(publication_label(record)),
-                    paper_links_markdown(record),
-                ]
-            )
-            + " |"
-        )
+        code = f"[GitHub]({record['code_url']})" if record.get("code_url") else "—"
+        lines.append(f"| [{title}]({url}) | {markdown_escape(listing_type(record))} | {markdown_escape(listing_publication(record))} | {code} |")
     return "\n".join(lines) + "\n"
+
+
+def literature_table_html(records: list[dict[str, Any]]) -> str:
+    rows = []
+    for record in records:
+        url = html.escape(record.get("canonical_url") or record.get("url") or "", quote=True)
+        title = html.escape(record.get("title") or "")
+        code = f'<a href="{html.escape(record["code_url"], quote=True)}" rel="noopener noreferrer">GitHub</a>' if record.get("code_url") else "—"
+        rows.append(f'<tr class="paper-row"><td><a href="{url}" rel="noopener noreferrer">{title}</a></td><td>{html.escape(listing_type(record))}</td><td>{html.escape(listing_publication(record))}</td><td>{code}</td></tr>')
+    return '<div class="table-wrap" tabindex="0" role="region" aria-label="Paper list"><table class="literature-table"><thead><tr><th scope="col">Title</th><th scope="col">Type</th><th scope="col">Publication</th><th scope="col">Code</th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>"
+
+
+def foundation_listing_records(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return load_foundational_resources() + [record for record in auxiliary_records(papers) if record.get("publication_status") != "withdrawn"]
 
 
 def load_review() -> dict[str, Any]:
@@ -1130,75 +1141,13 @@ def review_html(section_id: str) -> str:
 def research_theme_section_markdown(
     papers: list[dict[str, Any]], category: dict[str, Any], language: str, section_number: int
 ) -> str:
-    category_id = category["id"]
-    primary = theme_primary_records(papers, category_id)
-    secondary = theme_secondary_records(papers, category_id)
-    parts: list[str] = []
-    parts.append(f'<a id="theme-{html.escape(category_id)}"></a>')
-    parts.append("")
-    parts.append(f"## {section_number}. {category_name(category, language)}")
-    parts.append("")
-    parts.append(category.get("description") or "")
-    parts.append("")
-    boundary_label = "边界" if language == "zh" else "Boundary"
-    parts.append(f"**{boundary_label}:** {category.get('boundary') or ''}")
-    subdirections = category.get("subdirections") or []
-    if subdirections:
-        parts.append("")
-        parts.append(("**子方向：** " if language == "zh" else "**Subdirections:** ") + "; ".join(subdirections))
-
-    parts.extend(["", review_markdown(category_id, language)])
-    reviewed = [record for record in primary if record.get("screening_status") == "included"]
-    candidates = [
-        record
-        for record in primary
-        if record.get("screening_status") == "candidate"
-        and record.get("relevance") == "direct_uav"
-        and record.get("record_type") == "method"
-    ]
-    transferable = [record for record in primary if record.get("relevance") == "transferable"
-                    and record.get("screening_status") != "excluded"]
-    perspectives = [
-        record
-        for record in primary
-        if record not in reviewed
-        and record not in candidates
-        and record not in transferable
-        and record.get("screening_status") != "excluded"
-    ]
-
-    if reviewed:
-        parts.append("")
-        parts.append("### 已纳入的核心方法" if language == "zh" else "### Reviewed core methods")
-        parts.append("")
-        parts.append(compact_theme_table_markdown(reviewed))
-    if candidates:
-        parts.append("")
-        parts.append("### 候选方法" if language == "zh" else "### Candidate methods")
-        parts.append("")
-        parts.append(compact_theme_table_markdown(candidates))
-    if transferable:
-        parts.extend(["", "### 可迁移的机器人方法" if language == "zh" else "### Transferable robotics methods", "",
-                      compact_theme_table_markdown(transferable)])
-    if perspectives:
-        parts.append("")
-        parts.append("### 相关架构与观点" if language == "zh" else "### Related architectures / perspectives")
-        parts.append("")
-        parts.append(compact_theme_table_markdown(perspectives))
-    if secondary:
-        parts.append("")
-        parts.append("### 跨方向引用" if language == "zh" else "### Cross-theme links")
-        parts.append("")
-        parts.append(
-            ", ".join(
-                f"`{record.get('id')}`" for record in secondary
-            )
-            + (" 的主方向归属在其他章节，此处仅作交叉引用。" if language == "zh" else " appear in a different primary theme and are listed here for cross-reference only.")
-        )
-    if not (reviewed or candidates or transferable or perspectives):
-        parts.append("")
-        parts.append("_目前没有主方向归属于此的种子方法。_" if language == "zh" else "_No seed method is currently assigned to this primary theme._")
-    return "\n".join(parts)
+    records = [record for record in theme_primary_records(papers, category["id"])
+               if record.get("screening_status") != "excluded" and record.get("publication_status") != "withdrawn"]
+    return "\n".join([
+        f'<a id="theme-{html.escape(category["id"])}"></a>', "",
+        f"## {section_number}. {category_name(category, language)}", "",
+        compact_theme_table_markdown(records)
+    ])
 
 
 def auxiliary_records(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1259,7 +1208,7 @@ def readme_navigation_markdown(language: str) -> str:
 
 
 def readme_foundations_markdown(papers: list[dict[str, Any]], language: str) -> str:
-    return foundations_markdown(language) + "\n" + auxiliary_section_markdown(papers, language) + "\n"
+    return compact_theme_table_markdown(foundation_listing_records(papers))
 
 
 def category_coverage_markdown(papers: list[dict[str, Any]]) -> str:
@@ -1984,7 +1933,7 @@ def generate_readme(papers: list[dict[str, Any]], source: Path, target: Path, la
         text,
         OVERVIEW_MARKER_START,
         OVERVIEW_MARKER_END,
-        overview_markdown(papers, language),
+        "",
         str(source),
     )
     text = apply_generated_block(
@@ -2078,7 +2027,7 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
     common = {
         "OVERVIEW_HTML": overview_html(papers),
         "PROJECT_INFO_HTML": project_info_cards_html(project),
-        "FOUNDATIONS_HTML": review_html("foundations") + foundations_cards_html(),
+        "FOUNDATIONS_HTML": literature_table_html(foundation_listing_records(papers)),
         "CATEGORY_CARDS_HTML": category_cards_html(papers),
         "TAXONOMY_DATA_JSON": json_for_script(taxonomy),
         "PROJECT_DATA_JSON": json_for_script(project),
@@ -2118,16 +2067,6 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
             '</div></header>'
         )
         theme_intro = ""
-        if category:
-            subdirections = "".join(f'<span class="tag">{html.escape(item)}</span>' for item in category.get("subdirections") or [])
-            theme_intro = (
-                '<section class="theme-context" aria-label="Theme scope">'
-                f'<p class="section-kicker">{html.escape(category.get("name_zh", ""))}</p>'
-                f'<p>{html.escape(category.get("boundary", ""))}</p><div class="tag-list">{subdirections}</div>'
-                '<p class="status-note">Part of Proposed taxonomy v0.1. Papers include primary and secondary theme assignments; screening status remains visible.</p>'
-                '<a href="index.html#explore">&larr; All research directions</a><a href="papers.html">Open the full paper library &nearr;</a></section>'
-            )
-            theme_intro += review_html(category["id"])
         content = (WEBSITE_DIR / "pages" / ("theme.html" if category else slug + ".html")).read_text(encoding="utf-8")
         rendered = template.replace("{{PAGE_CONTENT}}", content)
         rendered = rendered.replace("{{PAPER_ARCHIVE_HTML}}", archive)
@@ -2135,9 +2074,9 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
             **common, "PAGE_TITLE": html.escape(title), "PAGE_DESCRIPTION": html.escape(description),
             "BODY_CLASS": "page-" + ("theme-detail" if category else slug),
             "NAVIGATION_HTML": navigation, "PAGE_HEADER_HTML": header, "THEME_INTRO_HTML": theme_intro,
-            "PAPER_TABLE_HTML": paper_cards_html(page_papers) if page_papers else '<p class="status-note">No papers are assigned to this theme yet.</p>',
+            "PAPER_TABLE_HTML": literature_table_html(page_papers) if page_papers else '<p class="status-note">No papers are assigned to this theme yet.</p>',
             "RESULT_COUNT": f"Showing {len(page_papers)} of {len(page_papers)} papers.",
-            "PAPER_DATA_JSON": json_for_script(page_papers), "NOTES_AVAILABLE_JSON": json_for_script(notes_available_map(page_papers)),
+            "PAPER_DATA_JSON": json_for_script([{**record, "listing_type": listing_type(record), "listing_publication": listing_publication(record)} for record in page_papers]), "NOTES_AVAILABLE_JSON": json_for_script(notes_available_map(page_papers)),
         }
         for key, value in replacements.items():
             rendered = rendered.replace("{{" + key + "}}", value)

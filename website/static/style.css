@@ -117,6 +117,13 @@ button, a, input, select, summary, .theme-card { -webkit-tap-highlight-color: tr
 .theme-context { padding: 1.5rem 2rem; border-left: 3px solid #91b3af; background: var(--mist); }
 .theme-context > a { display: inline-block; margin: 1rem 1.5rem 0 0; font-size: .8rem; }
 .theme-context + section { margin-top: 3rem; }
+.table-wrap { max-width: 100%; overflow-x: auto; margin-bottom: 2rem; }
+.literature-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .88rem; }
+.literature-table th, .literature-table td { padding: 1rem; border-bottom: 1px solid #dce5e3; vertical-align: top; line-height: 1.6; }
+.literature-table th { background: var(--mist); font-weight: 700; }
+.literature-table td:first-child { width: 52%; min-width: 230px; }
+.literature-table td:last-child { white-space: nowrap; }
+.literature-table tbody tr:hover { background: var(--mist); }
 .literature-synthesis { max-width: 82ch; margin: 2rem 0 3rem; }
 .literature-synthesis h2 { line-height: 1.25; }
 .literature-synthesis > p { line-height: 1.8; }
