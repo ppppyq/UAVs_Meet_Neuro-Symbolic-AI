@@ -14,6 +14,97 @@
   var resetButton = document.getElementById("reset-filters");
   var resultCount = document.getElementById("result-count");
   var paperContainer = document.querySelector(".papers");
+  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  var hero = document.querySelector(".hero");
+  var progress = document.querySelector(".reading-progress");
+  var revealObserver = !reducedMotion.matches && "IntersectionObserver" in window ?
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -5% 0px" }) : null;
+
+  function observeReveals(root) {
+    if (!revealObserver) {
+      return;
+    }
+    root.querySelectorAll(".section-heading, .survey-card, .theme-card, .foundation-card, .paper-card, .method-card").forEach(function (item) {
+      if (!item.classList.contains("motion-reveal")) {
+        item.classList.add("motion-reveal");
+        revealObserver.observe(item);
+      }
+    });
+  }
+
+  var progressFrame = 0;
+  function updateProgress() {
+    if (progressFrame) {
+      return;
+    }
+    progressFrame = requestAnimationFrame(function () {
+      var available = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.transform = "scaleX(" + (available > 0 ? Math.min(1, window.scrollY / available) : 0) + ")";
+      progressFrame = 0;
+    });
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("resize", updateProgress);
+  updateProgress();
+
+  if (hero) {
+    var heroFrame = 0;
+    var heroPointer = null;
+    hero.addEventListener("pointermove", function (event) {
+      if (!finePointer.matches || reducedMotion.matches) {
+        return;
+      }
+      heroPointer = event;
+      if (heroFrame) {
+        return;
+      }
+      heroFrame = requestAnimationFrame(function () {
+        heroFrame = 0;
+        if (!heroPointer) {
+          return;
+        }
+        var rect = hero.getBoundingClientRect();
+        hero.style.setProperty("--parallax-x", ((heroPointer.clientX / rect.width - 0.5) * -24).toFixed(1) + "px");
+        hero.style.setProperty("--parallax-y", ((heroPointer.clientY / rect.height - 0.5) * -16).toFixed(1) + "px");
+      });
+    });
+    hero.addEventListener("pointerleave", function () {
+      heroPointer = null;
+      hero.style.removeProperty("--parallax-x");
+      hero.style.removeProperty("--parallax-y");
+    });
+  }
+
+  reducedMotion.addEventListener("change", function () {
+    if (reducedMotion.matches) {
+      document.querySelectorAll(".motion-reveal").forEach(function (item) {
+        item.classList.add("is-visible");
+      });
+    }
+  });
+
+  document.querySelectorAll(".glass-surface").forEach(function (surface) {
+    surface.addEventListener("pointermove", function (event) {
+      if (reducedMotion.matches) {
+        return;
+      }
+      var rect = surface.getBoundingClientRect();
+      surface.style.setProperty("--glint-x", ((event.clientX - rect.left) / rect.width * 100) + "%");
+      surface.style.setProperty("--glint-y", ((event.clientY - rect.top) / rect.height * 100) + "%");
+    });
+    surface.addEventListener("pointerleave", function () {
+      surface.style.removeProperty("--glint-x");
+      surface.style.removeProperty("--glint-y");
+    });
+  });
 
   function axisTags(axisId) {
     var axis = (taxonomy.axes || []).filter(function (item) {
@@ -250,6 +341,11 @@
   function renderCards() {
     var visible = papers.filter(matches);
     resultCount.textContent = "Showing " + visible.length + " of " + papers.length + " papers.";
+    if (revealObserver) {
+      paperContainer.querySelectorAll(".motion-reveal").forEach(function (item) {
+        revealObserver.unobserve(item);
+      });
+    }
     if (!visible.length) {
       paperContainer.innerHTML = '<p class="status-note">No papers match the current filters.</p>';
       return;
@@ -257,6 +353,7 @@
     paperContainer.innerHTML = '<div class="paper-grid">' +
       visible.map(paperCard).join("") +
       "</div>";
+    observeReveals(paperContainer);
   }
 
   populateSelect(taskSelect, axisTags("uav_task"));
@@ -281,10 +378,29 @@
   });
 
   document.querySelectorAll(".theme-card[data-theme]").forEach(function (card) {
+    card.addEventListener("pointermove", function (event) {
+      if (!finePointer.matches || reducedMotion.matches) {
+        return;
+      }
+      var rect = card.getBoundingClientRect();
+      var x = (event.clientX - rect.left) / rect.width;
+      var y = (event.clientY - rect.top) / rect.height;
+      card.style.setProperty("--tilt-x", ((0.5 - y) * 7).toFixed(2) + "deg");
+      card.style.setProperty("--tilt-y", ((x - 0.5) * 7).toFixed(2) + "deg");
+      card.style.setProperty("--image-x", ((0.5 - x) * 8).toFixed(1) + "px");
+      card.style.setProperty("--image-y", ((0.5 - y) * 8).toFixed(1) + "px");
+      card.style.setProperty("--spot-x", (x * 100).toFixed(1) + "%");
+      card.style.setProperty("--spot-y", (y * 100).toFixed(1) + "%");
+    });
+    card.addEventListener("pointerleave", function () {
+      ["--tilt-x", "--tilt-y", "--image-x", "--image-y", "--spot-x", "--spot-y"].forEach(function (property) {
+        card.style.removeProperty(property);
+      });
+    });
     card.addEventListener("click", function () {
       themeSelect.value = card.getAttribute("data-theme");
       renderCards();
-      document.getElementById("papers").scrollIntoView({ behavior: "smooth" });
+      document.getElementById("papers").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth" });
     });
     card.addEventListener("keydown", function (event) {
       if (event.key === "Enter" || event.key === " ") {
@@ -294,5 +410,6 @@
     });
   });
 
+  observeReveals(document.querySelector("main"));
   renderCards();
 }());
