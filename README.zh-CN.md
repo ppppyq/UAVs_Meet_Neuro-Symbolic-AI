@@ -14,7 +14,7 @@
 >
 > **单位：** Harbin Institute of Technology, Shenzhen
 >
-> **仓库：** [ppppyq/UAVs_Meet_Neuro-Symbolic-AI](https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI)
+> **网页：** [UAVs Meet Neuro-Symbolic AI](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/)
 
 ---
 

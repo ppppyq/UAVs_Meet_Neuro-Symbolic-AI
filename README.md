@@ -15,7 +15,7 @@ trustworthy autonomy.
 >
 > **Affiliation:** Harbin Institute of Technology, Shenzhen
 >
-> **Repository:** [ppppyq/UAVs_Meet_Neuro-Symbolic-AI](https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI)
+> **Website:** [UAVs Meet Neuro-Symbolic AI](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/)
 
 ---
 
