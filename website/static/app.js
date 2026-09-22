@@ -18,6 +18,29 @@
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   var hero = document.querySelector(".hero");
   var progress = document.querySelector(".reading-progress");
+  var navigation = document.querySelector(".site-nav");
+  var navToggle = document.querySelector(".nav-toggle");
+  if (navigation && navToggle) {
+    navigation.classList.add("nav-enhanced");
+    function closeNavigation() {
+      navigation.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+    navToggle.addEventListener("click", function () {
+      var open = navigation.classList.toggle("nav-open");
+      navToggle.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && navigation.classList.contains("nav-open")) {
+        closeNavigation();
+        navToggle.focus();
+      }
+    });
+    document.addEventListener("pointerdown", function (event) {
+      if (!navigation.contains(event.target)) closeNavigation();
+    });
+    window.matchMedia("(max-width: 1100px)").addEventListener("change", closeNavigation);
+  }
   var revealObserver = !reducedMotion.matches && "IntersectionObserver" in window ?
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -356,26 +379,28 @@
     observeReveals(paperContainer);
   }
 
-  populateSelect(taskSelect, axisTags("uav_task"));
-  populateSelect(directionSelect, axisTags("integration_direction"));
-  populateThemeSelect(themeSelect, displayCategories());
-  populateSelect(statusSelect, unique(papers.map(function (paper) {
-    return paper.screening_status || "";
-  }).filter(Boolean)));
+  if (paperContainer) {
+    populateSelect(taskSelect, axisTags("uav_task"));
+    populateSelect(directionSelect, axisTags("integration_direction"));
+    populateThemeSelect(themeSelect, displayCategories());
+    populateSelect(statusSelect, unique(papers.map(function (paper) {
+      return paper.screening_status || "";
+    }).filter(Boolean)));
 
-  searchInput.addEventListener("input", renderCards);
-  taskSelect.addEventListener("change", renderCards);
-  directionSelect.addEventListener("change", renderCards);
-  themeSelect.addEventListener("change", renderCards);
-  statusSelect.addEventListener("change", renderCards);
-  resetButton.addEventListener("click", function () {
-    searchInput.value = "";
-    taskSelect.value = "";
-    directionSelect.value = "";
-    themeSelect.value = "";
-    statusSelect.value = "";
-    renderCards();
-  });
+    searchInput.addEventListener("input", renderCards);
+    taskSelect.addEventListener("change", renderCards);
+    directionSelect.addEventListener("change", renderCards);
+    themeSelect.addEventListener("change", renderCards);
+    statusSelect.addEventListener("change", renderCards);
+    resetButton.addEventListener("click", function () {
+      searchInput.value = "";
+      taskSelect.value = "";
+      directionSelect.value = "";
+      themeSelect.value = "";
+      statusSelect.value = "";
+      renderCards();
+    });
+  }
 
   document.querySelectorAll(".theme-card[data-theme]").forEach(function (card) {
     card.addEventListener("pointermove", function (event) {
@@ -397,19 +422,8 @@
         card.style.removeProperty(property);
       });
     });
-    card.addEventListener("click", function () {
-      themeSelect.value = card.getAttribute("data-theme");
-      renderCards();
-      document.getElementById("papers").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth" });
-    });
-    card.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        card.click();
-      }
-    });
   });
 
   observeReveals(document.querySelector("main"));
-  renderCards();
+  if (paperContainer) renderCards();
 }());

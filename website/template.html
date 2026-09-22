@@ -3,155 +3,19 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>UAVs Meet Neuro-Symbolic AI</title>
+  <title>{{PAGE_TITLE}} — UAVs Meet Neuro-Symbolic AI</title>
   <meta name="theme-color" content="#e6eef0">
-  <meta name="description" content="An evidence-led research survey of neuro-symbolic AI for trustworthy UAV autonomy.">
+  <meta name="description" content="{{PAGE_DESCRIPTION}}">
   <link rel="stylesheet" href="static/style.css">
 </head>
-<body>
+<body class="{{BODY_CLASS}}">
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <div class="reading-progress" aria-hidden="true"></div>
-  <nav class="site-nav glass-surface wrap" aria-label="Main navigation">
-      <a class="site-brand" href="#top" aria-label="UAVs Meet Neuro-Symbolic AI, top of page"><span class="brand-mark" aria-hidden="true">*</span><span>UAVs <em>x</em> Neuro-Symbolic AI</span></a>
-      <div class="nav-links">
-        <a href="#themes">Themes</a>
-        <a href="#papers">Papers</a>
-        <a href="#foundations">Foundations</a>
-        <a class="nav-repository" href="https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI" rel="noopener noreferrer">GitHub <span aria-hidden="true">&nearr;</span></a>
-      </div>
-  </nav>
-  <header class="hero">
-    <div class="hero-photo" aria-hidden="true"></div>
-    <canvas id="hero-webgl" aria-hidden="true"></canvas>
-    <div class="hero-content wrap" id="top">
-      <div class="hero-copy">
-        <p class="eyebrow">Research survey / Aerial autonomy</p>
-        <h1>UAVs Meet Neuro-Symbolic AI</h1>
-        <p class="subtitle">Foundations, Taxonomy, and Perspectives for Trustworthy Aerial Autonomy</p>
-        <p class="hero-description">A working literature survey connecting learned aerial perception with explicit, auditable reasoning for trustworthy UAV autonomy.</p>
-        <div class="hero-actions"><a class="primary-action glass-action glass-surface" href="#themes"><span>Explore research themes</span><span aria-hidden="true">&darr;</span></a><a class="secondary-action glass-action glass-surface" href="#papers"><span>Browse papers</span><span aria-hidden="true">&nearr;</span></a></div>
-      </div>
-    </div>
-    <a class="scroll-cue" href="#themes">Scroll to explore <span aria-hidden="true">&darr;</span></a>
-  </header>
-
-  <div class="metrics-band" aria-label="Survey overview"><div class="hero-stats wrap">{{OVERVIEW_HTML}}</div></div>
-
-  <main class="wrap">
-    <section id="themes" class="theme-section" aria-labelledby="themes-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">01 / Explore the field</p>
-          <h2 id="themes-heading">Five research themes</h2>
-          <p>From world models to verifiable flight, explore the proposed taxonomy through its five research directions.</p>
-        </div>
-      </div>
-      <div class="theme-grid">{{CATEGORY_CARDS_HTML}}</div>
-    </section>
-
-    <section class="survey-section" aria-labelledby="survey-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">02 / Research boundary</p>
-          <h2 id="survey-heading">Survey at a glance</h2>
-          <p class="lede">A deliberately narrow survey: learned components and explicit symbolic mechanisms must be functionally coupled, not merely coexist.</p>
-        </div>
-      </div>
-      <div class="survey-grid">
-        <article class="survey-card">
-          <span class="survey-number">01</span>
-          <h3>Research question</h3>
-          <p>How can neural learning and explicit symbolic representations, reasoning, and constraints be integrated to support trustworthy UAV autonomy?</p>
-        </article>
-        <article class="survey-card">
-          <span class="survey-number">02</span>
-          <h3>What counts as neuro-symbolic</h3>
-          <ul>
-            <li>a neural-learning component</li>
-            <li>an explicit symbolic representation or constraint mechanism</li>
-            <li>a functional coupling that affects learning or inference</li>
-            <li>a stated UAV problem and described validation scope</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section id="papers" class="papers-section" aria-labelledby="papers-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">03 / Evidence archive</p>
-          <h2 id="papers-heading">Survey papers</h2>
-          <p>Each card is generated from the same evidence database and shows screening, reading, and validation status.</p>
-        </div>
-      </div>
-      <div class="controls glass-surface">
-        <label for="search">Search title and keywords
-          <input id="search" type="search" placeholder="e.g. landing, logic, UAV">
-        </label>
-        <label for="task-filter">Task
-          <select id="task-filter">
-            <option value="">All tasks</option>
-          </select>
-        </label>
-        <label for="direction-filter">Integration direction
-          <select id="direction-filter">
-            <option value="">All directions</option>
-          </select>
-        </label>
-        <label for="theme-filter">Research theme
-          <select id="theme-filter">
-            <option value="">All themes</option>
-          </select>
-        </label>
-        <label for="status-filter">Status
-          <select id="status-filter">
-            <option value="">All statuses</option>
-          </select>
-        </label>
-        <button id="reset-filters" type="button" title="Reset filters" aria-label="Reset filters">&#8634;</button>
-      </div>
-      <p id="result-count" aria-live="polite"></p>
-      <div class="papers">{{PAPER_TABLE_HTML}}</div>
-    </section>
-
-    <section id="foundations" aria-labelledby="foundations-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">04 / Context</p>
-          <h2 id="foundations-heading">Foundations, books &amp; workshops</h2>
-          <p>Auxiliary resources for background, book-length references, and community venues.</p>
-        </div>
-      </div>
-      {{FOUNDATIONS_HTML}}
-    </section>
-
-    <section id="framework" aria-labelledby="framework-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">05 / Research model</p>
-          <h2 id="framework-heading">Proposed framework</h2>
-          <p>Editable Mermaid sketches from <code>assets/figures/*.mmd</code>, not experimental results.</p>
-        </div>
-      </div>
-      {{FIGURE_SOURCES_HTML}}
-    </section>
-
-    <section id="methodology" aria-labelledby="methodology-heading">
-      <div class="section-heading">
-        <div>
-          <p class="section-kicker">06 / About the survey</p>
-          <h2 id="methodology-heading">Methodology and contributions</h2>
-        </div>
-      </div>
-      <article class="method-card">
-        <p>See the repository documents for the review methodology, proposed taxonomy, evidence rules, and paper outline. Paper status and evidence fields are shown directly from <code>data/papers.json</code>.</p>
-        <p>This is a proposed research framework and evidence knowledge base, not a completed systematic review or an experimental system.</p>
-        <details class="project-details"><summary>Project details</summary>{{PROJECT_INFO_HTML}}</details>
-      </article>
-    </section>
-  </main>
-
+{{NAVIGATION_HTML}}
+{{PAGE_CONTENT}}
   <footer class="site-footer">
     <div class="wrap">
+      <nav class="footer-links" aria-label="More resources"><a href="index.html">Home</a><a href="papers.html">All papers</a><a href="themes.html">All research directions</a><a href="about.html">About the survey</a></nav>
       <p>UAVs Meet Neuro-Symbolic AI · <a href="https://github.com/ppppyq/UAVs_Meet_Neuro-Symbolic-AI" rel="noopener noreferrer">Repository &nearr;</a> · MIT · Generated from <code>data/papers.json</code>.</p>
       <p class="photo-credit">Photography: <a href="https://unsplash.com/photos/white-quadcopter-drone-flying-near-snow-mountain-during-daytime-ZlkRrzJl20Q">Iewek Gnos</a>, <a href="https://unsplash.com/photos/black-quadcopter-drone-on-air-under-mountain-covered-with-snow-F8WK1ZGwS1g">Paul Pastourmatzis</a>, <a href="https://unsplash.com/photos/a-winding-road-through-a-forest-3PtXzzZLp-s">Adria Sanchez Roque</a>, <a href="https://unsplash.com/photos/white-quadcopter-drone-near-mountain-during-daytime-_0ag_kHf2tw">Kelli McClintock</a>, <a href="https://unsplash.com/photos/white-dji-quadcopter-drone-flying-in-mid-air-nAU7Ajuj_RY">Jason Mavrommatis</a> / Unsplash.</p>
     </div>

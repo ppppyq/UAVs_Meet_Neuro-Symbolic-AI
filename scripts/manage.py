@@ -51,6 +51,8 @@ EVIDENCE_MATRIX_MARKER_START = "<!-- BEGIN GENERATED:EVIDENCE-MATRIX -->"
 EVIDENCE_MATRIX_MARKER_END = "<!-- END GENERATED:EVIDENCE-MATRIX -->"
 RESEARCH_THEMES_MARKER_START = "<!-- BEGIN GENERATED:RESEARCH-THEMES -->"
 RESEARCH_THEMES_MARKER_END = "<!-- END GENERATED:RESEARCH-THEMES -->"
+README_NAV_MARKER_START = "<!-- BEGIN GENERATED:README-NAV -->"
+README_NAV_MARKER_END = "<!-- END GENERATED:README-NAV -->"
 PAPER_INDEX_MARKER_START = "<!-- BEGIN GENERATED:PAPER-INDEX -->"
 PAPER_INDEX_MARKER_END = "<!-- END GENERATED:PAPER-INDEX -->"
 CATEGORY_COVERAGE_MARKER_START = "<!-- BEGIN GENERATED:CATEGORY-COVERAGE -->"
@@ -115,20 +117,6 @@ REQUIRED_FIELDS = {
     "bibliography_type",
     "metadata_conflict_scope",
 }
-
-WEBSITE_TOKENS = (
-    "{{OVERVIEW_HTML}}",
-    "{{PAPER_TABLE_HTML}}",
-    "{{PROJECT_INFO_HTML}}",
-    "{{FIGURE_SOURCES_HTML}}",
-    "{{FOUNDATIONS_HTML}}",
-    "{{CATEGORY_CARDS_HTML}}",
-    "{{PAPER_DATA_JSON}}",
-    "{{TAXONOMY_DATA_JSON}}",
-    "{{PROJECT_DATA_JSON}}",
-    "{{NOTES_AVAILABLE_JSON}}",
-)
-
 
 class ManageError(Exception):
     """Expected user-facing command error."""
@@ -1043,8 +1031,9 @@ def compact_theme_table_markdown(records: list[dict[str, Any]]) -> str:
             paper_cell = title
         tags = record.get("taxonomy_tags") or {}
         task = ", ".join(tags.get("uav_task", [])) or "\u2014"
+        evidence_types = ", ".join(record.get("uav_evidence", [])) or "\u2014"
         evidence = (
-            f"{record.get('reading_status') or ''} / {', '.join(record.get('uav_evidence', [])) or '\u2014'}"
+            f"{record.get('reading_status') or ''} / {evidence_types}"
         )
         lines.append(
             "| "
@@ -1064,21 +1053,24 @@ def compact_theme_table_markdown(records: list[dict[str, Any]]) -> str:
 
 
 def research_theme_section_markdown(
-    papers: list[dict[str, Any]], category: dict[str, Any], language: str
+    papers: list[dict[str, Any]], category: dict[str, Any], language: str, section_number: int
 ) -> str:
     category_id = category["id"]
     primary = theme_primary_records(papers, category_id)
     secondary = theme_secondary_records(papers, category_id)
     parts: list[str] = []
-    parts.append(f"### {category_name(category, language)}")
+    parts.append(f'<a id="theme-{html.escape(category_id)}"></a>')
+    parts.append("")
+    parts.append(f"## {section_number}. {category_name(category, language)}")
     parts.append("")
     parts.append(category.get("description") or "")
     parts.append("")
-    parts.append(f"**Boundary:** {category.get('boundary') or ''}")
+    boundary_label = "边界" if language == "zh" else "Boundary"
+    parts.append(f"**{boundary_label}:** {category.get('boundary') or ''}")
     subdirections = category.get("subdirections") or []
     if subdirections:
         parts.append("")
-        parts.append("**Subdirections:** " + "; ".join(subdirections))
+        parts.append(("**子方向：** " if language == "zh" else "**Subdirections:** ") + "; ".join(subdirections))
 
     reviewed = [record for record in primary if record.get("screening_status") == "included"]
     candidates = [
@@ -1098,32 +1090,32 @@ def research_theme_section_markdown(
 
     if reviewed:
         parts.append("")
-        parts.append("#### Reviewed core methods")
+        parts.append("### 已纳入的核心方法" if language == "zh" else "### Reviewed core methods")
         parts.append("")
         parts.append(compact_theme_table_markdown(reviewed))
     if candidates:
         parts.append("")
-        parts.append("#### Candidate methods")
+        parts.append("### 候选方法" if language == "zh" else "### Candidate methods")
         parts.append("")
         parts.append(compact_theme_table_markdown(candidates))
     if perspectives:
         parts.append("")
-        parts.append("#### Related architectures / perspectives")
+        parts.append("### 相关架构与观点" if language == "zh" else "### Related architectures / perspectives")
         parts.append("")
         parts.append(compact_theme_table_markdown(perspectives))
     if secondary:
         parts.append("")
-        parts.append("#### Cross-theme links")
+        parts.append("### 跨方向引用" if language == "zh" else "### Cross-theme links")
         parts.append("")
         parts.append(
             ", ".join(
                 f"`{record.get('id')}`" for record in secondary
             )
-            + " appear in a different primary theme and are listed here for cross-reference only."
+            + (" 的主方向归属在其他章节，此处仅作交叉引用。" if language == "zh" else " appear in a different primary theme and are listed here for cross-reference only.")
         )
     if not (reviewed or candidates or perspectives):
         parts.append("")
-        parts.append("_No seed method is currently assigned to this primary theme._")
+        parts.append("_目前没有主方向归属于此的种子方法。_" if language == "zh" else "_No seed method is currently assigned to this primary theme._")
     return "\n".join(parts)
 
 
@@ -1131,11 +1123,17 @@ def auxiliary_records(papers: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [record for record in papers if not record.get("primary_category")]
 
 
-def auxiliary_section_markdown(papers: list[dict[str, Any]]) -> str:
+def auxiliary_section_markdown(papers: list[dict[str, Any]], language: str) -> str:
     records = auxiliary_records(papers)
-    parts = ["### Surveys, Foundations & System Architectures", ""]
+    parts = ["### 相关综述与筛选背景" if language == "zh" else "### Related surveys and screening context", ""]
+    parts.append(
+        "以下条目来自论文数据库，尚未分配主研究方向。保留这些条目是为了提供背景和筛选来源，不代表已纳入的 UAV 核心方法。它们与上面的辅助资源单独统计。"
+        if language == "zh" else
+        "These paper-database records have no primary research-direction assignment. They retain background and screening provenance, not included core UAV methods. They are counted separately from the auxiliary resources above."
+    )
+    parts.append("")
     if not records:
-        parts.append("_No auxiliary records._")
+        parts.append("_暂无相关背景条目。_" if language == "zh" else "_No auxiliary records._")
         return "\n".join(parts)
     headers = ["Paper", "Role", "Reading", "Status", "Links"]
     lines = ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)]
@@ -1164,14 +1162,22 @@ def auxiliary_section_markdown(papers: list[dict[str, Any]]) -> str:
 def research_themes_markdown(papers: list[dict[str, Any]], language: str) -> str:
     categories = taxonomy_display_categories()
     parts: list[str] = []
-    aux = auxiliary_section_markdown(papers)
-    if aux:
-        parts.append(aux)
-        parts.append("")
-    for category in categories:
-        parts.append(research_theme_section_markdown(papers, category, language))
+    for number, category in enumerate(categories, start=2):
+        parts.append(research_theme_section_markdown(papers, category, language, number))
         parts.append("")
     return "\n".join(parts).rstrip() + "\n"
+
+
+def readme_navigation_markdown(language: str) -> str:
+    foundation_title = "神经符号 AI 基础" if language == "zh" else "Neuro-Symbolic AI Foundations"
+    lines = ["## 阅读导航" if language == "zh" else "## Contents", "", f"1. [{foundation_title}](#foundations)"]
+    for number, category in enumerate(taxonomy_display_categories(), start=2):
+        lines.append(f"{number}. [{category_name(category, language)}](#theme-{category['id']})")
+    return "\n".join(lines) + "\n"
+
+
+def readme_foundations_markdown(papers: list[dict[str, Any]], language: str) -> str:
+    return foundations_markdown(language) + "\n" + auxiliary_section_markdown(papers, language) + "\n"
 
 
 def category_coverage_markdown(papers: list[dict[str, Any]]) -> str:
@@ -1584,9 +1590,11 @@ def category_cards_html(papers: list[dict[str, Any]]) -> str:
             for item in category.get("subdirections") or []
         )
         cards.append(
-            '<article class="theme-card" data-theme="'
+            '<a class="theme-card" href="theme-'
             + html.escape(category_id)
-            + '" tabindex="0" role="button" aria-label="Filter papers by '
+            + '.html" data-theme="'
+            + html.escape(category_id)
+            + '" aria-label="Explore '
             + html.escape(category.get("name") or category_id)
             + '">'
             f'<span class="theme-index">{index}</span>'
@@ -1596,7 +1604,7 @@ def category_cards_html(papers: list[dict[str, Any]]) -> str:
             f'<div class="theme-boundary">{html.escape(category.get("boundary") or "")}</div>'
             f'<div class="theme-subdirections">{subdirections}</div>'
             f'<div class="theme-count">{primary_count} primary work{"s" if primary_count != 1 else ""}</div>'
-            "</article>"
+            '<span class="theme-open">Explore this theme &nearr;</span></a>'
         )
     return "".join(cards)
 
@@ -1819,20 +1827,6 @@ def project_info_html(project: dict[str, Any]) -> str:
     return f"<dl>\n{rows}\n</dl>\n"
 
 
-def figure_sources_html() -> str:
-    figures_dir = ROOT / "assets" / "figures"
-    if not figures_dir.exists():
-        return '<p class="status-note">No editable figure sources were found in assets/figures/.</p>'
-    blocks: list[str] = []
-    for path in sorted(figures_dir.glob("*.mmd")):
-        name = html.escape(path.name)
-        source = html.escape(path.read_text(encoding="utf-8").strip())
-        blocks.append(
-            f'<h3>{name}</h3><pre class="mermaid-source"><code>{source}</code></pre>'
-        )
-    return "\n".join(blocks) if blocks else '<p class="status-note">No .mmd figure sources were found.</p>'
-
-
 def notes_available_map(records: list[dict[str, Any]]) -> dict[str, bool]:
     result: dict[str, bool] = {}
     for record in records:
@@ -1898,6 +1892,13 @@ def generate_readme(papers: list[dict[str, Any]], source: Path, target: Path, la
     text = source.read_text(encoding="utf-8")
     text = apply_generated_block(
         text,
+        README_NAV_MARKER_START,
+        README_NAV_MARKER_END,
+        readme_navigation_markdown(language),
+        str(source),
+    )
+    text = apply_generated_block(
+        text,
         OVERVIEW_MARKER_START,
         OVERVIEW_MARKER_END,
         overview_markdown(papers, language),
@@ -1914,7 +1915,7 @@ def generate_readme(papers: list[dict[str, Any]], source: Path, target: Path, la
         text,
         FOUNDATIONS_MARKER_START,
         FOUNDATIONS_MARKER_END,
-        foundations_markdown(language),
+        readme_foundations_markdown(papers, language),
         str(source),
     )
     write_text(target, text)
@@ -1978,22 +1979,91 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
     template = (WEBSITE_DIR / "template.html").read_text(encoding="utf-8")
     taxonomy = load_json(TAXONOMY_PATH)
     project = load_json(PROJECT_PATH)
-    rendered = (
-        template.replace("{{OVERVIEW_HTML}}", overview_html(papers))
-        .replace("{{PAPER_TABLE_HTML}}", paper_cards_html(papers))
-        .replace("{{PROJECT_INFO_HTML}}", project_info_cards_html(project))
-        .replace("{{FIGURE_SOURCES_HTML}}", figure_sources_html())
-        .replace("{{FOUNDATIONS_HTML}}", foundations_cards_html())
-        .replace("{{CATEGORY_CARDS_HTML}}", category_cards_html(papers))
-        .replace("{{PAPER_DATA_JSON}}", json_for_script(papers))
-        .replace("{{TAXONOMY_DATA_JSON}}", json_for_script(taxonomy))
-        .replace("{{PROJECT_DATA_JSON}}", json_for_script(project))
-        .replace("{{NOTES_AVAILABLE_JSON}}", json_for_script(notes_available_map(papers)))
+    pages = [
+        ("index", "Home", "A research survey for trustworthy aerial autonomy."),
+        ("themes", "Research themes", "Five directions connecting neural learning with explicit reasoning for aerial autonomy."),
+        ("papers", "Paper library", "Search the evidence archive by task, integration direction, research theme, or review status."),
+        ("foundations", "Neuro-Symbolic AI Foundations", "Foundational papers, books, and community resources for understanding neuro-symbolic AI."),
+        ("about", "About the survey", "Our research question, scope, evidence standards, and review methodology."),
+    ]
+    categories = taxonomy_display_categories()
+    menu_items = [("foundations", "Neuro-Symbolic AI", "Foundations")]
+    for category in categories:
+        title, _, subtitle = category["name"].removeprefix("Neuro-Symbolic ").partition(" & ")
+        menu_items.append(("theme-" + category["id"], title, "& " + subtitle if subtitle else ""))
+    archive = (WEBSITE_DIR / "partials" / "paper-archive.html").read_text(encoding="utf-8")
+    common = {
+        "OVERVIEW_HTML": overview_html(papers),
+        "PROJECT_INFO_HTML": project_info_cards_html(project),
+        "FOUNDATIONS_HTML": foundations_cards_html(),
+        "CATEGORY_CARDS_HTML": category_cards_html(papers),
+        "TAXONOMY_DATA_JSON": json_for_script(taxonomy),
+        "PROJECT_DATA_JSON": json_for_script(project),
+    }
+    specs = [(slug, title, description, None) for slug, title, description in pages]
+    specs.extend(
+        ("theme-" + category["id"], category["name"].removeprefix("Neuro-Symbolic "), category.get("description", ""), category)
+        for category in categories
     )
-    unreplaced = [token for token in WEBSITE_TOKENS if token in rendered]
-    if unreplaced:
-        raise ManageError(f"website template still contains placeholders: {', '.join(unreplaced)}")
-    write_text(output_dir / "index.html", rendered)
+    for slug, title, description, category in specs:
+        page_papers = [
+            record for record in papers
+            if not category or record.get("primary_category") == category["id"]
+            or category["id"] in (record.get("secondary_categories") or [])
+        ] if category or slug == "papers" else []
+        nav_links = "".join(
+            f'<a href="{key}.html"' + (' aria-current="page"' if key == slug else '') + '>'
+            f'<span class="nav-title">{html.escape(label)}</span> '
+            f'<span class="nav-subtitle">{html.escape(subtitle)}</span></a>'
+            for key, label, subtitle in menu_items
+        )
+        navigation = (
+            '<nav class="site-nav glass-surface wrap" aria-label="Main navigation">'
+            '<a class="site-brand" href="index.html" aria-label="UAVs Meet Neuro-Symbolic AI, home">'
+            '<span class="brand-mark" aria-hidden="true">*</span><span>UAVs <em>x</em> Neuro-Symbolic AI</span></a>'
+            '<button class="nav-toggle" type="button" aria-controls="page-links" aria-expanded="false">Menu <span aria-hidden="true">+</span></button>'
+            f'<div class="nav-links" id="page-links">{nav_links}</div></nav>'
+        )
+        breadcrumb = '<a href="index.html">Home</a><span aria-hidden="true">/</span>'
+        breadcrumb += f'<span aria-current="page">{html.escape(title)}</span>'
+        cover = str(category.get("display_order", 1)) if category else {"themes": "1", "papers": "3", "foundations": "2", "about": "5"}.get(slug, "1")
+        header = (
+            f'<header class="page-banner" data-cover="{html.escape(cover)}"><div class="wrap">'
+            f'<nav class="breadcrumbs" aria-label="Breadcrumb">{breadcrumb}</nav>'
+            f'<p class="eyebrow">{"Research theme" if category else "UAVs Meet Neuro-Symbolic AI"}</p>'
+            f'<h1>{html.escape(title)}</h1><p class="page-description">{html.escape(description)}</p>'
+            '</div></header>'
+        )
+        theme_intro = ""
+        if category:
+            subdirections = "".join(f'<span class="tag">{html.escape(item)}</span>' for item in category.get("subdirections") or [])
+            theme_intro = (
+                '<section class="theme-context" aria-label="Theme scope">'
+                f'<p class="section-kicker">{html.escape(category.get("name_zh", ""))}</p>'
+                f'<p>{html.escape(category.get("boundary", ""))}</p><div class="tag-list">{subdirections}</div>'
+                '<p class="status-note">Part of Proposed taxonomy v0.1. Papers include primary and secondary theme assignments; screening status remains visible.</p>'
+                '<a href="index.html#explore">&larr; All research directions</a><a href="papers.html">Open the full paper library &nearr;</a></section>'
+            )
+        content = (WEBSITE_DIR / "pages" / ("theme.html" if category else slug + ".html")).read_text(encoding="utf-8")
+        rendered = template.replace("{{PAGE_CONTENT}}", content)
+        rendered = rendered.replace("{{PAPER_ARCHIVE_HTML}}", archive)
+        replacements = {
+            **common, "PAGE_TITLE": html.escape(title), "PAGE_DESCRIPTION": html.escape(description),
+            "BODY_CLASS": "page-" + ("theme-detail" if category else slug),
+            "NAVIGATION_HTML": navigation, "PAGE_HEADER_HTML": header, "THEME_INTRO_HTML": theme_intro,
+            "PAPER_TABLE_HTML": paper_cards_html(page_papers) if page_papers else '<p class="status-note">No papers are assigned to this theme yet.</p>',
+            "RESULT_COUNT": f"Showing {len(page_papers)} of {len(page_papers)} papers.",
+            "PAPER_DATA_JSON": json_for_script(page_papers), "NOTES_AVAILABLE_JSON": json_for_script(notes_available_map(page_papers)),
+        }
+        for key, value in replacements.items():
+            rendered = rendered.replace("{{" + key + "}}", value)
+        unreplaced = re.findall(r"\{\{[A-Z_]+\}\}", rendered)
+        if unreplaced:
+            raise ManageError(f"website template still contains placeholders: {', '.join(unreplaced)}")
+        write_text(output_dir / (slug + ".html"), rendered)
+
+    # Remove the retired generated route on incremental builds as well.
+    (output_dir / "framework.html").unlink(missing_ok=True)
 
     static_source = WEBSITE_DIR / "static"
     static_target = output_dir / "static"

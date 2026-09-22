@@ -1,0 +1,37 @@
+    <section id="papers" class="papers-section" aria-labelledby="papers-heading">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Evidence archive</p>
+          <h2 id="papers-heading">Survey papers</h2>
+          <p>Each card is generated from the same evidence database and shows screening, reading, and validation status.</p>
+        </div>
+      </div>
+      <div class="controls glass-surface">
+        <label for="search">Search title and keywords
+          <input id="search" type="search" placeholder="e.g. landing, logic, UAV">
+        </label>
+        <label for="task-filter">Task
+          <select id="task-filter">
+            <option value="">All tasks</option>
+          </select>
+        </label>
+        <label for="direction-filter">Integration direction
+          <select id="direction-filter">
+            <option value="">All directions</option>
+          </select>
+        </label>
+        <label for="theme-filter">Research theme
+          <select id="theme-filter">
+            <option value="">All themes</option>
+          </select>
+        </label>
+        <label for="status-filter">Status
+          <select id="status-filter">
+            <option value="">All statuses</option>
+          </select>
+        </label>
+        <button id="reset-filters" type="button" title="Reset filters" aria-label="Reset filters">&#8634;</button>
+      </div>
+      <p id="result-count" aria-live="polite">{{RESULT_COUNT}}</p>
+      <div class="papers">{{PAPER_TABLE_HTML}}</div>
+    </section>

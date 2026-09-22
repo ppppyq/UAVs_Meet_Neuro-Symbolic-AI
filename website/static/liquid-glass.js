@@ -118,7 +118,7 @@
       gl.uniform1f(refs.rimDistanceLoc, 0.45);
       gl.uniform1f(refs.cornerBoostLoc, 0.012);
       gl.uniform1f(refs.rippleEffectLoc, 0.025 + pulse);
-      gl.uniform1f(refs.tintOpacityLoc, this.tintOpacity);
+      gl.uniform1f(refs.tintOpacityLoc, this.element.classList.contains("nav-open") ? 0.7 : this.tintOpacity);
       gl.uniform2f(this.pointerLoc, this.pointer[0], this.pointer[1]);
       gl.uniform1f(this.pointerStrengthLoc, this.pointerStrength);
       gl.uniform1f(this.timeLoc, reducedMotion.matches ? 0 : now / 1000);
@@ -144,7 +144,8 @@
   }
 
   function captureOptions(scale) {
-    var heroTransform = getComputedStyle(document.querySelector(".hero-photo")).transform;
+    var heroPhoto = document.querySelector(".hero-photo");
+    var heroTransform = heroPhoto ? getComputedStyle(heroPhoto).transform : "none";
     return {
       scale: scale,
       useCORS: false,
@@ -209,7 +210,7 @@
   // samples the shared page texture immediately, without taking a DOM screenshot
   // on every frame or hiding/rebuilding the live navigation.
   async function captureHero() {
-    if (!snapshot || capturing || document.hidden || reducedMotion.matches || performance.now() - lastScroll < 400) return;
+    if (!hero || !snapshot || capturing || document.hidden || reducedMotion.matches || performance.now() - lastScroll < 400) return;
     var rect = hero.getBoundingClientRect();
     if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
     capturing = true;
@@ -248,9 +249,14 @@
     });
     document.addEventListener("toggle", scheduleCapture, true);
     reducedMotion.addEventListener("change", function () { activeUntil = 0; scheduleCapture(); });
-    new MutationObserver(scheduleCapture).observe(document.querySelector(".papers"), { childList: true });
-    if ("ResizeObserver" in window) new ResizeObserver(scheduleCapture).observe(document.body);
-    setInterval(captureHero, 1200);
+    var papers = document.querySelector(".papers");
+    if (papers) new MutationObserver(scheduleCapture).observe(papers, { childList: true });
+    if ("ResizeObserver" in window) {
+      var observer = new ResizeObserver(scheduleCapture);
+      observer.observe(document.body);
+      surfaces.forEach(function (surface) { observer.observe(surface.element); });
+    }
+    if (hero) setInterval(captureHero, 1200);
   }
 
   if (document.readyState === "complete") start();

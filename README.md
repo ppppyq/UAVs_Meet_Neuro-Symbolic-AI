@@ -19,6 +19,184 @@ trustworthy autonomy.
 
 ---
 
+[English](README.md) · [简体中文](README.zh-CN.md)
+
+This survey follows the same six-part structure as the website: neuro-symbolic
+AI foundations, followed by five research directions. The directions follow
+`Proposed taxonomy v0.1`, a working proposal. Primary assignments are mutually
+exclusive; secondary assignments are cross-references and do not inflate the
+unique study count. See the [full paper index](docs/paper-index.md) for all records.
+
+<!-- BEGIN GENERATED:README-NAV -->
+
+## Contents
+
+1. [Neuro-Symbolic AI Foundations](#foundations)
+2. [Neuro-Symbolic Perception & World Modeling](#theme-perception_world_modeling)
+3. [Neuro-Symbolic Reasoning & Mission Planning](#theme-reasoning_mission_planning)
+4. [Neuro-Symbolic Navigation & Control](#theme-navigation_control)
+5. [Neuro-Symbolic Safety & Verification](#theme-safety_verification)
+6. [Neuro-Symbolic Collaboration & Interaction](#theme-collaboration_interaction)
+
+<!-- END GENERATED:README-NAV -->
+
+<a id="foundations"></a>
+
+## 1. Neuro-Symbolic AI Foundations
+
+<!-- BEGIN GENERATED:FOUNDATIONS -->
+
+These resources provide background, book-length references, and community venues. They are auxiliary: they are not counted as UAV paper records or core methods.
+
+### Foundational papers
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| Neural-Symbolic Learning and Reasoning: A Survey and Interpretation | Authors: Tarek R. Besold, Artur d'Avila Garcez, Sebastian Bader, Howard Bowman, Pedro Domingos, Pascal Hitzler, Kai-Uwe Kuehnberger, Luis C. Lamb, Daniel Lowd, Priscila Machado Vieira Lima, Leo de Penning, Gadi Pinkas, Hoifung Poon, Gerson Zaverucha | 2017 | arXiv preprint | [arXiv](https://arxiv.org/abs/1711.03902) |
+| Neurosymbolic Programming | Authors: Swarat Chaudhuri, Kevin Ellis, Oleksandr Polozov, Rishabh Singh, Armando Solar-Lezama, Yisong Yue | 2021 | Foundations and Trends in Programming Languages, 7(3), 158-243; Now Publishers | [DOI](https://doi.org/10.1561/2500000049) |
+| Neuro-symbolic artificial intelligence: Current trends | Authors: Md Kamruzzaman Sarker, Lu Zhou, Aaron Eberhart, Pascal Hitzler | 2022 | AI Communications, 34(3), 197-209; SAGE Publications | [DOI](https://doi.org/10.3233/aic-210084) |
+
+### Books and edited collections
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| Neuro-Symbolic Artificial Intelligence: The State of the Art | Editors: Pascal Hitzler, Md Kamruzzaman Sarker | 2021 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia342) · ISBN 9781643682440, 9781643682457 |
+| Compendium of Neurosymbolic Artificial Intelligence | Editors: Pascal Hitzler, Md Kamruzzaman Sarker, Aaron Eberhart | 2023 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia369) · ISBN 9781643684062, 9781643684079 |
+| Handbook on Neurosymbolic AI and Knowledge Graphs | Editors: Pascal Hitzler, Abhilekha Dalal, Mohammad Saeid Mahdavinejad, Sanaz Saki Norouzi | 2025 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia400) · ISBN 9781643685786, 9781643685793 |
+| Neurosymbolic AI: Foundations and Applications | Editors: Alvaro Velasquez, Shankar Sastry, Pradeep Ravikumar, Houbing Song, Sandeep Neema | 2026 | Wiley | [DOI](https://doi.org/10.1002/9781394302406) · ISBN 9781394302376, 9781394302406 |
+
+### Workshops and community resources
+
+| Resource | Contributors | Year | Venue / Publisher | Links |
+|---|---|---|---|---|
+| ICRA'25 Workshop on Foundation Models and Neuro-Symbolic AI for Robotics | Organizers: Chen Wang, Lu Gan, Yunzhu Li, Jiajun Wu, Ayoung Kim, Letizia Gionfrida, Luigi Palmieri, Alexander Gray | 2025 | ICRA 2025, Atlanta, GA, USA | [page](https://sairlab.org/icra25/) |
+
+### Related surveys and screening context
+
+These paper-database records have no primary research-direction assignment. They retain background and screening provenance, not included core UAV methods. They are counted separately from the auxiliary resources above.
+
+| Paper | Role | Reading | Status | Links |
+|---|---|---|---|---|
+| [UAVs Meet LLMs: Overviews and Perspectives Toward Agentic Low-Altitude Mobility](https://arxiv.org/abs/2501.02341) | survey | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2501.02341) · [code](https://github.com/Hub-Tian/UAVs_Meet_LLMs) |
+| [UAVs Meet Agentic AI: A Multidomain Survey of Autonomous Aerial Intelligence and Agentic UAVs](https://arxiv.org/abs/2506.08045) | survey | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2506.08045) · code: — / not verified |
+| [Human-Inspired Neuro-Symbolic World Modeling and Logic Reasoning for Interpretable Safe UAV Landing Site Assessment](https://arxiv.org/abs/2510.22204) | method | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2510.22204) · code: — / not verified |
+| [Neurosymbolic AI: The 3rd Wave](https://arxiv.org/abs/2012.05876) | position | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2012.05876) · code: — / not verified |
+| [DeepProbLog: Neural Probabilistic Logic Programming](https://arxiv.org/abs/1805.10872) | method | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/1805.10872) · [code](https://github.com/ML-KULeuven/deepproblog) |
+
+
+<!-- END GENERATED:FOUNDATIONS -->
+
+<!-- BEGIN GENERATED:RESEARCH-THEMES -->
+
+<a id="theme-perception_world_modeling"></a>
+
+## 2. Neuro-Symbolic Perception & World Modeling
+
+Methods where neural perception grounds explicit symbols or maintains a probabilistic/semantic world model used by symbolic reasoning.
+
+**Boundary:** Use when perception and world-state maintenance are functionally coupled to symbolic structure. Exclude standalone detectors or purely latent world models without explicit symbolic semantics.
+
+**Subdirections:** Symbol grounding and scene graphs; Probabilistic and semantic world models; Multimodal perception for UAV search
+
+### Candidate methods
+
+| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
+|---|---|---|---|---|---|
+| [NEUSIS: A Compositional Neuro-Symbolic Framework for Autonomous Perception, Reasoning, and Planning in Complex UAV Search Missions](https://arxiv.org/abs/2409.10196) | GRiD neural perception produces noisy symbolic detections and attributes; the probabilistic world model reasons over and accumulates those symbols, then SNaC consumes the updated belief map for hierarchical planning. | search_and_exploration, navigation | fulltext_reviewed / simulation | preprint | [paper](https://arxiv.org/abs/2409.10196) · [code](https://github.com/ControlNet/NEUSIS) |
+
+
+### Cross-theme links
+
+`p-2607.02277` appear in a different primary theme and are listed here for cross-reference only.
+
+<a id="theme-reasoning_mission_planning"></a>
+
+## 3. Neuro-Symbolic Reasoning & Mission Planning
+
+Methods that combine explicit logic, constraints, probabilistic logic, or symbolic planning with learned components for mission-level reasoning and task sequencing.
+
+**Boundary:** Use for explicit symbolic inference or mission/task planning. Exclude low-level trajectory optimization without a discrete symbolic model.
+
+**Subdirections:** Logic and constraint reasoning; Task planning and goal management; Uncertainty-aware reasoning
+
+### Related architectures / perspectives
+
+| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
+|---|---|---|---|---|---|
+| [Neuro-Symbolic Agentic AI for Networked Low-Altitude UAVs](https://arxiv.org/abs/2609.19961) | Neural grounding feeds an agentic symbolic planning and verification loop; execution/connectivity feedback updates task state and triggers sensing or replanning. | communication_and_networking, mission_planning | fulltext_reviewed / conceptual, simulation | preprint | [paper](https://arxiv.org/abs/2609.19961) · code: — / not verified |
+
+
+### Cross-theme links
+
+`p-2409.10196`, `p-2603.27583`, `p-2603.07824` appear in a different primary theme and are listed here for cross-reference only.
+
+<a id="theme-navigation_control"></a>
+
+## 4. Neuro-Symbolic Navigation & Control
+
+Methods that couple learned perception/language interfaces with symbolic specifications, constraints, planners, or control structures for motion-level UAV navigation.
+
+**Boundary:** Use for motion-level navigation and control where symbolic structure shapes or guards learned behavior. Exclude pure end-to-end control without explicit semantics.
+
+**Subdirections:** Natural-language to formal specification; Constraint-guided trajectory synthesis; Safe motion planning
+
+### Candidate methods
+
+| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
+|---|---|---|---|---|---|
+| [LLM-Enabled Low-Altitude UAV Natural Language Navigation via Signal Temporal Logic Specification Translation and Repair](https://arxiv.org/abs/2603.27583) | The LLM translates natural language into STL; MILP synthesizes trajectories from those specifications, and infeasibility diagnosis feeds back into LLM-guided semantic repair. | navigation | abstract_reviewed / simulation, real_flight | preprint | [paper](https://arxiv.org/abs/2603.27583) · code: — / not verified |
+
+
+### Cross-theme links
+
+`p-2409.10196` appear in a different primary theme and are listed here for cross-reference only.
+
+<a id="theme-safety_verification"></a>
+
+## 5. Neuro-Symbolic Safety & Verification
+
+Methods focused on safety constraints, verification, monitoring, shielding, or assurance evidence tied to neural-symbolic integration.
+
+**Boundary:** Use when assurance is explicitly coupled to learned components. Exclude standalone formal methods on fixed purely symbolic models.
+
+**Subdirections:** Runtime monitoring and shielding; Landing and safety assessment; Formal verification of learned components
+
+### Candidate methods
+
+| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
+|---|---|---|---|---|---|
+| [NEUROSYMLAND: Neuro-Symbolic Landing-Site Assessment for Robust and Edge-Deployable UAV Autonomy](https://arxiv.org/abs/2607.02277) | Neural perception populates the PSSG; deterministic symbolic rules then evaluate candidate landing regions over that explicit representation. The runtime does not query the LLM; LLM-assisted authoring occurs offline before deployment. | landing | fulltext_reviewed / simulation, hardware_in_loop | conflict | [paper](https://arxiv.org/abs/2607.02277) · [code](https://github.com/Janus117/NeuroSymbolicLand) |
+
+
+### Cross-theme links
+
+`p-2609.19961`, `p-2603.27583` appear in a different primary theme and are listed here for cross-reference only.
+
+<a id="theme-collaboration_interaction"></a>
+
+## 6. Neuro-Symbolic Collaboration & Interaction
+
+Methods where explicit symbolic structure supports human-UAV, multi-UAV, or networked collaboration and information exchange.
+
+**Boundary:** Use when collaboration/interaction is central to the neuro-symbolic method, not merely a deployment label.
+
+**Subdirections:** Human-UAV knowledge interaction; Multi-UAV coordination; Networked and edge-cloud autonomy
+
+### Candidate methods
+
+| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
+|---|---|---|---|---|---|
+| [Reasoning Knowledge-Gap in Drone Planning via LLM-based Active Elicitation](https://arxiv.org/abs/2603.07824) | The VLM identifies semantic uncertainty; MINT represents it as a symbolic tree; the LLM chooses a binary query; the human answer prunes the tree and updates the semantic map and plan. | navigation, search_and_exploration | fulltext_reviewed / simulation, real_flight | preprint | [paper](https://arxiv.org/abs/2603.07824) · code: — / not verified |
+
+
+### Cross-theme links
+
+`p-2609.19961` appear in a different primary theme and are listed here for cross-reference only.
+
+<!-- END GENERATED:RESEARCH-THEMES -->
+
+---
+
 ## 🌐 Project overview
 
 This repository is a lightweight, reproducible literature-review engineering
@@ -95,158 +273,6 @@ version provenance, and candidate screening.
 
 <!-- END GENERATED:OVERVIEW -->
 
-## 📚 Neuro-symbolic UAV research themes
-
-The five display themes below are generated from `data/taxonomy.json` and
-`data/papers.json`. Primary assignments are mutually exclusive; secondary
-categories are cross-references only and do not inflate the unique study count.
-The full, flat paper list is in [docs/paper-index.md](docs/paper-index.md).
-
-<!-- BEGIN GENERATED:RESEARCH-THEMES -->
-
-### Surveys, Foundations & System Architectures
-
-| Paper | Role | Reading | Status | Links |
-|---|---|---|---|---|
-| [UAVs Meet LLMs: Overviews and Perspectives Toward Agentic Low-Altitude Mobility](https://arxiv.org/abs/2501.02341) | survey | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2501.02341) · [code](https://github.com/Hub-Tian/UAVs_Meet_LLMs) |
-| [UAVs Meet Agentic AI: A Multidomain Survey of Autonomous Aerial Intelligence and Agentic UAVs](https://arxiv.org/abs/2506.08045) | survey | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2506.08045) · code: — / not verified |
-| [Human-Inspired Neuro-Symbolic World Modeling and Logic Reasoning for Interpretable Safe UAV Landing Site Assessment](https://arxiv.org/abs/2510.22204) | method | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2510.22204) · code: — / not verified |
-| [Neurosymbolic AI: The 3rd Wave](https://arxiv.org/abs/2012.05876) | position | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/2012.05876) · code: — / not verified |
-| [DeepProbLog: Neural Probabilistic Logic Programming](https://arxiv.org/abs/1805.10872) | method | abstract_reviewed | excluded | [paper](https://arxiv.org/abs/1805.10872) · [code](https://github.com/ML-KULeuven/deepproblog) |
-
-
-### Neuro-Symbolic Perception & World Modeling
-
-Methods where neural perception grounds explicit symbols or maintains a probabilistic/semantic world model used by symbolic reasoning.
-
-**Boundary:** Use when perception and world-state maintenance are functionally coupled to symbolic structure. Exclude standalone detectors or purely latent world models without explicit symbolic semantics.
-
-**Subdirections:** Symbol grounding and scene graphs; Probabilistic and semantic world models; Multimodal perception for UAV search
-
-#### Candidate methods
-
-| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
-|---|---|---|---|---|---|
-| [NEUSIS: A Compositional Neuro-Symbolic Framework for Autonomous Perception, Reasoning, and Planning in Complex UAV Search Missions](https://arxiv.org/abs/2409.10196) | GRiD neural perception produces noisy symbolic detections and attributes; the probabilistic world model reasons over and accumulates those symbols, then SNaC consumes the updated belief map for hierarchical planning. | search_and_exploration, navigation | fulltext_reviewed / simulation | preprint | [paper](https://arxiv.org/abs/2409.10196) · [code](https://github.com/ControlNet/NEUSIS) |
-
-
-#### Cross-theme links
-
-`p-2607.02277` appear in a different primary theme and are listed here for cross-reference only.
-
-### Neuro-Symbolic Reasoning & Mission Planning
-
-Methods that combine explicit logic, constraints, probabilistic logic, or symbolic planning with learned components for mission-level reasoning and task sequencing.
-
-**Boundary:** Use for explicit symbolic inference or mission/task planning. Exclude low-level trajectory optimization without a discrete symbolic model.
-
-**Subdirections:** Logic and constraint reasoning; Task planning and goal management; Uncertainty-aware reasoning
-
-#### Related architectures / perspectives
-
-| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
-|---|---|---|---|---|---|
-| [Neuro-Symbolic Agentic AI for Networked Low-Altitude UAVs](https://arxiv.org/abs/2609.19961) | Neural grounding feeds an agentic symbolic planning and verification loop; execution/connectivity feedback updates task state and triggers sensing or replanning. | communication_and_networking, mission_planning | fulltext_reviewed / conceptual, simulation | preprint | [paper](https://arxiv.org/abs/2609.19961) · code: — / not verified |
-
-
-#### Cross-theme links
-
-`p-2409.10196`, `p-2603.27583`, `p-2603.07824` appear in a different primary theme and are listed here for cross-reference only.
-
-### Neuro-Symbolic Navigation & Control
-
-Methods that couple learned perception/language interfaces with symbolic specifications, constraints, planners, or control structures for motion-level UAV navigation.
-
-**Boundary:** Use for motion-level navigation and control where symbolic structure shapes or guards learned behavior. Exclude pure end-to-end control without explicit semantics.
-
-**Subdirections:** Natural-language to formal specification; Constraint-guided trajectory synthesis; Safe motion planning
-
-#### Candidate methods
-
-| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
-|---|---|---|---|---|---|
-| [LLM-Enabled Low-Altitude UAV Natural Language Navigation via Signal Temporal Logic Specification Translation and Repair](https://arxiv.org/abs/2603.27583) | The LLM translates natural language into STL; MILP synthesizes trajectories from those specifications, and infeasibility diagnosis feeds back into LLM-guided semantic repair. | navigation | abstract_reviewed / simulation, real_flight | preprint | [paper](https://arxiv.org/abs/2603.27583) · code: — / not verified |
-
-
-#### Cross-theme links
-
-`p-2409.10196` appear in a different primary theme and are listed here for cross-reference only.
-
-### Neuro-Symbolic Safety & Verification
-
-Methods focused on safety constraints, verification, monitoring, shielding, or assurance evidence tied to neural-symbolic integration.
-
-**Boundary:** Use when assurance is explicitly coupled to learned components. Exclude standalone formal methods on fixed purely symbolic models.
-
-**Subdirections:** Runtime monitoring and shielding; Landing and safety assessment; Formal verification of learned components
-
-#### Candidate methods
-
-| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
-|---|---|---|---|---|---|
-| [NEUROSYMLAND: Neuro-Symbolic Landing-Site Assessment for Robust and Edge-Deployable UAV Autonomy](https://arxiv.org/abs/2607.02277) | Neural perception populates the PSSG; deterministic symbolic rules then evaluate candidate landing regions over that explicit representation. The runtime does not query the LLM; LLM-assisted authoring occurs offline before deployment. | landing | fulltext_reviewed / simulation, hardware_in_loop | conflict | [paper](https://arxiv.org/abs/2607.02277) · [code](https://github.com/Janus117/NeuroSymbolicLand) |
-
-
-#### Cross-theme links
-
-`p-2609.19961`, `p-2603.27583` appear in a different primary theme and are listed here for cross-reference only.
-
-### Neuro-Symbolic Collaboration & Interaction
-
-Methods where explicit symbolic structure supports human-UAV, multi-UAV, or networked collaboration and information exchange.
-
-**Boundary:** Use when collaboration/interaction is central to the neuro-symbolic method, not merely a deployment label.
-
-**Subdirections:** Human-UAV knowledge interaction; Multi-UAV coordination; Networked and edge-cloud autonomy
-
-#### Candidate methods
-
-| Paper | Neural–Symbolic Coupling | UAV Task | Evidence / Review | Publication | Links |
-|---|---|---|---|---|---|
-| [Reasoning Knowledge-Gap in Drone Planning via LLM-based Active Elicitation](https://arxiv.org/abs/2603.07824) | The VLM identifies semantic uncertainty; MINT represents it as a symbolic tree; the LLM chooses a binary query; the human answer prunes the tree and updates the semantic map and plan. | navigation, search_and_exploration | fulltext_reviewed / simulation, real_flight | preprint | [paper](https://arxiv.org/abs/2603.07824) · code: — / not verified |
-
-
-#### Cross-theme links
-
-`p-2609.19961` appear in a different primary theme and are listed here for cross-reference only.
-
-<!-- END GENERATED:RESEARCH-THEMES -->
-
-## 🧭 Foundations, books & workshops
-
-These auxiliary resources provide the broader neuro-symbolic AI foundations,
-book-length references, and community venues. They are not counted as UAV
-paper records or core methods. See [docs/foundations.md](docs/foundations.md).
-
-<!-- BEGIN GENERATED:FOUNDATIONS -->
-
-These resources provide background, book-length references, and community venues. They are auxiliary: they are not counted as UAV paper records or core methods.
-
-### Foundational papers
-
-| Resource | Contributors | Year | Venue / Publisher | Links |
-|---|---|---|---|---|
-| Neural-Symbolic Learning and Reasoning: A Survey and Interpretation | Authors: Tarek R. Besold, Artur d'Avila Garcez, Sebastian Bader, Howard Bowman, Pedro Domingos, Pascal Hitzler, Kai-Uwe Kuehnberger, Luis C. Lamb, Daniel Lowd, Priscila Machado Vieira Lima, Leo de Penning, Gadi Pinkas, Hoifung Poon, Gerson Zaverucha | 2017 | arXiv preprint | [arXiv](https://arxiv.org/abs/1711.03902) |
-| Neurosymbolic Programming | Authors: Swarat Chaudhuri, Kevin Ellis, Oleksandr Polozov, Rishabh Singh, Armando Solar-Lezama, Yisong Yue | 2021 | Foundations and Trends in Programming Languages, 7(3), 158-243; Now Publishers | [DOI](https://doi.org/10.1561/2500000049) |
-| Neuro-symbolic artificial intelligence: Current trends | Authors: Md Kamruzzaman Sarker, Lu Zhou, Aaron Eberhart, Pascal Hitzler | 2022 | AI Communications, 34(3), 197-209; SAGE Publications | [DOI](https://doi.org/10.3233/aic-210084) |
-
-### Books and edited collections
-
-| Resource | Contributors | Year | Venue / Publisher | Links |
-|---|---|---|---|---|
-| Neuro-Symbolic Artificial Intelligence: The State of the Art | Editors: Pascal Hitzler, Md Kamruzzaman Sarker | 2021 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia342) · ISBN 9781643682440, 9781643682457 |
-| Compendium of Neurosymbolic Artificial Intelligence | Editors: Pascal Hitzler, Md Kamruzzaman Sarker, Aaron Eberhart | 2023 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia369) · ISBN 9781643684062, 9781643684079 |
-| Handbook on Neurosymbolic AI and Knowledge Graphs | Editors: Pascal Hitzler, Abhilekha Dalal, Mohammad Saeid Mahdavinejad, Sanaz Saki Norouzi | 2025 | Frontiers in Artificial Intelligence and Applications; IOS Press | [DOI](https://doi.org/10.3233/faia400) · ISBN 9781643685786, 9781643685793 |
-| Neurosymbolic AI: Foundations and Applications | Editors: Alvaro Velasquez, Shankar Sastry, Pradeep Ravikumar, Houbing Song, Sandeep Neema | 2026 | Wiley | [DOI](https://doi.org/10.1002/9781394302406) · ISBN 9781394302376, 9781394302406 |
-
-### Workshops and community resources
-
-| Resource | Contributors | Year | Venue / Publisher | Links |
-|---|---|---|---|---|
-| ICRA'25 Workshop on Foundation Models and Neuro-Symbolic AI for Robotics | Organizers: Chen Wang, Lu Gan, Yunzhu Li, Jiajun Wu, Ayoung Kim, Letizia Gionfrida, Luigi Palmieri, Alexander Gray | 2025 | ICRA 2025, Atlanta, GA, USA | [page](https://sairlab.org/icra25/) |
-
-<!-- END GENERATED:FOUNDATIONS -->
-
 ## 🗂 Repository layout
 
 | Path | Purpose |
@@ -254,11 +280,11 @@ These resources provide background, book-length references, and community venues
 | `data/papers.json` | Single source of truth for paper metadata, status, research content, and evidence. |
 | `data/taxonomy.json` | Machine-readable proposed multi-axis taxonomy. |
 | `data/search-log.json` | Searches and full-text resource accesses actually performed. |
-| `docs/` | Scope, taxonomy, positioning, related work, roadmap, and iteration reports. |
+| `docs/` | Scope, taxonomy, positioning, related work, roadmap, and generated coverage documents. |
 | `notes/papers/` | Per-paper full-text reading notes. |
 | `website/` and `site/` | Static project website source and generated output. |
 | `paper/` | LaTeX manuscript skeleton and generated `references.bib`. |
-| `scripts/manage.py` | Validation, migration, build, check, and local serve commands. |
+| `scripts/manage.py` | Validation, migration, build, and check commands. |
 
 ## 🚀 Quick start
 
@@ -271,10 +297,7 @@ py -3.14 -m unittest discover -s tests -v
 py -3.14 scripts/manage.py check --tracked-only
 py -3.14 scripts/manage.py build
 py -3.14 scripts/manage.py check
-py -3.14 scripts/manage.py serve
 ```
-
-`serve` binds to `127.0.0.1:8000` by default. Press `Ctrl+C` to stop.
 
 ## 🧾 How to contribute
 
@@ -295,8 +318,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and
 - [Positioning and testable hypotheses](docs/positioning.md)
 - [Roadmap](docs/roadmap.md)
 - [Paper outline](docs/paper-outline.md)
-- [Iteration 02 report](docs/iteration-02-report.md)
-- [Iteration 03 report](docs/iteration-03-report.md)
 - [LaTeX manuscript source](paper/main.tex)
 
 ## 🙏 Reference sources and acknowledgements

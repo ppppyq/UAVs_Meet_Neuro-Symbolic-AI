@@ -1,4 +1,5 @@
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -166,12 +167,39 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual(manage.README_EN_PATH.read_bytes(), before_readme)
         self.assertEqual(manage.BIB_PATH.read_bytes(), before_bib)
 
+    def test_bilingual_readmes_follow_six_part_structure_and_keep_all_records(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        categories = manage.taxonomy_display_categories()
+        for language, source in (("en", manage.README_EN_PATH), ("zh", manage.README_ZH_PATH)):
+            with self.subTest(language=language), tempfile.TemporaryDirectory() as tmp:
+                target = Path(tmp) / source.name
+                manage.generate_readme(papers, source, target, language)
+                text = target.read_text(encoding="utf-8")
+                numbered_headings = re.findall(r"^## (\d+)\. (.+)$", text, re.MULTILINE)
+                self.assertEqual([number for number, _ in numbered_headings], [str(i) for i in range(1, 7)])
+                self.assertEqual([title for _, title in numbered_headings[1:]], [manage.category_name(category, language) for category in categories])
+                navigation = text.split(manage.README_NAV_MARKER_START)[1].split(manage.README_NAV_MARKER_END)[0]
+                anchors = re.findall(r"\]\(#([^)]+)\)", navigation)
+                self.assertEqual(anchors, ["foundations"] + ["theme-" + category["id"] for category in categories])
+                for anchor in anchors:
+                    self.assertEqual(text.count(f'<a id="{anchor}"></a>'), 1)
+                foundations = text.split(manage.FOUNDATIONS_MARKER_START)[1].split(manage.FOUNDATIONS_MARKER_END)[0]
+                themes = text.split(manage.RESEARCH_THEMES_MARKER_START)[1].split(manage.RESEARCH_THEMES_MARKER_END)[0]
+                self.assertLess(text.index(manage.FOUNDATIONS_MARKER_START), text.index(manage.RESEARCH_THEMES_MARKER_START))
+                for record in papers:
+                    title = manage.markdown_escape(record["title"])
+                    self.assertIn(title, themes if record.get("primary_category") else foundations)
+                self.assertNotIn("Surveys, Foundations & System Architectures", themes)
+                first = target.read_bytes()
+                manage.generate_readme(papers, target, target, language)
+                self.assertEqual(first, target.read_bytes())
+
     def test_no_js_and_js_table_content_are_both_present(self):
         papers = [sample_record()]
         html_table = manage.paper_table_html(papers)
         with tempfile.TemporaryDirectory() as tmp:
             manage.generate_site(papers, Path(tmp))
-            rendered = (Path(tmp) / "index.html").read_text(encoding="utf-8")
+            rendered = (Path(tmp) / "papers.html").read_text(encoding="utf-8")
         self.assertIn("<table>", html_table)
         self.assertIn("paper-card", rendered)
         self.assertIn("status-pill candidate", rendered)
@@ -196,15 +224,90 @@ class GenerationTests(unittest.TestCase):
             out = Path(tmp) / "site"
             with mock.patch.object(manage, "PROJECT_PATH", project_path):
                 manage.generate_site(papers, out)
-            rendered = (out / "index.html").read_text(encoding="utf-8")
+            rendered = (out / "about.html").read_text(encoding="utf-8")
         self.assertIn("Yuqi Ping", rendered)
         self.assertIn("Harbin Institute of Technology, Shenzhen", rendered)
         self.assertIn("MIT", rendered)
+
+    def test_pages_separate_content_and_category_links_work_without_javascript(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manage.generate_site(papers, root)
+            home = (root / "index.html").read_text(encoding="utf-8")
+            self.assertNotIn('class="paper-card"', home)
+            self.assertNotIn('id="foundations"', home)
+            self.assertNotIn('id="framework"', home)
+            self.assertIn('href="themes.html"', home)
+            themes = (root / "themes.html").read_text(encoding="utf-8")
+            for category in manage.taxonomy_display_categories():
+                filename = "theme-" + category["id"] + ".html"
+                self.assertIn('href="' + filename + '"', themes)
+                self.assertTrue((root / filename).exists())
+            errors = []
+            manage.check_local_html_links(root, errors)
+            self.assertEqual(errors, [])
+            for slug in ("themes", "papers", "foundations", "about"):
+                content = (root / (slug + ".html")).read_text(encoding="utf-8")
+                self.assertNotIn("{{", content)
+
+    def test_main_menu_has_foundations_and_five_direct_theme_links(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        categories = manage.taxonomy_display_categories()
+        menu_routes = ["foundations"] + ["theme-" + category["id"] for category in categories]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manage.generate_site(papers, root)
+            for path in root.glob("*.html"):
+                content = path.read_text(encoding="utf-8")
+                menu = content.split('<div class="nav-links" id="page-links">', 1)[1].split('</div>', 1)[0]
+                self.assertEqual(menu.count('<a '), 6)
+                for route in menu_routes:
+                    self.assertIn('href="' + route + '.html"', menu)
+                if path.stem in menu_routes:
+                    self.assertIn('href="' + path.name + '" aria-current="page"', menu)
+                    self.assertEqual(menu.count('aria-current="page"'), 1)
+                else:
+                    self.assertNotIn('aria-current="page"', menu)
+
+    def test_retired_framework_is_removed_on_incremental_build(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "framework.html").write_text("Old generated framework page", encoding="utf-8")
+            (root / "keep.txt").write_text("Unrelated file", encoding="utf-8")
+            manage.generate_site(papers, root)
+            self.assertFalse((root / "framework.html").exists())
+            self.assertTrue((root / "keep.txt").exists())
+            for path in root.glob("*.html"):
+                content = path.read_text(encoding="utf-8")
+                for retired in ("framework.html", "Proposed framework", "Editable Mermaid", "assets/figures/", "mermaid-source"):
+                    self.assertNotIn(retired, content)
+
+    def test_theme_page_includes_primary_and_secondary_assignments_only(self):
+        categories = manage.taxonomy_display_categories()
+        first, second = categories[0]["id"], categories[1]["id"]
+        papers = [
+            sample_record(id="primary", title="Primary match", primary_category=first),
+            sample_record(id="secondary", title="Secondary match", primary_category=second, secondary_categories=[first]),
+            sample_record(id="unrelated", title="Unrelated record", primary_category=second),
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            manage.generate_site(papers, Path(tmp))
+            text = (Path(tmp) / ("theme-" + first + ".html")).read_text(encoding="utf-8")
+            self.assertIn("Primary match", text)
+            self.assertIn("Secondary match", text)
+            self.assertNotIn("Unrelated record", text)
+            self.assertEqual(text.count('class="paper-card"'), 2)
+            self.assertIn("Showing 2 of 2 papers.", text)
 
 
 class CheckGenerationTests(unittest.TestCase):
     def _write_readme_sources(self, root: Path):
         en = (
+            "<!-- BEGIN GENERATED:README-NAV -->\n"
+            "old\n"
+            "<!-- END GENERATED:README-NAV -->\n"
             "<!-- BEGIN GENERATED:OVERVIEW -->\n"
             "old\n"
             "<!-- END GENERATED:OVERVIEW -->\n"
@@ -335,9 +438,10 @@ class CheckGenerationTests(unittest.TestCase):
         )
         project_path.write_text(json.dumps(manage.load_json(manage.PROJECT_PATH)), encoding="utf-8")
         (website_dir / "static").mkdir(parents=True, exist_ok=True)
+        shutil.copytree(manage.WEBSITE_DIR / "pages", website_dir / "pages")
+        shutil.copytree(manage.WEBSITE_DIR / "partials", website_dir / "partials")
         (website_dir / "template.html").write_text(
-            "{{OVERVIEW_HTML}}{{PAPER_TABLE_HTML}}{{PROJECT_INFO_HTML}}{{FIGURE_SOURCES_HTML}}"
-            "{{FOUNDATIONS_HTML}}{{CATEGORY_CARDS_HTML}}"
+            "{{PAGE_CONTENT}}{{NAVIGATION_HTML}}"
             "{{PAPER_DATA_JSON}}{{TAXONOMY_DATA_JSON}}{{PROJECT_DATA_JSON}}{{NOTES_AVAILABLE_JSON}}",
             encoding="utf-8",
         )
