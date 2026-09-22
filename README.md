@@ -4,7 +4,7 @@ Where learned aerial perception meets explicit, auditable reasoning for
 trustworthy autonomy.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](pyproject.toml)
+[![Website](https://img.shields.io/badge/Read-online_survey-236b71.svg)](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/)
 [![Status](https://img.shields.io/badge/Status-manuscript--in--preparation-orange.svg)](#-project-overview)
 [![Data driven](https://img.shields.io/badge/Data-JSON--driven-green.svg)](data/papers.json)
 
@@ -20,6 +20,8 @@ trustworthy autonomy.
 ---
 
 [English](README.md) · [简体中文](README.zh-CN.md)
+
+[Read the survey online](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/) — explore the foundations and five research directions.
 
 This survey follows the same six-part structure as the website: neuro-symbolic
 AI foundations, followed by five research directions. The directions follow
@@ -199,8 +201,8 @@ Methods where explicit symbolic structure supports human-UAV, multi-UAV, or netw
 
 ## 🌐 Project overview
 
-This repository is a lightweight, reproducible literature-review engineering
-workspace for **neuro-symbolic UAV autonomy**. It is not a completed systematic
+This repository is a living literature survey of **neuro-symbolic UAV autonomy**.
+It is not a completed systematic
 review and not an experimental system, and it does not claim novelty or
 exhaustiveness.
 
@@ -273,7 +275,7 @@ version provenance, and candidate screening.
 
 <!-- END GENERATED:OVERVIEW -->
 
-## 🗂 Repository layout
+## 🗂 Research materials
 
 | Path | Purpose |
 |---|---|
@@ -282,22 +284,7 @@ version provenance, and candidate screening.
 | `data/search-log.json` | Searches and full-text resource accesses actually performed. |
 | `docs/` | Scope, taxonomy, positioning, related work, roadmap, and generated coverage documents. |
 | `notes/papers/` | Per-paper full-text reading notes. |
-| `website/` and `site/` | Static project website source and generated output. |
 | `paper/` | LaTeX manuscript skeleton and generated `references.bib`. |
-| `scripts/manage.py` | Validation, migration, build, and check commands. |
-
-## 🚀 Quick start
-
-Use Python 3.11 or newer. In the current local environment, the default
-`python` is Python 3.10, so Windows commands use `py -3.14`.
-
-```powershell
-py -3.14 scripts/manage.py validate
-py -3.14 -m unittest discover -s tests -v
-py -3.14 scripts/manage.py check --tracked-only
-py -3.14 scripts/manage.py build
-py -3.14 scripts/manage.py check
-```
 
 ## 🧾 How to contribute
 

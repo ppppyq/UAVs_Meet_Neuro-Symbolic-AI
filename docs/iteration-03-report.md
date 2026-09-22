@@ -71,15 +71,7 @@ NEUSIS 与 MINT 均已读取 HTML 全文并记录证据；LLM-STL 论文的 HTML
 
 ## 5. 校验结果
 
-已执行：
-
-```powershell
-py -3.14 scripts/manage.py validate
-py -3.14 -m unittest discover -s tests -v
-py -3.14 scripts/manage.py check --tracked-only
-py -3.14 scripts/manage.py build
-py -3.14 scripts/manage.py check
-```
+已完成数据校验、测试和生成结果一致性检查。
 
 结果：
 

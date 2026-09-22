@@ -3,7 +3,7 @@
 让无人机的学习式感知与显式、可审计的推理相遇，服务于可信自主性。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](pyproject.toml)
+[![Website](https://img.shields.io/badge/Read-online_survey-236b71.svg)](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/)
 [![Status](https://img.shields.io/badge/Status-manuscript--in--preparation-orange.svg)](#-项目概览)
 [![Data driven](https://img.shields.io/badge/Data-JSON--driven-green.svg)](data/papers.json)
 
@@ -19,6 +19,8 @@
 ---
 
 [English](README.md) · [简体中文](README.zh-CN.md)
+
+[在线阅读综述](https://ppppyq.github.io/UAVs_Meet_Neuro-Symbolic-AI/)：浏览神经符号 AI 基础与五个研究方向。
 
 本综述与网页采用相同的六部分结构：先介绍神经符号 AI 基础，再展开五个研究方向。
 方向划分采用 `Proposed taxonomy v0.1`，属于工作性提议。主方向互斥，次方向仅作
@@ -196,7 +198,7 @@ Methods where explicit symbolic structure supports human-UAV, multi-UAV, or netw
 
 ## 🌐 项目概览
 
-这是一个轻量、可复现的文献综述工程工作区，主题是**神经符号 UAV 自主性**。它
+这是一个持续更新的文献综述，主题是**神经符号 UAV 自主性**。它
 不是已完成的系统综述，也不是实验系统，并且不声称首创或穷尽。
 
 核心判断标准是有意收紧的：
@@ -259,7 +261,7 @@ Methods where explicit symbolic structure supports human-UAV, multi-UAV, or netw
 
 <!-- END GENERATED:OVERVIEW -->
 
-## 🗂 仓库结构
+## 🗂 研究资料
 
 | 路径 | 用途 |
 |---|---|
@@ -268,22 +270,7 @@ Methods where explicit symbolic structure supports human-UAV, multi-UAV, or netw
 | `data/search-log.json` | 实际执行的检索与全文资源访问记录。 |
 | `docs/` | 范围、分类、定位、相关工作、路线图与生成的覆盖文档。 |
 | `notes/papers/` | 单篇论文的全文阅读笔记。 |
-| `website/` 与 `site/` | 静态项目网站源码与生成结果。 |
 | `paper/` | LaTeX 手稿骨架与生成的 `references.bib`。 |
-| `scripts/manage.py` | 校验、迁移、构建与检查命令。 |
-
-## 🚀 快速开始
-
-请使用 Python 3.11 或更新版本。当前本地环境中默认 `python` 为 Python 3.10，
-因此 Windows 下使用 `py -3.14`。
-
-```powershell
-py -3.14 scripts/manage.py validate
-py -3.14 -m unittest discover -s tests -v
-py -3.14 scripts/manage.py check --tracked-only
-py -3.14 scripts/manage.py build
-py -3.14 scripts/manage.py check
-```
 
 ## 🧾 如何贡献
 

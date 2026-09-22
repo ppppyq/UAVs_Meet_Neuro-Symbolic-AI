@@ -1,6 +1,6 @@
 # Flat paper index
 
-This file is generated from `data/papers.json` by `scripts/manage.py build`.
+This index is derived from the research records in `data/papers.json`.
 It is a flat, no-JS table for quick lookup. The README groups the same records
 by five primary research themes; this index intentionally does not duplicate
 the theme structure.

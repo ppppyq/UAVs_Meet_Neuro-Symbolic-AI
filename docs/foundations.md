@@ -1,6 +1,6 @@
 # Foundations, books, and workshops
 
-This file is generated from `data/foundational-resources.json` by `scripts/manage.py build`. These resources are auxiliary and are not counted as UAV paper records or core methods.
+These resources are drawn from `data/foundational-resources.json`. They are auxiliary and are not counted as UAV paper records or core methods.
 
 These resources provide background, book-length references, and community venues. They are auxiliary: they are not counted as UAV paper records or core methods.
 

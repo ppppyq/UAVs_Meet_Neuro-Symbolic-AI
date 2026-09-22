@@ -7,8 +7,7 @@ author or submission metadata.
 Files:
 
 - `main.tex`: top-level article document with modular section inputs.
-- `references.bib`: generated from verified records in `data/papers.json` by
-  `scripts/manage.py build`.
+- `references.bib`: derived from verified records in `data/papers.json`.
 - `sections/`: placeholder section files for the planned outline.
 
 ## Compile later

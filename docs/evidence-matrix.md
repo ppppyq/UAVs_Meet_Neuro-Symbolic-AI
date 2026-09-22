@@ -1,7 +1,6 @@
 # Evidence matrix
 
-This matrix is generated from `data/papers.json` by
-`scripts/manage.py build`. It compares primary/secondary display category,
+This matrix is derived from `data/papers.json`. It compares primary/secondary display category,
 neural components, symbolic mechanisms, coupling, task, validation
 environment, evidence locations, and limitations. Candidate records and
 formally included records are distinguished by the `Screening` column.

@@ -83,15 +83,7 @@ branch. Uncommitted user changes were preserved.
 
 ## Verification performed
 
-Commands run successfully:
-
-```powershell
-py -3.14 scripts/manage.py validate
-py -3.14 -m unittest discover -s tests -v
-py -3.14 scripts/manage.py check --tracked-only
-py -3.14 scripts/manage.py build
-py -3.14 scripts/manage.py check
-```
+Validation, tests, and generated-output consistency checks completed successfully.
 
 Result:
 

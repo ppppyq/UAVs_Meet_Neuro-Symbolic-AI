@@ -1950,8 +1950,8 @@ def generate_category_coverage(papers: list[dict[str, Any]], output_path: Path) 
 def generate_foundations_doc(output_path: Path) -> None:
     content = (
         "# Foundations, books, and workshops\n\n"
-        "This file is generated from `data/foundational-resources.json` by "
-        "`scripts/manage.py build`. These resources are auxiliary and are not "
+        "These resources are drawn from `data/foundational-resources.json`. "
+        "They are auxiliary and are not "
         "counted as UAV paper records or core methods.\n\n"
         + foundations_markdown("en")
     )

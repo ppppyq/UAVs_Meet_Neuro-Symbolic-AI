@@ -10,14 +10,8 @@ preserve evidence provenance and avoid fabricating metadata.
 3. Record actually performed searches in `data/search-log.json`.
 4. Keep `human_reviewed` false unless a human reviewer explicitly updates it.
 5. Do not mark `fulltext_reviewed` unless the full text was actually read.
-6. Run:
-
-```powershell
-python scripts/manage.py validate
-python -m unittest discover -s tests -v
-python scripts/manage.py build
-python scripts/manage.py check
-```
+6. Submit the source records and supporting evidence for review. Automated
+   consistency checks run through the repository workflows.
 
 ## Evidence rules
 
@@ -29,10 +23,11 @@ python scripts/manage.py check
 - Do not turn “code not found” into “authors did not release code”.
 - Do not mix simulation, hardware-in-the-loop, and real-flight evidence.
 
-## Generated files
+## Source records
 
-Do not hand-edit the generated blocks in README files, `paper/references.bib`,
-or `site/`. Regenerate them with `scripts/manage.py build`.
+Paper tables, references, and the online survey are derived from the research
+records. Propose corrections in those records so that titles, classifications,
+review status, and evidence remain consistent across the survey.
 
 ## Suggestions
 
