@@ -275,6 +275,81 @@
           "accessed_at": "2026-09-21"
         }
       ]
+    },
+    {
+      "id": "fr-logic-tensor-networks",
+      "title": "Logic Tensor Networks",
+      "resource_type": "paper",
+      "year": 2022,
+      "url": "https://openaccess.city.ac.uk/id/eprint/27580/",
+      "arxiv_id": "2012.13635",
+      "doi": "10.1016/j.artint.2021.103649",
+      "isbn": [],
+      "venue": "Artificial Intelligence 303, 103649",
+      "publisher": "Elsevier",
+      "contributors": [
+        "Samy Badreddine",
+        "Artur d'Avila Garcez",
+        "Luciano Serafini",
+        "Michael Spranger"
+      ],
+      "contributor_role": "authors",
+      "summary": "Real Logic grounds first-order formulas in differentiable computations, allowing logical knowledge to constrain learning. Fuzzy truth degrees should not be interpreted as calibrated probabilities or hard safety proofs.",
+      "role": "Foundational method for logic-guided learning. Metadata and selected introductory full-text passages reviewed; not an end-to-end full-text review and no UAV validation inferred.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://openaccess.city.ac.uk/id/eprint/27580/",
+          "source_kind": "publisher",
+          "source_version": "Institutional repository publication record",
+          "claim": "Confirms article title, four authors, journal, volume, DOI and publication year.",
+          "accessed_at": "2026-09-22"
+        },
+        {
+          "source_url": "https://arxiv.org/pdf/2012.13635v4",
+          "source_kind": "fulltext",
+          "source_version": "arXiv v4, 2021-12-23",
+          "claim": "Selected reading: pp. 1–2 introduce Real Logic and differentiable grounding; used only for foundational framing, not a review of all experiments.",
+          "accessed_at": "2026-09-22"
+        }
+      ]
+    },
+    {
+      "id": "fr-scallop",
+      "title": "Scallop: A Language for Neurosymbolic Programming",
+      "resource_type": "paper",
+      "year": 2023,
+      "url": "https://pldi23.sigplan.org/details/pldi-2023-pldi/61/Scallop-A-Language-for-Neurosymbolic-Programming",
+      "arxiv_id": "2304.04812",
+      "doi": "10.1145/3591280",
+      "isbn": [],
+      "venue": "Proceedings of the ACM on Programming Languages 7 (PLDI), 1463–1487",
+      "publisher": "ACM",
+      "contributors": [
+        "Ziyang Li",
+        "Jiani Huang",
+        "Mayur Naik"
+      ],
+      "contributor_role": "authors",
+      "summary": "A relational language uses provenance semirings to support differentiable reasoning with recursion, negation and aggregation. Library capabilities do not establish end-to-end differentiable training in every downstream application.",
+      "role": "Foundational programming model for explicit relational reasoning. Metadata and selected introductory full-text passages reviewed; no UAV performance claim.",
+      "verification_status": "verified",
+      "evidence": [
+        {
+          "source_url": "https://pldi23.sigplan.org/details/pldi-2023-pldi/61/Scallop-A-Language-for-Neurosymbolic-Programming",
+          "source_kind": "publisher",
+          "source_version": "PLDI 2023 official programme",
+          "claim": "Official programme confirms title, authors and the relational/provenance-based language description.",
+          "accessed_at": "2026-09-22"
+        },
+        {
+          "source_url": "https://arxiv.org/pdf/2304.04812v1",
+          "source_kind": "fulltext",
+          "source_version": "arXiv v1, 2023-04-10",
+          "claim": "Selected reading: pp. 1–2 motivate differentiable reasoning over explicit relational programs; the extended arXiv manuscript is not identical in length to the proceedings article.",
+          "accessed_at": "2026-09-22"
+        }
+      ]
     }
   ]
 }

@@ -642,12 +642,12 @@
     "metadata_status": "verified",
     "reading_status": "fulltext_reviewed",
     "human_reviewed": false,
-    "screening_status": "candidate",
+    "screening_status": "included",
     "relevance": "direct_uav",
     "neural_component": "GRiD integrates vision foundation models, a fine-tuned CLIP classifier for object attributes/types, 2D tracking, and LLM-generated reasoner code adapted from HYDRA to ground objects in 3D from RGB, depth, and GPS.",
     "symbolic_component": "A probabilistic world model accumulates noisy GRiD detections with Bayesian position filtering, discrete attribute ranking, physical constraints, and explicit reporting; SNaC performs hierarchical selection, navigation, and coverage planning.",
     "coupling_mechanism": "GRiD neural perception produces noisy symbolic detections and attributes; the probabilistic world model reasons over and accumulates those symbols, then SNaC consumes the updated belief map for hierarchical planning.",
-    "inclusion_rationale": "Candidate direct UAV method: full text documents neuro-symbolic perception, a probabilistic symbolic world model, and hierarchical symbolic planning evaluated in AirSim/Unreal simulations. No real-flight validation was identified.",
+    "inclusion_rationale": "Meets the four scope criteria after source-based review of the neural component, explicit symbolic mechanism, functional coupling and described UAV validation. Inclusion is a review decision, not human review or independent replication.",
     "exclusion_reason": null,
     "taxonomy_tags": {
       "functional_position": [
@@ -674,9 +674,9 @@
     "uav_evidence": [
       "simulation"
     ],
-    "summary": "NEUSIS combines GRiD neuro-symbolic visual perception/grounding, a probabilistic world model for persistent environment reasoning, and the SNaC hierarchical selection-navigation-coverage planner. It is evaluated on HAMERITT search missions in a 500m x 500m AirSim/Unreal environment.",
-    "limitations": "Reported validation is simulation-only in AirSim/Unreal; no real-flight results were identified. The official repository was located, but its replication status and license were not fully audited in this iteration.",
-    "checked_at": "2026-09-20",
+    "summary": "GRiD neural perception and generated programs feed a persistent probabilistic world model; MiniZinc AOI selection and hierarchical navigation guide search. AirSim/HAMERITT comparisons and component ablations are reported.",
+    "limitations": "Simulation only. The world model starts with ground-truth occupancy/BEV maps and relies on accurate localization/depth. Table I SR measures entity localization within 5 m, not whole-mission success or flight safety; false positives require separate F1/precision analysis.",
+    "checked_at": "2026-09-22",
     "taxonomy_migration_pending": [],
     "primary_category": "perception_world_modeling",
     "secondary_categories": [
@@ -731,6 +731,24 @@
         "claim": "Web search identified ControlNet/NEUSIS as the official repository for this paper.",
         "attribution": "reviewer_synthesis",
         "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/pdf/2409.10196v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2409.10196v1",
+        "locator": "pp. 2-6; Sections II-V; Tables I-IV",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Re-read main text and visually checked Table I. SR measures correctly localized entities, not whole-mission or safety success. Ground-truth maps initialize the world model.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
       }
     ],
     "bibliography_type": "misc",
@@ -761,14 +779,14 @@
     "code_url": null,
     "related_versions": [],
     "metadata_status": "verified",
-    "reading_status": "abstract_reviewed",
+    "reading_status": "fulltext_reviewed",
     "human_reviewed": false,
-    "screening_status": "candidate",
+    "screening_status": "included",
     "relevance": "direct_uav",
-    "neural_component": "A reasoning-enhanced large language model uses chain-of-thought supervision and group-relative policy optimization to translate free-form natural language into executable Signal Temporal Logic specifications.",
-    "symbolic_component": "Signal Temporal Logic specifications, mixed-integer linear programming trajectory synthesis, and a repair mechanism that combines MILP-based diagnosis with constraint relaxation while enforcing safety guarantees.",
-    "coupling_mechanism": "The LLM translates natural language into STL; MILP synthesizes trajectories from those specifications, and infeasibility diagnosis feeds back into LLM-guided semantic repair.",
-    "inclusion_rationale": "Candidate direct UAV method from the abstract: LLM-to-STL translation plus MILP trajectory synthesis is clearly neural-symbolic for low-altitude navigation. Full-text HTML was unavailable, so technical claims remain abstract-level.",
+    "neural_component": "Qwen2.5-0.5B translator adapted using LoRA/SFT and GRPO; an LLM selects repair dimensions.",
+    "symbolic_component": "STL formulas, mixed-integer trajectory constraints, IIS conflict diagnosis and protected safety predicates.",
+    "coupling_mechanism": "The LLM proposes STL; solver conflicts guide temporal/predicate repair while the optimization layer chooses relaxation magnitudes.",
+    "inclusion_rationale": "Meets the four scope criteria after source-based review of the neural component, explicit symbolic mechanism, functional coupling and described UAV validation. Inclusion is a review decision, not human review or independent replication.",
     "exclusion_reason": null,
     "taxonomy_tags": {
       "functional_position": [
@@ -797,9 +815,9 @@
       "simulation",
       "real_flight"
     ],
-    "summary": "Abstract reports a unified framework translating natural-language UAV navigation instructions into STL, synthesizing trajectories with MILP, and repairing infeasible specifications via MILP diagnosis and LLM reasoning. Extensive simulations and real-world flight experiments are claimed.",
-    "limitations": "Only the abstract/metadata were reviewed; full-text HTML timed out on 2026-09-20. Quantitative results, real-flight details, and safety guarantees have not been independently verified from the full text.",
-    "checked_at": "2026-09-20",
+    "summary": "Links language translation, constrained trajectory synthesis and specification repair. Table I reports 98% normalized formula exact match; a separate outdoor DJI Matrice 300 RTK demonstration is described.",
+    "limitations": "Known geometry and simplified dynamics; translation/planning run offboard. Formula exact match is not semantic equivalence or a flight-safety rate. The outdoor example does not establish broad operational robustness; formal encoding and repair assumptions require independent audit.",
+    "checked_at": "2026-09-22",
     "taxonomy_migration_pending": [],
     "primary_category": "navigation_control",
     "secondary_categories": [
@@ -810,7 +828,7 @@
     "classification_evidence_refs": [
       "https://arxiv.org/abs/2603.27583"
     ],
-    "classification_status": "provisional",
+    "classification_status": "reviewed",
     "evidence_legacy": "arXiv API and abs page returned matching title, authors, and abstract on 2026-09-20. Full-text HTML https://arxiv.org/html/2603.27583v1 timed out and was not reviewed.",
     "evidence_items": [
       {
@@ -830,6 +848,24 @@
         "claim": "Abstract reports an LLM translating NL to STL, MILP trajectory synthesis, a specification repair mechanism with safety guarantees, and extensive simulation plus real-world flight experiments. Full text was not accessed because the HTML version timed out.",
         "attribution": "reviewer_synthesis",
         "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2603.27583v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2603.27583v1",
+        "locator": "Sections II-VII; Table I; Section VI-C",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Main method and evaluation reviewed: trained NL-to-STL translator, constrained planning and IIS-based repair; 98% is translation exact match, distinct from the outdoor flight demonstration.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
       }
     ],
     "bibliography_type": "misc",
@@ -852,21 +888,21 @@
     "year": 2026,
     "canonical_url": "https://arxiv.org/abs/2603.07824",
     "arxiv_id": "2603.07824",
-    "doi": null,
-    "venue": null,
-    "publication_status": "preprint",
+    "doi": "10.1609/aaaiss.v8i1.42527",
+    "venue": "Proceedings of the AAAI Symposium Series 8(1), 127-131 (2026)",
+    "publication_status": "published",
     "record_type": "method",
     "code_url": null,
     "related_versions": [],
     "metadata_status": "verified",
     "reading_status": "fulltext_reviewed",
     "human_reviewed": false,
-    "screening_status": "candidate",
+    "screening_status": "included",
     "relevance": "direct_uav",
     "neural_component": "A vision-language model processes RGB-D observations and constructs a local semantic map; an LLM selects optimal binary questions for active human elicitation.",
     "symbolic_component": "The Minimal Information Neuro-Symbolic Tree (MINT) explicitly structures obstacle and goal knowledge gaps; a hierarchical planner evaluates trajectory cost/divergence and goal entropy over hypothesis branches.",
     "coupling_mechanism": "The VLM identifies semantic uncertainty; MINT represents it as a symbolic tree; the LLM chooses a binary query; the human answer prunes the tree and updates the semantic map and plan.",
-    "inclusion_rationale": "Candidate direct UAV method: full text documents a neuro-symbolic tree, LLM active elicitation, NVIDIA Isaac simulation, and real-world quadrotor deployment. No code repository was identified.",
+    "inclusion_rationale": "Meets the four scope criteria after source-based review of the neural component, explicit symbolic mechanism, functional coupling and described UAV validation. Inclusion is a review decision, not human review or independent replication.",
     "exclusion_reason": null,
     "taxonomy_tags": {
       "functional_position": [
@@ -896,8 +932,8 @@
       "real_flight"
     ],
     "summary": "MINT structures knowledge gaps about obstacles and goals into a queryable neuro-symbolic tree, uses an LLM to ask optimal binary questions, and updates plans after human responses. It integrates VLM perception, voice interaction, and low-level UAV control in NVIDIA Isaac simulations and real-world quadrotor trials.",
-    "limitations": "Reported real-world deployment is feasibility-oriented rather than a broad controlled benchmark; no official code repository was identified. The paper does not provide evidence that MINT should be treated as multi-UAV distributed reasoning.",
-    "checked_at": "2026-09-20",
+    "limitations": "Simulation success/query counts and a separate 20-trial physical demonstration are small, task-specific results. Human answers are treated as reliable; model details, query optimality and failure coverage need further validation. This is an AAAI Spring Symposium paper, not an AAAI main-conference paper.",
+    "checked_at": "2026-09-22",
     "taxonomy_migration_pending": [],
     "primary_category": "collaboration_interaction",
     "secondary_categories": [
@@ -938,9 +974,759 @@
         "claim": "Full text describes VLM semantic-map construction, MINT neuro-symbolic tree construction, LLM optimal binary query generation, plan update after human response, NVIDIA Isaac simulation, and real-world quadrotor deployment. No official code repository was identified.",
         "attribution": "reviewer_synthesis",
         "accessed_at": "2026-09-20"
+      },
+      {
+        "source_url": "https://arxiv.org/pdf/2603.07824v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2603.07824v1",
+        "locator": "pp. 2-4; Methodology, Table 1, Real-World Deployment",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Re-read main text: hypothesis trees guide binary queries and map updates; simulation and a separate 20-trial physical demonstration are reported.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://ojs.aaai.org/index.php/AAAI-SS/article/view/42527",
+        "source_kind": "publisher",
+        "source_version": "Published 2026-05-18",
+        "locator": "Article metadata; volume 8(1), pp. 127-131",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "The official proceedings confirm title, authors, DOI and publication in the AAAI Symposium Series.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "article",
+    "metadata_conflict_scope": []
+  },
+  {
+    "id": "p-2501.01439",
+    "work_id": "work-2501.01439",
+    "title": "Probabilistic Mission Design for Neuro-Symbolic Unmanned Aircraft Systems",
+    "authors": [
+      "Simon Kohaut",
+      "Benedict Flade",
+      "Daniel Ochs",
+      "Devendra Singh Dhami",
+      "Julian Eggert",
+      "Kristian Kersting"
+    ],
+    "year": 2025,
+    "canonical_url": "https://arxiv.org/abs/2501.01439",
+    "arxiv_id": "2501.01439",
+    "doi": "10.1109/TITS.2025.3609835",
+    "venue": "IEEE Transactions on Intelligent Transportation Systems 26(12), 22751-22760 (2025)",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": "https://github.com/HRI-EU/ProMis",
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "included",
+    "relevance": "direct_uav",
+    "neural_component": "ChangeFormer estimates change probabilities; an LLM translates operator requirements.",
+    "symbolic_component": "Hybrid probabilistic logic programs over explicit spatial relations and mission constraints.",
+    "coupling_mechanism": "Neural probabilities become logic facts; inference produces a spatial field of modeled requirement satisfaction.",
+    "inclusion_rationale": "Meets the neural, explicit-logic, functional-coupling and UAV-scope criteria through offline mission-design experiments; inclusion does not imply flight validation.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "representation",
+        "reasoning",
+        "planning"
+      ],
+      "integration_direction": [
+        "neural_to_symbolic"
+      ],
+      "symbolic_mechanism": [
+        "probabilistic_logic",
+        "logic_rules"
+      ],
+      "uav_task": [
+        "mission_planning"
+      ],
+      "system_deployment": [
+        "single_uav",
+        "human_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "conceptual"
+    ],
+    "summary": "ProMis connects uncertain maps and neural sensing to declarative mission rules. Evaluation uses geographic case studies, satellite-image change detection and runtime/sampling experiments, not closed-loop flight trials.",
+    "limitations": "Pointwise model satisfaction is not a certified flight-path probability or legal authorization. Results depend on uncertainty inputs, encoded rules and inference cost; no HIL or real-flight experiment was identified.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2501.01439",
+        "source_kind": "abstract",
+        "source_version": "arXiv:2501.01439v2",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2501.01439v2",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2501.01439v2",
+        "locator": "Sections III, IV-A-F and V",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Main text reviewed: neural facts feed HPLP inference; experiments are offline map/perception and runtime studies, not flight trials.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://api.crossref.org/works/10.1109/TITS.2025.3609835",
+        "source_kind": "publisher",
+        "source_version": "Crossref publisher-deposited metadata",
+        "locator": "Title, authors, date, venue, pages and DOI",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Publisher-deposited metadata matches the arXiv work.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "article",
+    "metadata_conflict_scope": [],
+    "primary_category": "reasoning_mission_planning",
+    "secondary_categories": [
+      "perception_world_modeling",
+      "safety_verification"
+    ],
+    "classification_rationale": "Neural probabilities become logic facts; inference produces a spatial field of modeled requirement satisfaction.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2501.01439v2"
+    ],
+    "classification_status": "reviewed"
+  },
+  {
+    "id": "p-2209.06130",
+    "work_id": "work-2209.06130",
+    "title": "Verified Compositions of Neural Network Controllers for Temporal Logic Control Objectives",
+    "authors": [
+      "Jun Wang",
+      "Samarth Kalluraya",
+      "Yiannis Kantaros"
+    ],
+    "year": 2022,
+    "canonical_url": "https://arxiv.org/abs/2209.06130",
+    "arxiv_id": "2209.06130",
+    "doi": "10.1109/CDC51059.2022.9993010",
+    "venue": "2022 IEEE 61st Conference on Decision and Control, 4004-4009",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "included",
+    "relevance": "direct_uav",
+    "neural_component": "Feedforward neural controllers trained from MPC-generated state/action examples.",
+    "symbolic_component": "Co-safe LTL, deterministic finite automata and reachable-set verification.",
+    "coupling_mechanism": "Automaton search accepts neural-controller sequences only when their reachable sets satisfy each reach-avoid transition.",
+    "inclusion_rationale": "Explicit temporal specifications and verification directly select learned controllers in UAV-model case studies.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "planning",
+        "execution",
+        "assurance"
+      ],
+      "integration_direction": [
+        "symbolic_to_neural"
+      ],
+      "symbolic_mechanism": [
+        "temporal_logic",
+        "constraint_reasoning"
+      ],
+      "uav_task": [
+        "navigation"
+      ],
+      "system_deployment": [
+        "single_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "simulation"
+    ],
+    "summary": "Constructs verified controller compositions for aerial-vehicle navigation; numerical UAV examples include successful and rejected compositions.",
+    "limitations": "Guarantees are conditional on the dynamics, initial set and sound reachability bounds. Conservative reachability and restricted search can miss feasible compositions. Numerical studies do not establish real-flight robustness.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2209.06130",
+        "source_kind": "abstract",
+        "source_version": "arXiv:2209.06130v1",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://arxiv.org/pdf/2209.06130v1",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2209.06130v1",
+        "locator": "pp. 2-6; Sections II-IV, Proposition 3.5 and Remark 3.6",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Main text reviewed: co-safe LTL/DFA reach-avoid checks compose learned controllers; UAV examples are numerical and search may be incomplete.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://api.crossref.org/works/10.1109/CDC51059.2022.9993010",
+        "source_kind": "publisher",
+        "source_version": "Crossref publisher-deposited metadata",
+        "locator": "Title, authors, date, venue, pages and DOI",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Publisher-deposited metadata matches the arXiv work.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": [],
+    "primary_category": "navigation_control",
+    "secondary_categories": [
+      "safety_verification"
+    ],
+    "classification_rationale": "Automaton search accepts neural-controller sequences only when their reachable sets satisfy each reach-avoid transition.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/pdf/2209.06130v1"
+    ],
+    "classification_status": "reviewed"
+  },
+  {
+    "id": "p-2306.06531",
+    "work_id": "work-2306.06531",
+    "title": "AutoTAMP: Autoregressive Task and Motion Planning with LLMs as Translators and Checkers",
+    "authors": [
+      "Yongchao Chen",
+      "Jacob Arkin",
+      "Charles Dawson",
+      "Yang Zhang",
+      "Nicholas Roy",
+      "Chuchu Fan"
+    ],
+    "year": 2024,
+    "canonical_url": "https://arxiv.org/abs/2306.06531",
+    "arxiv_id": "2306.06531",
+    "doi": null,
+    "venue": "IEEE International Conference on Robotics and Automation (ICRA), 2024",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "GPT-3/GPT-4 translate instructions and check semantic alignment.",
+    "symbolic_component": "STL formulas, rule-based syntax checks and a formal task-and-motion planner.",
+    "coupling_mechanism": "Planner trajectories and syntax feedback guide repeated LLM translation; STL constrains joint task/motion synthesis.",
+    "inclusion_rationale": "Direct UAV simulation is present, but the fully evaluated translator/checker pipeline is primarily general robotics; retain as a candidate with limited UAV evidence.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "planning",
+        "reasoning"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "temporal_logic",
+        "symbolic_planning"
+      ],
+      "uav_task": [
+        "mission_planning",
+        "navigation"
+      ],
+      "system_deployment": [
+        "single_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "simulation"
+    ],
+    "summary": "Evaluates language-to-STL planning in single/multi-agent 2D tasks. A supplemental 3D drone simulation is described; physical demonstrations use differential-drive robots.",
+    "limitations": "The drone demonstration omits semantic checking. Ground-robot hardware and 2D benchmark scores must not be counted as UAV flight evidence; known geometry and high planning latency limit transfer.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2306.06531",
+        "source_kind": "abstract",
+        "source_version": "arXiv:2306.06531v3",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2306.06531v3",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2306.06531v3",
+        "locator": "Sections III-C, IV, V (3D Simulation; Physical Demonstrations), VII",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Main text reviewed: STL translation and checking; drone simulation omits semantic checking and hardware demonstrations are ground robots.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": [],
+    "primary_category": "reasoning_mission_planning",
+    "secondary_categories": [
+      "navigation_control",
+      "collaboration_interaction"
+    ],
+    "classification_rationale": "Planner trajectories and syntax feedback guide repeated LLM translation; STL constrains joint task/motion synthesis.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2306.06531v3"
+    ],
+    "classification_status": "reviewed"
+  },
+  {
+    "id": "p-2312.14950",
+    "work_id": "work-2312.14950",
+    "title": "TypeFly: Flying Drones with Large Language Model",
+    "authors": [
+      "Guojun Chen",
+      "Xiaojing Yu",
+      "Neiwen Ling",
+      "Lin Zhong"
+    ],
+    "year": 2023,
+    "canonical_url": "https://arxiv.org/abs/2312.14950",
+    "arxiv_id": "2312.14950",
+    "doi": null,
+    "venue": null,
+    "publication_status": "preprint",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "fulltext_reviewed",
+    "human_reviewed": false,
+    "screening_status": "included",
+    "relevance": "direct_uav",
+    "neural_component": "GPT-4 generates plans and answers runtime queries; YOLOv8 provides scene descriptions.",
+    "symbolic_component": "MiniSpec programs with explicit conditionals, bounded loops, skill calls and exception handling.",
+    "coupling_mechanism": "Neural outputs become executable programs; the interpreter invokes skills and requests replanning using updated observations.",
+    "inclusion_rationale": "Included under the explicit-program branch of this proposed taxonomy, not merely because it uses an LLM. MiniSpec control flow and runtime interpretation couple neural generation to real UAV execution.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "grounding",
+        "planning",
+        "execution"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "program_representation"
+      ],
+      "uav_task": [
+        "navigation",
+        "search_and_exploration"
+      ],
+      "system_deployment": [
+        "human_uav",
+        "edge_cloud",
+        "single_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "real_flight"
+    ],
+    "summary": "Indoor Tello experiments evaluate 11 tasks with 10 repetitions each. MiniSpec and streaming interpretation reduce command-to-first-action delay in the reported setup.",
+    "limitations": "Program restrictions are not a collision-safety proof. Task 9 succeeds in 7/10 trials, exposing geometric reasoning failures. Results depend on an edge server, remote LLM and a small indoor task set.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2312.14950",
+        "source_kind": "abstract",
+        "source_version": "arXiv:2312.14950v2",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://arxiv.org/html/2312.14950v2",
+        "source_kind": "fulltext",
+        "source_version": "arXiv:2312.14950v2",
+        "locator": "Sections 4-8; PDF pp. 4-12; Tables 1-3",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Main text reviewed and Table 2 visually checked: MiniSpec has explicit control flow; indoor Tello tests include 7/10 success for task 9.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
       }
     ],
     "bibliography_type": "misc",
-    "metadata_conflict_scope": []
+    "metadata_conflict_scope": [],
+    "primary_category": "collaboration_interaction",
+    "secondary_categories": [
+      "reasoning_mission_planning"
+    ],
+    "classification_rationale": "Neural outputs become executable programs; the interpreter invokes skills and requests replanning using updated observations.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/html/2312.14950v2"
+    ],
+    "classification_status": "reviewed"
+  },
+  {
+    "id": "p-2307.06135",
+    "work_id": "work-2307.06135",
+    "title": "SayPlan: Grounding Large Language Models using 3D Scene Graphs for Scalable Robot Task Planning",
+    "authors": [
+      "Krishan Rana",
+      "Jesse Haviland",
+      "Sourav Garg",
+      "Jad Abou-Chakra",
+      "Ian Reid",
+      "Niko Suenderhauf"
+    ],
+    "year": 2023,
+    "canonical_url": "https://proceedings.mlr.press/v229/rana23a.html",
+    "arxiv_id": "2307.06135",
+    "doi": null,
+    "venue": "Conference on Robot Learning (CoRL), PMLR 229:23-72, 2023",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "abstract_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "transferable",
+    "neural_component": "An LLM selects relevant graph regions and proposes task plans.",
+    "symbolic_component": "Hierarchical 3D scene graphs, action predicates and a scene-graph simulator.",
+    "coupling_mechanism": "Symbolic graph search restricts context; simulator feedback rejects infeasible actions and drives LLM replanning.",
+    "inclusion_rationale": "Relevant world-model and symbolic plan-checking mechanism, retained as transferable context rather than a core UAV method.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "representation",
+        "reasoning",
+        "planning"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "scene_graph",
+        "symbolic_planning"
+      ],
+      "uav_task": []
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "none"
+    ],
+    "summary": "A transferable approach to making world representations actionable for language-based planning. Evaluations concern a mobile manipulator, not a UAV.",
+    "limitations": "Assumes a preconstructed scene graph. This round reviewed metadata, abstract and selected method pages only; the complete evaluation and appendices remain to be read. No UAV evidence is claimed.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://proceedings.mlr.press/v229/rana23a.html",
+        "source_kind": "publisher",
+        "source_version": "CoRL 2023 proceedings; selected arXiv method pages",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://arxiv.org/pdf/2307.06135",
+        "source_kind": "fulltext",
+        "source_version": "arXiv current PDF accessed 2026-09-22",
+        "locator": "Selected pp. 3-5; Section 3 and Algorithm 1 only",
+        "supports_fields": [
+          "neural_component",
+          "symbolic_component",
+          "coupling_mechanism",
+          "uav_evidence",
+          "summary",
+          "limitations",
+          "classification"
+        ],
+        "claim": "Selected method pages checked; preconstructed scene graphs and simulator-based action checking. Not a complete full-text review.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": [],
+    "primary_category": "perception_world_modeling",
+    "secondary_categories": [
+      "reasoning_mission_planning"
+    ],
+    "classification_rationale": "Symbolic graph search restricts context; simulator feedback rejects infeasible actions and drives LLM replanning.",
+    "classification_evidence_refs": [
+      "https://proceedings.mlr.press/v229/rana23a.html"
+    ],
+    "classification_status": "provisional"
+  },
+  {
+    "id": "p-2409.10283",
+    "work_id": "work-2409.10283",
+    "title": "ASMA: An Adaptive Safety Margin Algorithm for Vision-Language Drone Navigation via Scene-Aware Control Barrier Functions",
+    "authors": [
+      "Sourav Sanyal",
+      "Kaushik Roy"
+    ],
+    "year": 2025,
+    "canonical_url": "https://arxiv.org/abs/2409.10283",
+    "arxiv_id": "2409.10283",
+    "doi": "10.1109/LRA.2025.3592138",
+    "venue": "IEEE Robotics and Automation Letters 10(9), 9232–9239",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "abstract_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "A vision-language encoder and object detector ground requested landmarks.",
+    "symbolic_component": "Scene-aware control barrier constraints within model predictive control.",
+    "coupling_mechanism": "Learned landmark navigation is constrained by a depth-based adaptive safety layer.",
+    "inclusion_rationale": "Retained as a boundary candidate to audit whether the adaptive constraints constitute the required semantic coupling, not automatically included because a CBF is used.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "grounding",
+        "execution",
+        "assurance"
+      ],
+      "integration_direction": [
+        "unknown"
+      ],
+      "symbolic_mechanism": [
+        "constraint_reasoning"
+      ],
+      "uav_task": [
+        "navigation"
+      ],
+      "system_deployment": [
+        "single_uav",
+        "human_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "simulation"
+    ],
+    "summary": "An adjacent safety-control candidate with Gazebo/ROS UAV simulation. The current arXiv abstract reports RA-L acceptance and a revised architecture compared with v1.",
+    "limitations": "Abstract-level screening only. The substantive neural-to-symbolic coupling and assumptions behind the safety constraint need full-text audit before core inclusion; CBF/MPC alone is insufficient.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://arxiv.org/abs/2409.10283",
+        "source_kind": "abstract",
+        "source_version": "arXiv:2409.10283v4 abstract",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://api.crossref.org/works/10.1109/LRA.2025.3592138",
+        "source_kind": "publisher",
+        "source_version": "Publisher-deposited Crossref metadata, retrieved 2026-09-22",
+        "locator": "Title, author, published, container-title and page fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "The DOI record confirms the title, authors and published proceedings/journal metadata; this does not establish full-text review.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "article",
+    "metadata_conflict_scope": [],
+    "primary_category": "safety_verification",
+    "secondary_categories": [
+      "navigation_control"
+    ],
+    "classification_rationale": "Learned landmark navigation is constrained by a depth-based adaptive safety layer.",
+    "classification_evidence_refs": [
+      "https://arxiv.org/abs/2409.10283"
+    ],
+    "classification_status": "provisional"
+  },
+  {
+    "id": "p-simultech-2026-solver-selection",
+    "work_id": "work-simultech-2026-solver-selection",
+    "title": "Learning-Guided Symbolic Solver Selection for Dynamic Multi-UAV Missions in Simulation",
+    "authors": [
+      "Muhyun Byun",
+      "Seok-Joo Doo",
+      "Eunae Lee"
+    ],
+    "year": 2026,
+    "canonical_url": "https://www.insticc.org/node/TechnicalProgram/simultech/2026/presentationDetails/149518",
+    "arxiv_id": null,
+    "doi": "10.5220/0014951800004094",
+    "venue": "SIMULTECH 2026, pp. 595–607",
+    "publication_status": "published",
+    "record_type": "method",
+    "code_url": null,
+    "related_versions": [],
+    "metadata_status": "verified",
+    "reading_status": "abstract_reviewed",
+    "human_reviewed": false,
+    "screening_status": "candidate",
+    "relevance": "direct_uav",
+    "neural_component": "Double DQN selects among assignment solvers.",
+    "symbolic_component": "Heterogeneous symbolic solvers and a feasibility filter.",
+    "coupling_mechanism": "A learned meta-controller selects a solver; its candidate assignment is checked and evaluated in simulation.",
+    "inclusion_rationale": "Candidate addressing multi-UAV collaboration, with a stated learned/symbolic interface; full text is required before inclusion.",
+    "exclusion_reason": null,
+    "taxonomy_tags": {
+      "functional_position": [
+        "planning",
+        "assurance"
+      ],
+      "integration_direction": [
+        "bidirectional"
+      ],
+      "symbolic_mechanism": [
+        "symbolic_planning",
+        "constraint_reasoning"
+      ],
+      "uav_task": [
+        "multi_uav_coordination"
+      ],
+      "system_deployment": [
+        "multi_uav"
+      ]
+    },
+    "taxonomy_migration_pending": [],
+    "uav_evidence": [
+      "simulation"
+    ],
+    "summary": "The official conference abstract describes adaptive solver selection for multi-UAV task allocation.",
+    "limitations": "Only the official programme abstract was accessible; the PDF required login. Solver definitions, constraints, evaluation conditions and numerical claims have not been audited. No full-text or real-flight claim is made.",
+    "checked_at": "2026-09-22",
+    "evidence_legacy": "Bounded six-part search and source review on 2026-09-22; see structured evidence.",
+    "evidence_items": [
+      {
+        "source_url": "https://www.insticc.org/node/TechnicalProgram/simultech/2026/presentationDetails/149518",
+        "source_kind": "publisher",
+        "source_version": "metadata page",
+        "locator": "Title, authors and publication/abstract fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "Primary-source metadata and abstract checked.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      },
+      {
+        "source_url": "https://api.crossref.org/works/10.5220/0014951800004094",
+        "source_kind": "publisher",
+        "source_version": "Publisher-deposited Crossref metadata, retrieved 2026-09-22",
+        "locator": "Title, author, published, container-title and page fields",
+        "supports_fields": [
+          "metadata"
+        ],
+        "claim": "The DOI record confirms the title, authors and published proceedings/journal metadata; this does not establish full-text review.",
+        "attribution": "reviewer_synthesis",
+        "accessed_at": "2026-09-22"
+      }
+    ],
+    "bibliography_type": "inproceedings",
+    "metadata_conflict_scope": [],
+    "primary_category": "collaboration_interaction",
+    "secondary_categories": [
+      "reasoning_mission_planning"
+    ],
+    "classification_rationale": "A learned meta-controller selects a solver; its candidate assignment is checked and evaluated in simulation.",
+    "classification_evidence_refs": [
+      "https://www.insticc.org/node/TechnicalProgram/simultech/2026/presentationDetails/149518"
+    ],
+    "classification_status": "provisional"
   }
 ]

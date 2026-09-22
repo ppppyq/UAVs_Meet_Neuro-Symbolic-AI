@@ -117,6 +117,11 @@ button, a, input, select, summary, .theme-card { -webkit-tap-highlight-color: tr
 .theme-context { padding: 1.5rem 2rem; border-left: 3px solid #91b3af; background: var(--mist); }
 .theme-context > a { display: inline-block; margin: 1rem 1.5rem 0 0; font-size: .8rem; }
 .theme-context + section { margin-top: 3rem; }
+.literature-synthesis { max-width: 82ch; margin: 2rem 0 3rem; }
+.literature-synthesis h2 { line-height: 1.25; }
+.literature-synthesis > p { line-height: 1.8; }
+.literature-synthesis .synthesis-sources { font-size: .78rem; line-height: 1.6; overflow-wrap: anywhere; margin-top: -.4rem; }
+.synthesis-question { padding: 1rem 1.25rem; border-left: 3px solid #91b3af; background: var(--mist); }
 .page-theme-detail .controls label[for="theme-filter"] { display: none; }
 .page-theme-detail .controls { grid-template-columns: minmax(190px, 1.4fr) repeat(3, minmax(120px, 1fr)) 44px; }
 .theme-open { padding-top: 1rem; color: white; font-size: .75rem; font-weight: 650; }

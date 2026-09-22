@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import html
-import http.server
 import json
 import re
 import shutil
@@ -1052,6 +1051,82 @@ def compact_theme_table_markdown(records: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def load_review() -> dict[str, Any]:
+    path = ROOT / "data" / "review-sections.json"
+    return load_json(path) if path.exists() else {"sections": []}
+
+
+def review_sources() -> dict[str, dict[str, Any]]:
+    return {item["id"]: item for item in load_json(PAPERS_PATH) + load_foundational_resources()}
+
+
+def validate_review() -> list[str]:
+    review = load_review()
+    sections = review.get("sections", [])
+    expected = ["foundations"] + [item["id"] for item in taxonomy_display_categories()]
+    errors = []
+    if [item.get("id") for item in sections] != expected:
+        errors.append("review-sections.json: expected foundations followed by the five research themes")
+    if not is_valid_date(review.get("review_date")):
+        errors.append("review-sections.json: invalid review_date")
+    sources = review_sources()
+    for section in sections:
+        for field in ("title_en", "title_zh", "question_en", "question_zh"):
+            if not section.get(field):
+                errors.append(f"review-sections.json: {section.get('id')}: missing {field}")
+        if not section.get("paragraphs"):
+            errors.append(f"review-sections.json: {section.get('id')}: missing synthesis")
+        for paragraph in section.get("paragraphs", []):
+            if not paragraph.get("en") or not paragraph.get("zh") or not paragraph.get("sources"):
+                errors.append("review-sections.json: each paragraph needs bilingual text and sources")
+            for source_id in paragraph.get("sources", []):
+                if source_id not in sources:
+                    errors.append(f"review-sections.json: unknown source {source_id}")
+    return errors
+
+
+def review_section(section_id: str) -> dict[str, Any] | None:
+    return next((item for item in load_review()["sections"] if item["id"] == section_id), None)
+
+
+def review_markdown(section_id: str, language: str) -> str:
+    section = review_section(section_id)
+    if not section:
+        return ""
+    review, sources = load_review(), review_sources()
+    heading = "文献综述" if language == "zh" else "Literature synthesis"
+    parts = [f"### {heading} · {review['review_date']}", "", review['scope_' + language], ""]
+    for paragraph in section["paragraphs"]:
+        links = []
+        for source_id in paragraph["sources"]:
+            source = sources[source_id]
+            links.append(f"[{markdown_escape(source['title'])}]({source.get('canonical_url') or source['url']})")
+        parts.extend([paragraph[language], "", " / ".join(links), ""])
+    label = "开放问题" if language == "zh" else "Open question"
+    parts.append(f"**{label}:** {section['question_' + language]}")
+    return "\n".join(parts) + "\n"
+
+
+def review_html(section_id: str) -> str:
+    section = review_section(section_id)
+    if not section:
+        return ""
+    review, sources = load_review(), review_sources()
+    blocks = ['<section class="literature-synthesis" aria-labelledby="synthesis-heading">',
+              '<p class="section-kicker">Literature synthesis · ' + html.escape(review["review_date"]) + '</p>',
+              '<h2 id="synthesis-heading">Research synthesis &amp; evidence boundaries</h2>',
+              '<p class="status-note">' + html.escape(review["scope_en"]) + '</p>']
+    for paragraph in section["paragraphs"]:
+        links = []
+        for source_id in paragraph["sources"]:
+            source = sources[source_id]
+            url = source.get("canonical_url") or source["url"]
+            links.append(f'<a href="{html.escape(url, quote=True)}" rel="noopener noreferrer">{html.escape(source["title"])}</a>')
+        blocks.append('<p>' + html.escape(paragraph["en"]) + '</p><p class="synthesis-sources">' + ' / '.join(links) + '</p>')
+    blocks.append('<p class="synthesis-question"><strong>Open question:</strong> ' + html.escape(section["question_en"]) + '</p></section>')
+    return "\n".join(blocks)
+
+
 def research_theme_section_markdown(
     papers: list[dict[str, Any]], category: dict[str, Any], language: str, section_number: int
 ) -> str:
@@ -1072,6 +1147,7 @@ def research_theme_section_markdown(
         parts.append("")
         parts.append(("**子方向：** " if language == "zh" else "**Subdirections:** ") + "; ".join(subdirections))
 
+    parts.extend(["", review_markdown(category_id, language)])
     reviewed = [record for record in primary if record.get("screening_status") == "included"]
     candidates = [
         record
@@ -1080,11 +1156,14 @@ def research_theme_section_markdown(
         and record.get("relevance") == "direct_uav"
         and record.get("record_type") == "method"
     ]
+    transferable = [record for record in primary if record.get("relevance") == "transferable"
+                    and record.get("screening_status") != "excluded"]
     perspectives = [
         record
         for record in primary
         if record not in reviewed
         and record not in candidates
+        and record not in transferable
         and record.get("screening_status") != "excluded"
     ]
 
@@ -1098,6 +1177,9 @@ def research_theme_section_markdown(
         parts.append("### 候选方法" if language == "zh" else "### Candidate methods")
         parts.append("")
         parts.append(compact_theme_table_markdown(candidates))
+    if transferable:
+        parts.extend(["", "### 可迁移的机器人方法" if language == "zh" else "### Transferable robotics methods", "",
+                      compact_theme_table_markdown(transferable)])
     if perspectives:
         parts.append("")
         parts.append("### 相关架构与观点" if language == "zh" else "### Related architectures / perspectives")
@@ -1113,7 +1195,7 @@ def research_theme_section_markdown(
             )
             + (" 的主方向归属在其他章节，此处仅作交叉引用。" if language == "zh" else " appear in a different primary theme and are listed here for cross-reference only.")
         )
-    if not (reviewed or candidates or perspectives):
+    if not (reviewed or candidates or transferable or perspectives):
         parts.append("")
         parts.append("_目前没有主方向归属于此的种子方法。_" if language == "zh" else "_No seed method is currently assigned to this primary theme._")
     return "\n".join(parts)
@@ -1386,6 +1468,7 @@ def foundations_markdown(language: str) -> str:
         )
     parts.append(intro)
     parts.append("")
+    parts.append(review_markdown("foundations", language))
     for resource_type in ("paper", "book", "workshop", "collection"):
         section = foundations_section_markdown(resources, resource_type, language)
         if section:
@@ -1995,7 +2078,7 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
     common = {
         "OVERVIEW_HTML": overview_html(papers),
         "PROJECT_INFO_HTML": project_info_cards_html(project),
-        "FOUNDATIONS_HTML": foundations_cards_html(),
+        "FOUNDATIONS_HTML": review_html("foundations") + foundations_cards_html(),
         "CATEGORY_CARDS_HTML": category_cards_html(papers),
         "TAXONOMY_DATA_JSON": json_for_script(taxonomy),
         "PROJECT_DATA_JSON": json_for_script(project),
@@ -2044,6 +2127,7 @@ def generate_site(papers: list[dict[str, Any]], output_dir: Path) -> None:
                 '<p class="status-note">Part of Proposed taxonomy v0.1. Papers include primary and secondary theme assignments; screening status remains visible.</p>'
                 '<a href="index.html#explore">&larr; All research directions</a><a href="papers.html">Open the full paper library &nearr;</a></section>'
             )
+            theme_intro += review_html(category["id"])
         content = (WEBSITE_DIR / "pages" / ("theme.html" if category else slug + ".html")).read_text(encoding="utf-8")
         rendered = template.replace("{{PAGE_CONTENT}}", content)
         rendered = rendered.replace("{{PAPER_ARCHIVE_HTML}}", archive)
@@ -2344,6 +2428,8 @@ def print_errors(title: str, errors: Iterable[str]) -> None:
 
 def command_validate() -> int:
     ok, errors = validate_data()
+    errors.extend(validate_review())
+    ok = not errors
     if not ok:
         print_errors("Validation failed:", errors)
         return 1
@@ -2385,6 +2471,8 @@ def command_migrate(apply: bool) -> int:
 
 def command_build() -> int:
     ok, errors = validate_data()
+    errors.extend(validate_review())
+    ok = not errors
     if not ok:
         print_errors("Cannot build; validation failed:", errors)
         return 1
@@ -2399,6 +2487,8 @@ def command_build() -> int:
 
 def command_check(tracked_only: bool = False) -> int:
     ok, validation_errors = validate_data()
+    validation_errors.extend(validate_review())
+    ok = not validation_errors
     if not ok:
         print_errors("Check failed; validation errors:", validation_errors)
         return 1
@@ -2413,37 +2503,6 @@ def command_check(tracked_only: bool = False) -> int:
         return 1
     mode = "tracked generated files" if tracked_only else "generated files and local links"
     print(f"Check passed; {mode} are in sync.")
-    return 0
-
-
-class QuietHandler(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, format: str, *args: Any) -> None:
-        return
-
-
-def command_serve(port: int) -> int:
-    ok, errors = validate_data()
-    if not ok:
-        print_errors("Cannot serve; validation failed:", errors)
-        return 1
-    try:
-        build_project()
-    except ManageError as exc:
-        print(f"Cannot build site for preview: {exc}")
-        return 1
-    if not (SITE_DIR / "index.html").exists():
-        print(f"Missing generated site entry: {SITE_DIR / 'index.html'}")
-        return 1
-    handler = lambda *args, **kwargs: QuietHandler(*args, directory=str(SITE_DIR), **kwargs)
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
-    print(f"Serving {SITE_DIR} at http://127.0.0.1:{port}/")
-    print("Press Ctrl+C to stop.")
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        print("\nStopping server.")
-    finally:
-        server.server_close()
     return 0
 
 
@@ -2519,8 +2578,6 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("check-links", help="Optionally check external links over the network.")
     migrate_parser = subparsers.add_parser("migrate-data", help="Migrate legacy flat taxonomy/evidence fields.")
     migrate_parser.add_argument("--apply", action="store_true", help="Write migrated data; default is dry-run.")
-    serve_parser = subparsers.add_parser("serve", help="Build and serve the generated site locally.")
-    serve_parser.add_argument("--port", type=int, default=8000, help="Port to bind on 127.0.0.1 (default: 8000).")
     return parser
 
 
@@ -2537,8 +2594,6 @@ def main(argv: list[str] | None = None) -> int:
         return command_check_links()
     if args.command == "migrate-data":
         return command_migrate(apply=args.apply)
-    if args.command == "serve":
-        return command_serve(args.port)
     parser.print_help()
     return 2
 

@@ -9,6 +9,11 @@ venv/
 # Generated site output
 site/
 
+# Local reference PDFs should live outside the repository
+reference-pdfs/
+reference-pdf/
+*.pdf
+
 # LaTeX build artifacts
 paper/*.aux
 paper/*.bbl

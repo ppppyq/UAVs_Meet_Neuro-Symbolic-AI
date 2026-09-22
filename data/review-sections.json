@@ -1,0 +1,207 @@
+{
+  "review_date": "2026-09-22",
+  "scope_en": "A bounded, source-checked literature round, not an exhaustive systematic review. Full-text, selected-passage and abstract-only evidence remain distinct; all records are awaiting human review.",
+  "scope_zh": "本轮为有限范围的来源核查与文献扩展，并非穷尽式系统综述。全文、选段与摘要证据分别标记；所有记录均尚待人工复核。",
+  "sections": [
+    {
+      "id": "foundations",
+      "title_en": "Neuro-Symbolic AI Foundations",
+      "title_zh": "神经符号 AI 基础",
+      "paragraphs": [
+        {
+          "en": "This review treats a system as neuro-symbolic when a learned component is functionally coupled to an explicit representation with interpretable semantics: logical facts, executable programs, task automata or constraints. Three useful starting points are DeepProbLog's neural predicates and probabilistic inference, Logic Tensor Networks' differentiable logical grounding, and Scallop's relational programs with provenance-based reasoning.",
+          "zh": "本综述将神经符号系统理解为：学习组件与具有明确语义的表示发生实际功能耦合，例如逻辑事实、可执行程序、任务自动机或约束。三个基础入口分别是 DeepProbLog 的神经谓词与概率推理、Logic Tensor Networks 的可微逻辑接地，以及 Scallop 基于溯源语义的关系程序推理。",
+          "sources": [
+            "p-1805.10872",
+            "fr-logic-tensor-networks",
+            "fr-scallop"
+          ]
+        },
+        {
+          "en": "These mechanisms answer different questions. A query probability, a fuzzy truth degree and a temporal specification's satisfaction are not interchangeable measures of confidence or safety. A UAV pipeline must explain how perception becomes a symbol, what inference changes an action, and which assumptions make that inference meaningful. Merely using an LLM, graph or optimizer does not establish this connection.",
+          "zh": "这些机制回答的问题并不相同：查询概率、模糊真值与时序规格满足性，不能互换成同一种置信度或安全指标。面向 UAV，需要说明感知如何成为符号、推理如何改变动作，以及推理依赖哪些假设。仅使用 LLM、图结构或优化器，并不足以说明这一耦合。",
+          "sources": [
+            "p-1805.10872",
+            "fr-logic-tensor-networks",
+            "fr-scallop"
+          ]
+        },
+        {
+          "en": "The present UAV sample mainly integrates pretrained neural modules with explicit reasoning at inference time. It does not establish a general advantage for end-to-end differentiable neuro-symbolic training. Foundational tools are therefore explanatory references, not extra UAV benchmark results; the selected introductory readings for LTN and Scallop are not marked as full-text reviews.",
+          "zh": "本轮 UAV 样本主要在推理阶段连接预训练神经模块与显式推理，并不能证明端到端可微神经符号训练普遍更优。基础工具用于解释方法，不应被计作额外 UAV 实验结果；LTN 与 Scallop 本轮只阅读了选定的导论段落，未标为全文审阅。",
+          "sources": [
+            "p-2409.10196",
+            "p-2501.01439",
+            "fr-scallop"
+          ]
+        }
+      ],
+      "question_en": "How should perception calibration, logical semantics and runtime assumptions be exposed together so that a claimed guarantee can be audited?",
+      "question_zh": "如何同时公开感知校准、逻辑语义与运行假设，使系统声称的保证能够被核查？"
+    },
+    {
+      "id": "perception_world_modeling",
+      "title_en": "Perception & World Modeling",
+      "title_zh": "感知与世界建模",
+      "paragraphs": [
+        {
+          "en": "The key interface is the conversion of uncertain visual observations into persistent entities, relations and world-state estimates that a planner can query. NEUSIS combines neural grounding with programmatic interfaces, a filtered world model and constraint-based search planning. Its symbolic layer therefore affects what is searched and how observations are reconciled, rather than serving only as a descriptive graph.",
+          "zh": "这一方向的关键接口，是把不确定的视觉观测转成可持续更新、可供规划器查询的实体、关系和世界状态。NEUSIS 将神经接地、程序化接口、滤波世界模型和约束搜索规划连接起来，符号层实际影响搜索目标和观测融合，而不只是保存一张描述性图。",
+          "sources": [
+            "p-2409.10196"
+          ]
+        },
+        {
+          "en": "NEUSIS is evaluated in AirSim/HAMERITT simulation and starts with ground-truth occupancy and bird's-eye maps. Its reported search measure concerns correctly localized entities, not a flight-safety rate; false reports require separate scrutiny. SayPlan offers a transferable hierarchical scene-graph and plan-validation pattern, but its mobile-manipulation evidence is not UAV evidence and only selected method passages were inspected here.",
+          "zh": "NEUSIS 的证据来自 AirSim/HAMERITT 仿真，初始占据图与俯视地图使用真值。其搜索指标衡量正确定位的实体，不能解释为飞行安全率，误报也需要另行考察。SayPlan 提供了可迁移的层级场景图与计划验证思路，但移动操作机器人实验不等于 UAV 实验，本轮也只检查了其部分方法段落。",
+          "sources": [
+            "p-2409.10196",
+            "p-2307.06135"
+          ]
+        },
+        {
+          "en": "Together these studies motivate a world model that records both semantic structure and the provenance and uncertainty of observations. Robustness to stale maps, uncertain pose and moving objects remains a deployment question, rather than a consequence of adding a scene graph.",
+          "zh": "这些工作提示，世界模型应同时记录语义结构、观测来源及其不确定性。过期地图、位姿误差与动态目标下的稳健性，仍需面向部署单独验证，不能由“使用场景图”直接推出。",
+          "sources": [
+            "p-2409.10196",
+            "p-2307.06135"
+          ]
+        }
+      ],
+      "question_en": "Can a planner detect and repair an incorrect symbolic world state without relying on an accurate initial map?",
+      "question_zh": "在没有准确初始地图时，规划器能否发现并修复错误的符号世界状态？"
+    },
+    {
+      "id": "reasoning_mission_planning",
+      "title_en": "Reasoning & Mission Planning",
+      "title_zh": "推理与任务规划",
+      "paragraphs": [
+        {
+          "en": "Two routes emerge: probabilistic inference over mission rules, and translation of language into executable task specifications. ProMis combines uncertain geospatial relations and neural change-detection outputs in hybrid probabilistic logic programs, producing a probabilistic mission landscape. AutoTAMP instead translates instructions into signal temporal logic and iteratively checks and repairs task-and-motion plans.",
+          "zh": "本轮可归纳出两条路线：对任务规则进行概率推理，以及把语言指令翻译成可执行任务规格。ProMis 在混合概率逻辑程序中结合不确定地理关系与神经变化检测输出，生成概率任务地图；AutoTAMP 则将指令转为信号时序逻辑，并通过检查与反馈迭代修复任务和运动计划。",
+          "sources": [
+            "p-2501.01439",
+            "p-2306.06531"
+          ]
+        },
+        {
+          "en": "ProMis provides offline map-based computational case studies, not a closed-loop flight demonstration. Pointwise rule satisfaction is neither a trajectory-wide collision probability nor legal authorization to fly. AutoTAMP's principal evaluation is in 2D domains; its supplemental 3D drone example omits the semantic-checking step, while physical demonstrations use ground robots. It remains a UAV candidate here despite full-text reading.",
+          "zh": "ProMis 提供的是离线地图计算案例，未展示闭环飞行；逐点规则满足概率既不是整条轨迹的碰撞概率，也不构成实际飞行许可。AutoTAMP 的主要评估来自二维任务域，补充的三维无人机示例省略语义检查，实物演示使用地面机器人。因此，即使已阅读全文，本综述仍将其保留为 UAV 候选方法。",
+          "sources": [
+            "p-2501.01439",
+            "p-2306.06531"
+          ]
+        },
+        {
+          "en": "The synthesis is that a well-formed logical plan can still encode the wrong human intent or an outdated environment. Reviews should separate translation fidelity, logical feasibility, motion feasibility and execution outcome, and report the feedback connecting those stages.",
+          "zh": "由此可见，形式合法的逻辑计划仍可能误解人的意图，或基于过期环境。综述与实验应分别报告翻译忠实度、逻辑可行性、运动可行性和执行结果，并说明这些阶段之间如何反馈。",
+          "sources": [
+            "p-2501.01439",
+            "p-2306.06531"
+          ]
+        }
+      ],
+      "question_en": "How can semantic translation errors and changing mission rules be detected before a feasible but unintended plan is executed?",
+      "question_zh": "如何在一个可行但偏离意图的计划被执行之前，检测语义翻译错误与任务规则变化？"
+    },
+    {
+      "id": "navigation_control",
+      "title_en": "Navigation & Control",
+      "title_zh": "导航与控制",
+      "paragraphs": [
+        {
+          "en": "Explicit specifications can connect learned behavior to continuous motion in different ways. Verified Compositions of Neural Network Controllers decomposes a co-safe LTL task into automaton transitions and uses reachable-set analysis to select admissible neural-controller compositions. LLM-STL Navigation translates language into STL constraints for trajectory optimization, with diagnosis and constrained repair when a request is infeasible.",
+          "zh": "显式规格以不同方式连接学习行为与连续运动。Verified Compositions of Neural Network Controllers 将共安全 LTL 任务分解为自动机迁移，再用可达集分析选择满足要求的神经控制器组合。LLM-STL Navigation 将语言转为用于轨迹优化的 STL 约束，并在请求不可行时进行诊断与受限修复。",
+          "sources": [
+            "p-2209.06130",
+            "p-2603.27583"
+          ]
+        },
+        {
+          "en": "The controller-composition study uses numerical UAV dynamics and provides no real-flight evidence; its guarantee depends on the dynamics, initial-state set and sound reachable-set approximation. LLM-STL reports simulation and an outdoor DJI Matrice 300 RTK demonstration. Its formula exact-match accuracy measures translation, not flight safety, and the demonstration does not establish a broad operational success rate.",
+          "zh": "控制器组合研究使用数值 UAV 动力学实验，没有实飞证据；其保证依赖动力学模型、初始状态集合及可靠的可达集外包络。LLM-STL 报告了仿真与 DJI Matrice 300 RTK 户外演示，但公式精确匹配率衡量的是翻译表现，不能替代飞行安全率，单项演示也不能证明广泛运行条件下的成功率。",
+          "sources": [
+            "p-2209.06130",
+            "p-2603.27583"
+          ]
+        },
+        {
+          "en": "These are complementary evidence patterns: formal reasoning under stated assumptions and physical demonstration under specific conditions. A useful comparison must include specification semantics, model mismatch, solver latency, fallback behavior and the scope of any relaxed constraint.",
+          "zh": "这两类工作提供互补的证据：一类在给定假设下开展形式推理，另一类在特定条件下展示物理执行。比较时应同时考察规格语义、模型失配、求解延迟、回退行为，以及约束放松的范围。",
+          "sources": [
+            "p-2209.06130",
+            "p-2603.27583"
+          ]
+        }
+      ],
+      "question_en": "Can specification satisfaction survive perception delay, dynamics mismatch and onboard compute limits without silently weakening safety constraints?",
+      "question_zh": "在感知延迟、动力学失配和机载算力约束下，能否保持规格满足性，而不隐式削弱安全约束？"
+    },
+    {
+      "id": "safety_verification",
+      "title_en": "Safety & Verification",
+      "title_zh": "安全与验证",
+      "paragraphs": [
+        {
+          "en": "Safety evidence should identify the object being checked: an action precondition, a landing decision, a reachable state set or a temporal trajectory specification. Neural-controller composition and LLM-STL contribute cross-theme examples of reachability and specification constraints. Neither makes all upstream perception or language interpretation correct by construction.",
+          "zh": "安全证据首先需要明确验证对象：动作前置条件、着陆决策、可达状态集合，还是轨迹时序规格。神经控制器组合与 LLM-STL 分别提供可达性分析与规格约束的跨方向案例，但二者都不能自动保证上游感知或语言理解始终正确。",
+          "sources": [
+            "p-2209.06130",
+            "p-2603.27583"
+          ]
+        },
+        {
+          "en": "NeuroSymLand remains a reviewed candidate with unresolved publication-venue provenance; its symbolic landing-decision pipeline should not be promoted to a general closed-loop flight guarantee. ASMA is an adjacent published vision-language navigation method with adaptive CBF/MPC safety constraints. It remains abstract-reviewed: the semantic coupling and assumptions need a full-text audit, and CBF/MPC use alone does not satisfy this review's inclusion rule.",
+          "zh": "NeuroSymLand 保留为已阅读全文的候选工作，其发表场所来源冲突尚未解决；符号着陆决策流程也不能直接提升为通用闭环飞行保证。ASMA 是采用自适应 CBF/MPC 安全约束的已发表视觉语言导航相关研究，本轮仍属于摘要级审阅：其语义耦合与假设需要全文核查，单独采用 CBF/MPC 不满足本综述的核心纳入标准。",
+          "sources": [
+            "p-2607.02277",
+            "p-2409.10283"
+          ]
+        },
+        {
+          "en": "The current sample does not support a ranking of these methods by a common safety score. A useful assurance account separates semantic correctness, conditional mathematical guarantees, runtime monitoring and measured violations, including failures outside the assumed environment.",
+          "zh": "当前样本不支持用一个统一安全分数对这些方法排名。更有价值的安全论证，应区分语义正确性、附带假设的数学保证、运行监测和实际观测到的违规，并报告超出环境假设时的失效。",
+          "sources": [
+            "p-2209.06130",
+            "p-2603.27583",
+            "p-2607.02277"
+          ]
+        }
+      ],
+      "question_en": "Which failures remain outside each guarantee, and can the runtime detect those assumption violations early enough to trigger a safe fallback?",
+      "question_zh": "哪些失效不在现有保证范围内？运行系统能否及时检测假设被破坏，并触发安全回退？"
+    },
+    {
+      "id": "collaboration_interaction",
+      "title_en": "Collaboration & Interaction",
+      "title_zh": "协作与交互",
+      "paragraphs": [
+        {
+          "en": "Human–UAV interaction and multi-UAV coordination require different evidence. TypeFly compiles language into MiniSpec programs with explicit skills, conditions, bounded loops and feedback-triggered replanning, evaluated on an indoor Tello. MINT maintains an explicit hypothesis tree and asks questions where alternative interpretations would change the flight path, using human answers to prune the task state.",
+          "zh": "人机交互与多机协同需要不同的验证证据。TypeFly 将语言编译为 MiniSpec 程序，显式表示技能、条件、有界循环与反馈重规划，并在室内 Tello 上评估。MINT 维护显式假设树，在不同解释会改变飞行路径时发起询问，再用人的回答剪枝任务状态。",
+          "sources": [
+            "p-2312.14950",
+            "p-2603.07824"
+          ]
+        },
+        {
+          "en": "TypeFly's constrained program execution is not a collision-avoidance proof. MINT combines simulation with a small physical ambiguity-resolution study; reduced query count does not itself establish reduced human cognitive load, and truthful answers are assumed. Its publication is in the AAAI Spring Symposium Series, not the main AAAI conference.",
+          "zh": "TypeFly 的受限程序执行并不构成避碰证明。MINT 的证据包括仿真与小规模实物歧义消解实验；询问次数减少本身不能证明人的认知负担降低，方法也假设回答可信。其发表场所是 AAAI Spring Symposium Series，而非 AAAI 主会。",
+          "sources": [
+            "p-2312.14950",
+            "p-2603.07824"
+          ]
+        },
+        {
+          "en": "For team-level coordination, Learning-Guided Symbolic Solver Selection proposes a Double-DQN meta-controller selecting symbolic assignment solvers with feasibility filtering. Only the official abstract and publication metadata were checked because the full text required login. It is a candidate lead, not evidence for verified fleet-wide safety or real-flight scalability.",
+          "zh": "多机层面，Learning-Guided Symbolic Solver Selection 提出由 Double DQN 元控制器选择符号分配求解器，并结合可行性筛选。由于全文需要登录，本轮仅核对官方摘要与发表信息，因此它是候选线索，不能用来证明已验证的机群安全性或实飞扩展性。",
+          "sources": [
+            "p-simultech-2026-solver-selection"
+          ]
+        }
+      ],
+      "question_en": "How should uncertainty, communication cost and disagreement be represented when moving from a single operator and UAV to multiple humans and aircraft?",
+      "question_zh": "从单人单机扩展到多人多机时，应如何表达不确定性、通信成本和意图分歧？"
+    }
+  ]
+}

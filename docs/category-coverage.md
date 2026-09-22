@@ -7,10 +7,10 @@ unique studies.
 
 <!-- BEGIN GENERATED:CATEGORY-COVERAGE -->
 
-- Unique seed studies (non-withdrawn, distinct `work_id`): **9**
-- Formally included core methods (deduplicated): **0**
-- Full-text reviewed unique works: **4**
-- Abstract-reviewed unique works: **5**
+- Unique seed studies (non-withdrawn, distinct `work_id`): **16**
+- Formally included core methods (deduplicated): **6**
+- Full-text reviewed unique works: **9**
+- Abstract-reviewed unique works: **7**
 - Direct UAV candidate methods (distinct `work_id`, non-withdrawn): **4**
 - Direct UAV architectures / perspectives (distinct `work_id`): **1**
 
@@ -18,10 +18,10 @@ Primary assignments are mutually exclusive; secondary assignments are cross-refe
 
 | Display category | Primary unique works | Reading depth | Included core methods | Candidate methods | Perspectives | Gap note |
 |---|---|---|---|---|---|---|
-| Neuro-Symbolic Perception & World Modeling | 1 | fulltext=1, abstract=0 | 0 | 1 | 0 | no formally included core method |
-| Neuro-Symbolic Reasoning & Mission Planning | 1 | fulltext=1, abstract=0 | 0 | 0 | 1 | no formally included core method |
-| Neuro-Symbolic Navigation & Control | 1 | fulltext=0, abstract=1 | 0 | 1 | 0 | no formally included core method |
-| Neuro-Symbolic Safety & Verification | 1 | fulltext=1, abstract=0 | 0 | 1 | 0 | no formally included core method |
-| Neuro-Symbolic Collaboration & Interaction | 1 | fulltext=1, abstract=0 | 0 | 1 | 0 | no formally included core method |
+| Neuro-Symbolic Perception & World Modeling | 2 | fulltext=1, abstract=1 | 1 | 1 | 0 |  |
+| Neuro-Symbolic Reasoning & Mission Planning | 3 | fulltext=3, abstract=0 | 1 | 1 | 1 |  |
+| Neuro-Symbolic Navigation & Control | 2 | fulltext=2, abstract=0 | 2 | 0 | 0 | coverage is included-only |
+| Neuro-Symbolic Safety & Verification | 2 | fulltext=1, abstract=1 | 0 | 2 | 0 | no formally included core method |
+| Neuro-Symbolic Collaboration & Interaction | 3 | fulltext=2, abstract=1 | 2 | 1 | 0 |  |
 
 <!-- END GENERATED:CATEGORY-COVERAGE -->

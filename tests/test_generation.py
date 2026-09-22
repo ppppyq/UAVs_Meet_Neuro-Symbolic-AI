@@ -302,6 +302,42 @@ class GenerationTests(unittest.TestCase):
             self.assertIn("Showing 2 of 2 papers.", text)
 
 
+class LiteratureReviewTests(unittest.TestCase):
+    def test_review_references_and_six_sections_are_valid(self):
+        self.assertEqual(manage.validate_review(), [])
+        review = manage.load_review()
+        review["sections"][0]["paragraphs"][0]["sources"].append("missing-paper")
+        with mock.patch.object(manage, "load_review", return_value=review):
+            self.assertTrue(any("unknown source missing-paper" in error for error in manage.validate_review()))
+
+    def test_each_page_has_its_own_cited_review_without_javascript(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        sources = manage.review_sources()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            manage.generate_site(papers, root)
+            for section in manage.load_review()["sections"]:
+                route = "foundations" if section["id"] == "foundations" else "theme-" + section["id"]
+                rendered = (root / (route + ".html")).read_text(encoding="utf-8")
+                self.assertEqual(rendered.count('id="synthesis-heading"'), 1)
+                self.assertIn(manage.html.escape(section["question_en"]), rendered)
+                for paragraph in section["paragraphs"]:
+                    for source_id in paragraph["sources"]:
+                        source = sources[source_id]
+                        url = source.get("canonical_url") or source["url"]
+                        self.assertIn('href="' + manage.html.escape(url, quote=True) + '"', rendered)
+                self.assertNotIn("reference-pdf/", rendered)
+            self.assertNotIn('id="synthesis-heading"', (root / "index.html").read_text(encoding="utf-8"))
+
+    def test_transferable_methods_are_not_labeled_as_architectures(self):
+        papers = manage.load_json(manage.PAPERS_PATH)
+        category = next(item for item in manage.taxonomy_display_categories() if item["id"] == "perception_world_modeling")
+        rendered = manage.research_theme_section_markdown(papers, category, "en", 2)
+        transferable_section = rendered.split("### Transferable robotics methods", 1)[1].split("###", 1)[0]
+        self.assertIn("SayPlan", transferable_section)
+        self.assertIn("### Reviewed core methods", rendered)
+
+
 class CheckGenerationTests(unittest.TestCase):
     def _write_readme_sources(self, root: Path):
         en = (

@@ -34,5 +34,59 @@
     "source": "https://export.arxiv.org/api/query; https://api.crossref.org/works; https://sairlab.org/icra25/",
     "screening_notes": "Added three foundational papers/monographs, four books/edited collections, and one robotics workshop as auxiliary resources. They are catalogued separately from UAV paper records and are not counted as core methods.",
     "limitations": "Book chapter contents and workshop papers were not individually screened. The workshop page was verified, but its OpenReview archive contents were not enumerated in this iteration."
+  },
+  {
+    "id": "search-2026-09-22-foundations",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "DeepProbLog exact title; Logic Tensor Networks exact title; \"Scallop\" \"Differentiable\" PLDI 2023",
+    "source": "https://pldi23.sigplan.org/details/pldi-2023-pldi/61/Scallop-A-Language-for-Neurosymbolic-Programming",
+    "screening_notes": "Added LTN and Scallop as auxiliary foundational methods after official/institutional and DOI metadata checks. Read selected introductory passages only; DeepProbLog remains a background paper, not a UAV method.",
+    "limitations": "Selected passages do not justify fulltext_reviewed. Existing general surveys/books were not all reread."
+  },
+  {
+    "id": "search-2026-09-22-perception",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "UAV drone neuro symbolic perception planning probabilistic logic NEUSIS; \"SayPlan\" \"3D Scene Graphs\" CoRL 2023",
+    "source": "https://proceedings.mlr.press/v229/rana23a.html",
+    "screening_notes": "NEUSIS v1 method/experiments read and included; SayPlan metadata and selected method passages checked, classified as transferable mobile-manipulation work, not direct UAV evidence.",
+    "limitations": "NEUSIS simulation assumes accurate maps/pose; SayPlan remains abstract_reviewed because the full extended manuscript was not read."
+  },
+  {
+    "id": "search-2026-09-22-planning",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "\"drone\" \"PDDL\" \"language model\" planning; AutoTAMP exact title and arXiv; ProMis exact title and DOI",
+    "source": "https://arxiv.org/html/2501.01439v2",
+    "screening_notes": "Included ProMis after main-text review and published DOI verification. AutoTAMP v3 main text read but remains candidate: principal evaluation in 2D, 3D drone supplement lacks semantic check, physical experiments use ground robots. AutoTAMP uses STL, not PDDL. ProMis predecessor arXiv:2406.03454 was a citation lead, not counted as a separate neural-coupling result.",
+    "limitations": "ProMis offline geospatial experiments are not closed-loop flight; schema uses conceptual with this distinction explained in prose. Search was a targeted web/citation expansion, not an exhaustive database export."
+  },
+  {
+    "id": "search-2026-09-22-navigation",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "UAV drone neuro symbolic signal temporal logic language navigation; UAV \"temporal logic\" \"neural\" navigation learning; Verified compositions exact title",
+    "source": "https://arxiv.org/abs/2209.06130",
+    "screening_notes": "Added the CDC 2022 verified neural-controller composition study after reading its main method/experiment text. Read LLM-STL v1 method/evaluation and included with separate simulation and author-reported real-flight labels.",
+    "limitations": "Reachability guarantees are conditional on model and initial-set assumptions; LLM-STL exact-match translation accuracy is not safety. No reproduction or independent flight-data audit."
+  },
+  {
+    "id": "search-2026-09-22-safety",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "UAV neurosymbolic \"shield\" reinforcement learning; \"UAV\" \"neuro-symbolic\" \"learning\" verification; ASMA exact title; REVEL exact title",
+    "source": "https://arxiv.org/abs/2409.10283v4",
+    "screening_notes": "ASMA v4 abstract screened, final RA-L DOI confirmed; retained as boundary candidate pending audit of semantic coupling beyond CBF/MPC. NeuroSymLand v2 downloaded; retained previous 2026-09-20 full-text review and unresolved venue conflict. REVEL was a foundational safety lead, not added or treated as UAV evidence.",
+    "limitations": "ASMA v1/v4 architectures differ; do not merge abstract claims across versions. No full-text review of ASMA or REVEL this round. This search does not establish the absence of other safety methods."
+  },
+  {
+    "id": "search-2026-09-22-collaboration",
+    "date": "2026-09-22",
+    "entry": "Bounded literature expansion following foundations and five research themes.",
+    "query_or_resource": "multi UAV neuro symbolic collaboration knowledge reasoning; \"Learning-Guided Symbolic Solver Selection\"; TypeFly exact title",
+    "source": "https://www.insticc.org/node/TechnicalProgram/simultech/2026/presentationDetails/149518",
+    "screening_notes": "Read TypeFly v2 and MINT v1 main texts and included both as human–UAV interaction methods. Corrected MINT venue to AAAI Spring Symposium Series using official publication metadata. Added SIMULTECH 2026 solver-selection paper as abstract-only candidate with DOI. CogMUS was a symbolic multi-UAV lead, not included without verified neural coupling.",
+    "limitations": "Solver-selection PDF required login and was not downloaded or read. Human–UAV demonstrations do not establish multi-UAV coordination performance; MINT question counts are not a measured cognitive-load study."
   }
 ]

@@ -4,7 +4,7 @@
 
 - Project structure, AGENTS.md, scope, taxonomy, search protocol, data schema.
 - Seven seed arXiv entries verified at metadata/abstract level.
-- `validate`, `build`, `check`, `serve`, and optional `check-links` command
+- `validate`, `build`, `check`, and optional `check-links` command
   skeleton in `scripts/manage.py`.
 - Static site template, tests, and CI workflow.
 
